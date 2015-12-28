@@ -1,0 +1,42 @@
+Sublime SFTP 1.12.0 Changelog:
+
+
+Upcoming Price Increase
+-----------------------
+
+Due to the increased support work and complexity of supporting Sublime Text 2
+and Sublime Text 3, the price of the package will be increasing on Tuesday,
+September 3rd, 2013. The current price of $16 is good until that date.
+
+https://wbond.net/sublime_packages/sftp/buy
+
+As a reminder, licenses purchased now include a year of free major version
+upgrades. The next feature release will likely be 2.0 and include a number of
+long-awaited enhancements.
+
+
+New Features
+------------
+
+ - Added "sync_same_age" setting to allow ignoring files that are approximately
+   the same age
+
+ - Added verification that the correct version of the package is installed
+   for the current OS. See https://sublime.wbond.net/docs/syncing for more
+   details.
+
+ - Added help for handling SSH keys that have insecure permissions
+
+
+Bug Fixes
+---------
+
+ - Fixed FTPS support on ST3
+
+ - Fixed a bug with Diff Remote File
+
+ - Fixed occasional bug with printing the debug log to a file
+
+ - Added code to handle situations when the "color_scheme" setting is not set
+
+ - Added handling of FTP "550 Requested action not taken" errors

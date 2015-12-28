@@ -1,0 +1,42 @@
+{
+	"added_words":
+	[
+		"playlist",
+		"autoplay",
+		"playlists",
+		"www",
+		"youtube",
+		"https",
+		"middleware"
+	],
+	"bold_folder_labels": true,
+	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
+	"dictionary": "Packages/Language - English/en_US.dic",
+	"draw_centered": true,
+	"font_size": 14.0,
+	"git":
+	{
+		"diff_tool": true
+	},
+	"highlight_line": true,
+	"ignored_packages":
+	[
+		"Gist",
+		"HTML-CSS-JS Prettify",
+		"JSHint",
+		"Markdown",
+		"SideBarEnhancements",
+		"SublimeCodeIntel",
+		"Vintage",
+		"WordCount",
+		"xmllint"
+	],
+	"index_files": false,
+	"itg_small_tabs": true,
+	"overlay_scroll_bars": "disabled",
+	"scroll_past_end": true,
+	"spell_check": true,
+	"tab_size": 4,
+	"theme": "itg.flat.dark.green.sublime-theme",
+	"translate_tabs_to_spaces": true
+}

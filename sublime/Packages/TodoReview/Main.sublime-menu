@@ -1,0 +1,46 @@
+[
+	{
+		"id": "preferences",
+		"children":
+		[
+			{
+				"caption": "Package Settings",
+				"id": "package-settings",
+				"children":
+				[
+					{
+						"caption": "TodoReview",
+						"children":
+						[
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/TodoReview/TodoReview.sublime-settings"},
+								"caption": "Settings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/User/TodoReview.sublime-settings"},
+								"caption": "Settings – User"
+							},
+							{ "caption": "-" },
+							{
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/TodoReview/Default.sublime-keymap"
+								},
+								"caption": "Key Bindings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/TodoReview/Default.sublime-mousemap"
+								},
+								"caption": "Key Bindings – Default"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]

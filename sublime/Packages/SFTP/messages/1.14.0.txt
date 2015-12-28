@@ -1,0 +1,63 @@
+Sublime SFTP 1.14.0 Changelog:
+
+
+I wanted to acknowledge the extended length of time between this update and the
+last release of Sublime SFTP. During that period, my time has largely been
+focused on a low-level rewrite of the encryption functionality used for FTPS
+connections.
+
+This release includes quite a number of bug fixes, all based on reports that
+users have sent in. Please continue to send in debug logs, and look forward to
+more releases in the near future.
+
+
+Bug Fixes
+---------
+
+ - Improved handling of timeouts and reconnections using the SFTP protocol on
+   OS X and Linux
+
+ - A new version of psftp.exe is bundled for Windows users, using version 0.65
+   as a base, resolving incompatibility with newer version of OpenSSL servers.
+   The executable is cryptographically signed.
+
+ - The custom SSL module for Linux was replaced with Package Control SSL module
+   dependency
+
+ - Allow uploading an image while viewing its preview - previously unsupported
+   due to bugs in the Sublime Text 3 API
+
+ - "Link to file server lost" error now causes automatic reconnection instead
+   of a disconnection
+
+ - Fixed a bug with running the "Upload VCS Changed Files" command on ST3
+
+ - Resolved an issue where it was not possible to upload files starting with
+   a "-" over the SFTP protocol
+
+ - Resolved "warning: mnemonic b not found in menu caption SFTP/FTP"
+
+ - Improved handling of encoding errors in some situations
+
+ - Now handles more 5xx FTP error codes
+
+ - Resolved an occasional "Folder Not Found" error when using the SFTP protocol
+
+ - Added handling of situations where the local directory is deleted out from
+   under an open connection
+
+ - "Map to Remote" context menu now works properly from an editor pane
+
+ - Fixed a bug dealing with parsing dates from before 1970
+
+
+Known Issues
+------------
+
+ - FTPS connections to servers requiring session reuse between the control and
+   data connections will fail. This is due to limitation of the SSL module that
+   is part of Python, which is what the Sublime Text API is built upon.
+
+   Ongoing development work has been focused on building a cross-platform TLS
+   library for Python to overcome this limitation. However, there is no
+   concrete ETA for completion.

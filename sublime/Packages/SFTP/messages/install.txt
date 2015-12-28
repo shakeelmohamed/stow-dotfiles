@@ -1,0 +1,48 @@
+Thanks for installing Sublime SFTP! Below are some quick notes to get you
+started with the plugin. Please see https://wbond.net/sublime_packages/sftp for
+the full documentation.
+
+
+There are two major modes of operation:
+1. Mapping a local folder to a remote folder
+2. Working off of a server
+
+
+Mapping a Local Folder to a Remote Folder
+----
+
+To map a local folder to a remote folder, right-click on it in the side bar
+and select the SFTP/SFTP > Map to Remote... You will enter your connection
+parameters and a new file will be created named sftp-config.json.
+
+Once this file has been saved, all files in that folder and all subfolders
+will have various operations available via the side bar context menu, editor
+context menu and command palette.
+
+
+Working off of a Server
+----
+
+To work off of a server, use the File menu and select SFTP/FTP > Setup Server...
+You will enter your connection parameters and options then save the file with
+the name you want to give the connection.
+
+Once the server config is saved, you will be automatically connected to the
+server and you can browse and perform actions via the quick panel.
+
+Unfortunely due to limitations of the Sublime Text API, it is not possible
+to present the remote filesystem in the side bar. There are, however, key
+bindings for connecting to servers to help reduce the amount of time remote
+file operations take.
+
+
+Support
+----
+
+To learn more about the features and settings, please visit
+https://wbond.net/sublime_packages/sftp.
+
+If you are having trouble, please visit
+https://wbond.net/sublime_packages/sftp/support. The support page includes
+instructions for capturing a debug log that will be useful if you believe
+you are experiencing a bug.

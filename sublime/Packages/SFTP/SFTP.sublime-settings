@@ -1,0 +1,61 @@
+{
+	// Hide the output panel:
+	//  - false  = never
+	//  - number = seconds after completion
+	//  - true   = always
+	"hide_output_panel": 1,
+
+	// Frequency in milliseconds that sftp_monitor_file command checks
+	// modification time of file. This uses lstat, so it is not an I/O
+	// intensive operation, especially since the OS has a filesystem cache
+	"monitoring_frequency": 200,
+
+	// Number of milliseconds to wait after a file change is detected before
+	// starting the upload. This can help if the old version of a file is
+	// being uploaded.
+	"monitoring_upload_delay": 500,
+
+	// If you want to use ftps on Linux you need the ssl module, which does
+	// not come included with Sublime due to compatiblity issues. I've compiled
+	// different ssl modules for both 32bit and 64bit and included them.
+	// You can try enabling this, but if Sublime starts crashing, you know
+	// what to disable. Sublime must be restarted after changing this setting.
+	"linux_enable_ssl": false,
+
+	// If the temp folder created for diff operations should be deleted when
+	// the diff completes. If this is set to false, the user is responsible
+	// for cleaning up temp folders. This only applies to situations when
+	// diff_command is set.
+	"delete_temp_diff_folder": true,
+
+	// If debug output should be printed to the console
+	// True or 1 outputs FTP/SFTP commands, 2 is more verbose
+	"debug": false
+	//,"debug_log_file": "C:\\Users\\Username\\Desktop\\sublime_sftp_debug.txt"
+	//,"debug_log_file": "/Users/username/Desktop/sublime_sftp_debug.txt"
+	//,"debug_log_file": "/home/username/Desktop/sublime_sftp_debug.txt"
+
+	// The command line arguments to open an external diff tool. The local file
+	// path will replace any parameter equal to %1$s and the file path of the
+	// local temp file representing the remote file will replace any parameter
+	// equal to %2$s
+	//,"diff_command": ["/usr/bin/meld", "%1$s", "%2$s"]
+	//,"diff_command": ["C:\\Program Files (x86)\\WinMerge\\WinMergeU.exe", "%1$s", "%2$s"]
+	//,"diff_command": ["/usr/bin/opendiff", "%1$s", "%2$s"]
+ 
+	// On Windows machines, git and hg are often not in the path and if they
+	// are not in one of the default install locations, their path must be
+	// specified here for the VCS-based commands to work
+	//,"git_binary_path": "C:\\Program Files\\Msysgit\\bin\\git.exe"
+	//,"hg_binary_path": "C:\\Program Files\\Mercurial\\hg.exe"
+	//,"svn_binary_path": "/usr/bin/svn"
+
+	// On OS X, tabs don't instantly get rendered when opening a file, which
+	// can have the side effect of the sync_down_on_open setting not properly
+	// detecting a file open. SFTP uses a slight delay before checking to see
+	// if a file has been completely opened before syncing down. Depending on
+	// the machine, it may be necessary to tweak this value if sometimes files
+	// do not sync down on open. The number of milliseconds to wait after a
+	// file load event is triggered before checking if the file has a tab.
+	//,"osx_sync_down_on_open_delay": 500
+}

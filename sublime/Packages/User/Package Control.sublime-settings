@@ -1,0 +1,28 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"AAAPackageDev",
+		"CMake",
+		"Colorsublime",
+		"Git",
+		"Jade",
+		"JSHint",
+		"Markdown Preview",
+		"MarkdownEditing",
+		"Missing Palette Commands",
+		"Package Control",
+		"SCSS",
+		"SFTP",
+		"Splunk Conf File Syntax Highlighting",
+		"Splunk Syntax",
+		"sublime-github",
+		"Theme - itg.flat",
+		"Theme - Spacegray",
+		"TodoReview",
+		"VBScript"
+	]
+}

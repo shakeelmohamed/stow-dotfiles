@@ -1,0 +1,12 @@
+{
+	"linux": {
+		"*": [
+			"ssl-linux"
+		]
+	},
+	"windows": {
+		"<3000": [
+			"ssl-windows"
+		]
+	}
+}

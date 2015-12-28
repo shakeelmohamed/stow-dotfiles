@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>sftp-out</string>
+	</array>
+	<key>keyEquivalent</key>
+	<string>^~S</string>
+	<key>name</key>
+	<string>SFTP Output Panel</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>match</key>
+			<string>( Yes|No)\n</string>
+			<key>name</key>
+			<string>response.sftp</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string> \.+</string>
+			<key>name</key>
+			<string>dots.sftp</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(?i:\bfailure\b)</string>
+			<key>name</key>
+			<string>failure.sftp</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(?i:\bsuccess\b)</string>
+			<key>name</key>
+			<string>success.sftp</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^UNREGISTERED: Please visit http://sublime.wbond.net/sftp</string>
+			<key>name</key>
+			<string>failure.sftp</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.begin.sftp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end.sftp</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(")[^"#]*(")</string>
+			<key>name</key>
+			<string>string.sftp</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>datediff.begin.sftp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>datediff.end.sftp</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(\()(\d+|same age)[^\)]*(\))</string>
+			<key>name</key>
+			<string>datediff.sftp</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>date.begin.sftp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>date.end.sftp</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(\[)(\d+|same age)[^\]]*(\])</string>
+			<key>name</key>
+			<string>date.sftp</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>output.sftp</string>
+	<key>uuid</key>
+	<string>E3A415F0-3F50-11E0-9207-0800200C9A67</string>
+</dict>
+</plist>

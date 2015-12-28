@@ -1,0 +1,13 @@
+Sublime SFTP 1.13.2 Changelog:
+
+
+Bug Fixes
+---------
+
+ - Updated the bundled SSL module for ST3 on x64 Linux installs so that is does
+   not require SSLv2 in libssl. Fixes compatibility with Ubuntu 13.10 x64.
+
+ - Fixed a bug where users would get an error popup when opening some files.
+
+ - Resolved an issue in ST3 where printing the remote file listing when it
+   could not be parsed would result in an error.

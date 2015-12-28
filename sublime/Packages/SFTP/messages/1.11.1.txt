@@ -1,0 +1,7 @@
+Sublime SFTP 1.11.1 Changelog:
+
+Bug Fixes
+
+ - Fixed an error connecting to FTP servers with ST2
+
+ - Fixed a bug with checking license keys in ST3
