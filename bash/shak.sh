@@ -10,6 +10,7 @@ alias restart="exec zsh"
 alias shakshock="subl ~/shak.sh"
 
 alias dotfiles="cd ~/work/git/dotfiles"
+alias stowfiles="cd ~/stow-dotfiles"
 
 # alias for cd-ing to git dir
 alias gitgit="cd ~/work/git"
@@ -113,7 +114,10 @@ alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 alias mvnpkg="mvn package -Dmaven.test.skip=true"
 
 mkgo() {
-    mkdir $1 && cd $1
+    if [ ! -d "$1" ]; then
+        mkdir $1
+    fi
+    cd $1
 }
 # Strange hack for docker
 $(boot2docker shellinit 2> /dev/null)
@@ -170,3 +174,19 @@ eval "$(phpenv init -)"
 export SELENIUM="$HOME/selenium-server-standalone-2.48.2.jar"
 
 export RPI_MEDIA="$HOME/desktop/videos"
+
+timestamp() {
+    echo "$(date +%s)"
+}
+
+# Make a new temp directory, go there, then clone the passed in repo
+clonego() {
+    if [ "$#" -eq 1 ]; then
+        mkgo ~/_temp
+        mkgo "$(timestamp)"
+        git clone "$1"
+        cd *
+    else
+        echo "Usage: clonego <github_repo_url>"
+    fi
+}
