@@ -7,7 +7,8 @@ My configuration files, for OS X.
 0. Install stow (`brew install stow`)
 0. Clone this repo with git
 0. cd into this repo
-0. Run `stow <directory>` for each folder. (TODO: an installer script)
+0. Run `stow <directory>` for each folder. (TODO: an installer script) 
+  - Sometimes `stow <directory> -t ~`
 
 
 ## Resources

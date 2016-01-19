@@ -9,6 +9,6 @@
 
 ### STOW ###
 
-# stow bash
-# stow zsh
+# stow bash -t ~
+# stow zsh -t ~
 # stow -t ~/Library/Application\ Support/Sublime\ Text\ 3/ sublime 
