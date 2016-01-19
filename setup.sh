@@ -11,4 +11,4 @@
 
 # stow bash -t ~
 # stow zsh -t ~
-# stow -t ~/Library/Application\ Support/Sublime\ Text\ 3/ sublime 
+# stow sublime -t ~/Library/Application\ Support/Sublime\ Text\ 3/
