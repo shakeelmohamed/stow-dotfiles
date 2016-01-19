@@ -1,5 +1,15 @@
 echo "Shak shock."
 
+function rm() {
+    trash $@
+}
+
+function tarme() {
+    tar cf "$1.tar.gz" "$1"
+}
+
+alias untar="tar xf $@"
+
 # Cross-platform notepad
 alias notepad.exe="vim $@"
 
@@ -171,8 +181,6 @@ intellij() {
 export PATH="/Users/smohamed/.phpenv/bin:$PATH"
 eval "$(phpenv init -)"
 
-export SELENIUM="$HOME/selenium-server-standalone-2.48.2.jar"
-
 export RPI_MEDIA="$HOME/desktop/videos"
 
 timestamp() {
@@ -190,3 +198,5 @@ clonego() {
         echo "Usage: clonego <github_repo_url>"
     fi
 }
+
+alias virus.exe="open ~/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
