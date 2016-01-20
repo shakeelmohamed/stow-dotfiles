@@ -200,3 +200,5 @@ clonego() {
 }
 
 alias virus.exe="open ~/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
+
+alias desk="cd ~/Desktop"
