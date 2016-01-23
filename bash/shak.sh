@@ -17,13 +17,13 @@ alias notepad.exe="vim $@"
 alias restart="exec zsh"
 
 # Edit this file
-alias shakshock="subl ~/shak.sh"
+alias shakshock="subl $HOME/shak.sh"
 
-alias dotfiles="cd ~/work/git/dotfiles"
-alias stowfiles="cd ~/stow-dotfiles"
+alias dotfiles="cd $HOME/work/git/dotfiles"
+alias stowfiles="cd $HOME/stow-dotfiles"
 
 # alias for cd-ing to git dir
-alias gitgit="cd ~/work/git"
+alias gitgit="cd $HOME/work/git"
 
 # clear git cache
 alias gitclear="git rm -r --cached ."
@@ -56,9 +56,9 @@ alias splgo="open http://localhost:8000"
 
 export splunks=$HOME/work/splunks
 
-alias spls="ls ~/work/splunks"
+alias spls="ls $HOME/work/splunks"
 
-splunk_version_file=~/splunkver
+splunk_version_file=$HOME/splunkver
 SPLUNK_VERSION_CMD()
 {
     if [ "$#" -ne 1 ]; then
@@ -71,7 +71,7 @@ SPLUNK_VERSION_CMD()
 }
 alias splver=SPLUNK_VERSION_CMD
 
-SPLUNK_HOME_BASE=~/work/splunks/
+SPLUNK_HOME_BASE=$HOME/work/splunks/
 SPLUNK_VERSION_STR=$(splver)
 
 # export SPLUNK_HOME=$SPLUNK_HOME_BASE$SPLUNK_VERSION_STR
@@ -85,7 +85,7 @@ SPLUNKCMD() {
 }
 alias SPLUNK=SPLUNKCMD
 
-alias splunkrc="subl ~/.splunkrc"
+alias splunkrc="subl $HOME/.splunkrc"
 
 alias spl="echo $SPLUNK_HOME"
 
@@ -94,7 +94,7 @@ alias spl="echo $SPLUNK_HOME"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
 # Android things
-export ANDROID_HOME="/Users/smohamed/Android"
+export ANDROID_HOME="$HOME/Android"
 export PATH=$PATH:$ANDROID_HOME"/tools":$ANDROID_HOME"/platform-tools"
 
 # Pyenv
@@ -115,7 +115,7 @@ SDKREL() {
 }
 
 # NVM
-export NVM_DIR=~/.nvm
+export NVM_DIR=$HOME/.nvm
 source $(brew --prefix nvm)/nvm.sh
 
 # tree command
@@ -141,7 +141,7 @@ splapp() {
     fi
 }
 
-export PATH="/Users/smohamed/.phpenv/bin:$PATH"
+export PATH="$HOME/.phpenv/bin:$PATH"
 eval "$(phpenv init -)"
 
 DELETEMYSPLUNKEVENTS() {
@@ -162,7 +162,7 @@ sourcetree() {
 alias srctree=sourcetree
 alias srct=sourcetree
 
-alias stash="cd ~/work/stash"
+alias stash="cd $HOME/work/stash"
 
 pycharm() {
     if [ "$#" -eq 0 ]; then
@@ -178,7 +178,7 @@ intellij() {
     open -a "IntelliJ IDEA 14 CE" $1
 }
 # phpenv
-export PATH="/Users/smohamed/.phpenv/bin:$PATH"
+export PATH="$HOME/.phpenv/bin:$PATH"
 eval "$(phpenv init -)"
 
 export RPI_MEDIA="$HOME/desktop/videos"
@@ -190,7 +190,7 @@ timestamp() {
 # Make a new temp directory, go there, then clone the passed in repo
 clonego() {
     if [ "$#" -eq 1 ]; then
-        mkgo ~/_temp
+        mkgo $HOME/_temp
         mkgo "$(timestamp)"
         git clone "$1"
         cd *
@@ -199,6 +199,6 @@ clonego() {
     fi
 }
 
-alias virus.exe="open ~/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
+alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
 
-alias desk="cd ~/Desktop"
+alias desk="cd $HOME/Desktop"
