@@ -30,6 +30,7 @@ alias gitclear="git rm -r --cached ."
 
 alias gs="git status"
 alias gdt="git difftool $@"
+alias gb="git rev-parse --abbrev-ref HEAD"
 
 gitslurp() {
     if [ "$#" -eq 0 ]; then
@@ -202,3 +203,6 @@ clonego() {
 alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
 
 alias desk="cd $HOME/Desktop"
+
+# This is not the Jeep you're looking for
+export WRANGLER_HOME="$HOME/wrangler"

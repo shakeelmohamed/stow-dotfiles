@@ -1,5 +1,0 @@
-[
-	{ "caption": "-" },
-	{ "command": "sftp_upload_file", "args": { "group": -1, "index": -1 }, "caption": "Upload File" },
-	{ "command": "sftp_upload_open_files", "caption": "Upload Open Files" }
-]
