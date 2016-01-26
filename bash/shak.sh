@@ -8,7 +8,11 @@ function tarme() {
     tar cf "$1.tar.gz" "$1"
 }
 
-alias untar="tar xf $@"
+untar() {
+    for filename in $@; do
+        tar xf $filename
+    done
+}
 
 # Cross-platform notepad
 alias notepad.exe="vim $@"
