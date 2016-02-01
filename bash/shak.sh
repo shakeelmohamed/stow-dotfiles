@@ -1,10 +1,11 @@
 echo "Shak shock."
 
-function rm() {
+# Moves to trash instead of wiping completely, npm install -g trash-cli
+rm() {
     trash $@
 }
 
-function tarme() {
+tarme() {
     tar cf "$1.tar.gz" "$1"
 }
 
@@ -48,20 +49,17 @@ gitslurp() {
     fi
 }
 
-# Moves to trash instead of wiping completely, npm install -g trash-cli
-function rm() {
-    trash $@
-}
-
 # Java env
 # export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
 
 # Splunk things
 alias splgo="open http://localhost:8000"
 
-export splunks=$HOME/work/splunks
+SPLUNKS_LOCATION=$HOME/work/splunks
 
-alias spls="ls $HOME/work/splunks"
+alias splunks="cd $SPLUNKS_LOCATION"
+
+alias spls="ls $SPLUNKS_LOCATION"
 
 splunk_version_file=$HOME/splunkver
 SPLUNK_VERSION_CMD()
@@ -134,6 +132,7 @@ mkgo() {
     fi
     cd $1
 }
+
 # Strange hack for docker
 $(boot2docker shellinit 2> /dev/null)
 
@@ -210,3 +209,11 @@ alias desk="cd $HOME/Desktop"
 
 # This is not the Jeep you're looking for
 export WRANGLER_HOME="$HOME/wrangler"
+
+backup() {
+    if [ -d "$1" ]; then
+        cp -r "$1" "$1-backup"
+    else
+        cp "$1" "$1-backup"
+    fi
+}

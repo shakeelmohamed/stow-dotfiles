@@ -5,7 +5,6 @@
 	],
 	"installed_packages":
 	[
-		"AAAPackageDev",
 		"ChannelRepositoryTools",
 		"CMake",
 		"ColorSchemeSelector",
@@ -19,6 +18,7 @@
 		"JSONLint",
 		"Missing Palette Commands",
 		"Package Control",
+		"PackageDev",
 		"PowerShell",
 		"Pretty JSON",
 		"Quick File Move",
