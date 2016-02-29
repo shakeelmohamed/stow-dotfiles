@@ -11,7 +11,8 @@
 		"dev@splunk",
 		"addon",
 		"splunk",
-		"admon"
+		"admon",
+		"metadata"
 	],
 	"binary_file_patterns":
 	[
@@ -23,7 +24,7 @@
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
 	"dictionary": "Packages/Language - English/en_US.dic",
 	"draw_centered": true,
-	"font_size": 13,
+	"font_size": 15,
 	"highlight_line": true,
 	"ignored_packages":
 	[
