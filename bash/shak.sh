@@ -37,6 +37,8 @@ alias gs="git status"
 alias gdt="git difftool $@"
 alias gb="git rev-parse --abbrev-ref HEAD"
 
+git config --global rerere.enabled true
+
 gitslurp() {
     if [ "$#" -eq 0 ]; then
         1="$(git rev-parse --abbrev-ref HEAD)"
@@ -133,9 +135,6 @@ mkgo() {
     cd $1
 }
 
-# Strange hack for docker
-$(boot2docker shellinit 2> /dev/null)
-
 # Upload a Splunk app: splapp user password host path-to-app
 splapp() {
     if [ "$#" -lt 4 ]; then
@@ -217,3 +216,6 @@ backup() {
         cp "$1" "$1-backup"
     fi
 }
+
+# Print a random guid
+alias guid=uuidgen
