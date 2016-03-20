@@ -39,9 +39,9 @@ alias gb="git rev-parse --abbrev-ref HEAD"
 
 git config --global rerere.enabled true
 
-gitslurp() {
+gityank() {
     if [ "$#" -eq 0 ]; then
-        1="$(git rev-parse --abbrev-ref HEAD)"
+        1="$(gb)"
     fi
 
     if [ "$#" -eq 1 ]; then
@@ -219,3 +219,7 @@ backup() {
 
 # Print a random guid
 alias guid=uuidgen
+
+function tableflip(){
+    echo "(╯°□°）╯︵ ┻━┻"
+}
