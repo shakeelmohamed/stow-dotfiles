@@ -42,9 +42,7 @@ git config --global rerere.enabled true
 gityank() {
     if [ "$#" -eq 0 ]; then
         1="$(gb)"
-    fi
-
-    if [ "$#" -eq 1 ]; then
+    elif [ "$#" -eq 1 ]; then
         git branch --set-upstream-to="origin/$1" $1
     else
         git branch --set-upstream-to="$1/$2" $2
