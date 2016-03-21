@@ -35,7 +35,10 @@ alias gitclear="git rm -r --cached ."
 
 alias gs="git status"
 alias gdt="git difftool $@"
+alias gdc="git diff --cached $@"
 alias gb="git rev-parse --abbrev-ref HEAD"
+alias gf="git fetch"
+alias gfa="git fetch --all"
 
 git config --global rerere.enabled true
 
@@ -221,3 +224,5 @@ alias guid=uuidgen
 function tableflip(){
     echo "(╯°□°）╯︵ ┻━┻"
 }
+
+alias copy=pbcopy
