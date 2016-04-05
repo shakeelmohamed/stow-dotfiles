@@ -29,7 +29,7 @@ alias restart="exec zsh"
 alias shakshock="subl $HOME/shak.sh"
 
 alias dotfiles="cd $HOME/work/git/dotfiles"
-alias stowfiles="cd $HOME/stow-dotfiles"
+alias stowfiles="cd $HOME/work/git/stow-dotfiles"
 
 # alias for cd-ing to git dir
 alias gitgit="cd $HOME/work/git"
