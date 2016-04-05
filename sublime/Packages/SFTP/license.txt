@@ -1,0 +1,33 @@
+Software contained in the "bin" directory is subject to the licenses in the
+"licenses" subdirectory. "sftp/ftplib2.pyc" is subject to the
+"python_license.txt" in this directory. All other files are subject to the
+following copyright.
+
+--------
+
+Sublime SFTP
+Copyright (c) 2011-2015 William Bond <will@wbond.net>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software to use it for an evaluation period for the purpose of
+testing prior to purchase.
+
+Extended use of Sublime SFTP requires a license, which can be purchased from
+https://wbond.net/sublime_packages/buy. Any person who has purchased a license
+from William Bond and enters the provided product key is granted use of Sublime
+SFTP on any number of computers, of any supported operating system. Licenses are
+valid for only a single person, and are valid for all upgrades to the
+major version purchased. For example, purchasing a license for version 1.1 will
+allow for free upgrades until version 2.0.
+
+Redistribution, modification, merging, publication, distribution, sublicensing,
+and/or selling copies of Sublime SFTP is prohibited. Please contact
+support@wbond.net with any questions.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

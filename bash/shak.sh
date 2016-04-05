@@ -15,6 +15,10 @@ untar() {
     done
 }
 
+zipme() {
+    zip -er "$1.zip" "$1"
+}
+
 # Cross-platform notepad
 alias notepad.exe="vim $@"
 
@@ -97,7 +101,9 @@ alias spl="echo $SPLUNK_HOME"
 
 
 # Sublime text!
-alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+# TODO: add a step in setup script to symlink this
+#ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+# alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
 # Android things
 export ANDROID_HOME="$HOME/Android"
@@ -226,3 +232,4 @@ function tableflip(){
 }
 
 alias copy=pbcopy
+alias update=upgrade_oh_my_zsh

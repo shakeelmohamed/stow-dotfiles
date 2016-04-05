@@ -1,0 +1,13 @@
+Sublime SFTP 1.6.0 Changelog:
+
+Please be sure to restart Sublime Text 2 to start using this new version.
+
+New Features
+ - Added remote browsing functionality - see File menu for standalone browsing,
+   or use the context menus for existing local projects. Open
+   Preferences > Package Settings > SFTP > Key Bindings - Default to see
+   the new key bindings.
+
+Bug Fixes
+ - More idle timeout fixes for FTP
+ - Fixed download of 0-byte files via FTP

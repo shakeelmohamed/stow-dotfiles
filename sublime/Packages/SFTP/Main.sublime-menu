@@ -1,0 +1,93 @@
+[
+    {
+        "id": "file",
+        "children":
+        [
+            {
+                "caption": "SFTP/FTP",
+                "mnemonic": "F",
+                "children":
+                [
+                    { "command": "sftp_create_server", "caption": "Setup Server…" },
+                    { "command": "sftp_browse_server", "caption": "Browse Server…" },
+                    { "command": "sftp_edit_server", "caption": "Edit Server…" },
+                    { "command": "sftp_delete_server", "caption": "Delete Server…" }
+                ]
+            }
+        ]
+    },
+    {
+        "caption": "Preferences",
+        "mnemonic": "n",
+        "id": "preferences",
+        "children":
+        [
+            {
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
+                "children":
+                [
+                    {
+                        "caption": "SFTP",
+                        "children":
+                        [
+                            { "command": "open_file", "args": {"file": "${packages}/SFTP/SFTP.sublime-settings"}, "caption": "Settings – Default" },
+                            { "command": "open_file", "args": {"file": "${packages}/User/SFTP.sublime-settings"}, "caption": "Settings – User" },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/SFTP/Default (Windows).sublime-keymap",
+                                    "platform": "Windows"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/SFTP/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/SFTP/Default (Linux).sublime-keymap",
+                                    "platform": "Linux"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (Windows).sublime-keymap",
+                                    "platform": "Windows"
+                                },
+                                "caption": "Key Bindings – User"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                },
+                                "caption": "Key Bindings – User"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (Linux).sublime-keymap",
+                                    "platform": "Linux"
+                                },
+                                "caption": "Key Bindings – User"
+                            },
+                            { "caption": "-" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -5,10 +5,12 @@
 	],
 	"installed_packages":
 	[
+		"BracketHighlighter",
 		"ChannelRepositoryTools",
 		"CMake",
 		"ColorSchemeSelector",
 		"Colorsublime",
+		"DocBlockr",
 		"Evernote",
 		"Git",
 		"Github Tools",
@@ -22,6 +24,7 @@
 		"PowerShell",
 		"Pretty JSON",
 		"Quick File Move",
+		"SFTP",
 		"SideBarEnhancements",
 		"Splunk Conf File Syntax Highlighting",
 		"Splunk Syntax",

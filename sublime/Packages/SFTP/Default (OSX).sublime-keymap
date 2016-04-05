@@ -1,0 +1,26 @@
+[
+	{ "keys": ["super+ctrl+u","super+ctrl+f"], "command": "sftp_upload_file" },
+	{ "keys": ["super+ctrl+u","super+ctrl+r"], "command": "sftp_upload_folder" },
+	{ "keys": ["super+ctrl+u","super+ctrl+y"], "command": "sftp_sync_up" },
+	{ "keys": ["super+ctrl+u","super+ctrl+n"], "command": "sftp_upload_open_files" },
+	{ "keys": ["super+ctrl+u","super+ctrl+m"], "command": "sftp_monitor_file" },
+
+	{ "keys": ["super+ctrl+u","super+ctrl+o"], "command": "sftp_download_file" },
+	{ "keys": ["super+ctrl+u","super+ctrl+e"], "command": "sftp_download_folder" },
+	{ "keys": ["super+ctrl+u","super+ctrl+d"], "command": "sftp_sync_down" },
+	{ "keys": ["super+ctrl+u","super+ctrl+i"], "command": "sftp_diff_remote_file" },
+
+	{ "keys": ["super+ctrl+u","super+ctrl+b"], "command": "sftp_sync_both" },
+	{ "keys": ["super+ctrl+u","super+ctrl+c"], "command": "sftp_vcs_changed_files" },
+
+	{ "keys": ["super+ctrl+u","super+ctrl+w"], "command": "sftp_browse" },
+
+	{ "keys": ["super+ctrl+r","super+ctrl+s"], "command": "sftp_create_server" },
+	{ "keys": ["super+ctrl+r","super+ctrl+b"], "command": "sftp_browse_server" },
+	{ "keys": ["super+ctrl+r","super+ctrl+n"], "command": "sftp_last_server" },
+	{ "keys": ["super+ctrl+r","super+ctrl+e"], "command": "sftp_edit_server" },
+	{ "keys": ["super+ctrl+r","super+ctrl+d"], "command": "sftp_delete_server" },
+
+	{ "keys": ["super+ctrl+u","super+ctrl+s"], "command": "sftp_show_panel" },
+	{ "keys": ["super+ctrl+u","super+ctrl+x"], "command": "sftp_cancel_upload" }
+]

@@ -1,0 +1,14 @@
+Sublime SFTP 1.4.0 Changelog:
+
+New Features
+ - Added FTP protocol support
+ - Updated the plugin to automatically retry operations when a
+   disconnection occurs
+
+Bug Fixes
+ - Fixed handling of diffs on Windows for files not in the
+   root of the remote
+ - Made SFTP remote folder list parsing more robust when Sublime
+   is run on a machine with a different locale than the server
+ - Fixed issue with connecting to an SFTP server for the
+   first time on Windows
