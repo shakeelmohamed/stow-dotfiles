@@ -54,6 +54,7 @@ gitvim() {
 
 # TODO: move to git setup
 git config --global rerere.enabled true
+git config --global diff.tool Kaleidoscope
 
 gityank() {
     if [ "$#" -eq 0 ]; then
