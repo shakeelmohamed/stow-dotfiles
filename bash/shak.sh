@@ -81,6 +81,7 @@ alias spls="ls $SPLUNKS_LOCATION"
 splunk_version_file=$HOME/splunkver
 SPLUNK_VERSION_CMD()
 {
+    touch $splunk_version_file
     if [ "$#" -ne 1 ]; then
         cat $splunk_version_file
     else
@@ -161,9 +162,6 @@ splapp() {
     fi
 }
 
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
-
 DELETEMYSPLUNKEVENTS() {
     if [ "$#" -eq 0 ]; then
         1="admin"
@@ -197,9 +195,6 @@ intellij() {
     fi
     open -a "IntelliJ IDEA 14 CE" $1
 }
-# phpenv
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
 
 export RPI_MEDIA="$HOME/desktop/videos"
 
