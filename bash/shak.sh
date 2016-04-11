@@ -43,6 +43,7 @@ alias gdc="git diff --cached $@"
 alias gb="git rev-parse --abbrev-ref HEAD"
 alias gf="git fetch"
 alias gfa="git fetch --all"
+alias gfp="git fetch --prune"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
