@@ -44,6 +44,8 @@ alias gb="git rev-parse --abbrev-ref HEAD"
 alias gf="git fetch"
 alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
+# See 1 git commit in the future
+alias gitforward="git show HEAD@{1}"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
@@ -203,11 +205,15 @@ timestamp() {
     echo "$(date +%s)"
 }
 
+tempgo() {
+    mkgo $HOME/_temp
+    mkgo "$(timestamp)"
+}
+
 # Make a new temp directory, go there, then clone the passed in repo
 clonego() {
     if [ "$#" -eq 1 ]; then
-        mkgo $HOME/_temp
-        mkgo "$(timestamp)"
+        tempgo
         git clone "$1"
         cd *
     else
