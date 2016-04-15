@@ -1,5 +1,9 @@
 echo "Shak shock."
 
+actuallyrm() {
+    rm $@
+}
+
 # Moves to trash instead of wiping completely, npm install -g trash-cli
 rm() {
     trash $@
@@ -37,6 +41,8 @@ alias gitgit="cd $HOME/work/git"
 # clear git cache
 alias gitclear="git rm -r --cached ."
 
+alias gitclone="cd $HOME/work/git && git clone $@"
+
 alias gs="git status"
 alias gdt="git difftool $@"
 alias gdc="git diff --cached $@"
@@ -45,7 +51,7 @@ alias gf="git fetch"
 alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
 # See 1 git commit in the future
-alias gitforward="git show HEAD@{1}"
+alias gitpeek="git show HEAD@{1}"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
