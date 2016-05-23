@@ -22,6 +22,10 @@ untar() {
 }
 
 zipme() {
+    zip -r "$1.zip" "$1"
+}
+
+zipmeencrypted() {
     zip -er "$1.zip" "$1"
 }
 
@@ -55,6 +59,7 @@ alias gfp="git fetch --prune"
 # See 1 git commit in the future
 alias gitpeek="git show HEAD@{1}"
 alias gshow="git show --pretty=full $@"
+alias gitgui="git gui $@"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
