@@ -70,7 +70,7 @@ gitvim() {
 }
 
 # TODO: move to git setup
-git config --global rerere.enabled true
+#git config --global rerere.enabled true
 git config --global diff.tool Kaleidoscope
 
 gityank() {
@@ -112,10 +112,10 @@ alias splver=SPLUNK_VERSION_CMD
 SPLUNK_HOME_BASE=$HOME/work/splunks/
 SPLUNK_VERSION_STR=$(splver)
 
-# export SPLUNK_HOME=$SPLUNK_HOME_BASE$SPLUNK_VERSION_STR
+export SPLUNK_HOME=$SPLUNK_HOME_BASE$SPLUNK_VERSION_STR
 
 ## MANUALLY OVERRIDE SPLUNK_HOME FOR CORE
-export SPLUNK_HOME="$HOME/work/splunks/core"
+# export SPLUNK_HOME="$HOME/work/splunks/core"
 
 # Alias to do something with splunk
 SPLUNKCMD() {
