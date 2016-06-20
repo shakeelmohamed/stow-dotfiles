@@ -1,5 +1,9 @@
 echo "Shak shock."
 
+###################
+# General utilities
+###################
+
 actuallyrm() {
     rm $@
 }
@@ -38,6 +42,10 @@ alias restart="exec zsh"
 # Edit this file
 alias shakshock="subl $HOME/shak.sh"
 
+###################
+# Git utilities
+###################
+
 alias dotfiles="cd $HOME/work/git/dotfiles"
 alias stowfiles="cd $HOME/work/git/stow-dotfiles"
 
@@ -47,7 +55,12 @@ alias gitgit="cd $HOME/work/git"
 # clear git cache
 alias gitclear="git rm -r --cached ."
 
-alias gitclone="cd $HOME/work/git && git clone $@"
+gitclone() {
+    cd $HOME/work/git
+    git clone $@
+    repo_name=$(echo $1 | sed 's/\.git$//' | sed 's/.*\///')
+    cd $repo_name
+}
 
 alias gs="git status"
 alias gdt="git difftool $@"
@@ -83,10 +96,9 @@ gityank() {
     fi
 }
 
-# Java env
-# export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home"
-
-# Splunk things
+###################
+# Splunk utilities
+###################
 alias splgo="open http://localhost:8000"
 
 SPLUNKS_LOCATION=$HOME/work/splunks
@@ -127,6 +139,9 @@ alias splunkrc="subl $HOME/.splunkrc"
 
 alias spl="echo $SPLUNK_HOME"
 
+###################
+# TODO: organize
+###################
 
 # Sublime text!
 # TODO: add a step in setup script to symlink this

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>fileTypes</key>
@@ -8,6 +8,10 @@
 		<string>conf.example</string>
 		<string>conf.default</string>
 		<string>conf.spec</string>
+		<string>conf.in</string>
+		<string>conf.example.in</string>
+		<string>conf.spec.in</string>
+		<string>cfg.spec.in</string>
 	</array>
 	<key>name</key>
 	<string>Splunk Conf file</string>
@@ -38,20 +42,26 @@
 			<string>entity.name.function</string>
 		</dict>
 		<dict>
+			<key>begin</key>
+			<string>^([^\s=]+)[ ]*(=)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.function</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator</string>
+				</dict>
+			</dict>
 			<key>comment</key>
-			<string>conf setting key</string>
-			<key>match</key>
-			<string>^[\w+\.\-\:]+</string>
-			<key>name</key>
-			<string>support.function</string>
-		</dict>
-		<dict>
-			<key>comment</key>
-			<string>Equals Sign</string>
-			<key>match</key>
-			<string>=</string>
-			<key>name</key>
-			<string>keyword.operator</string>
+			<string>Setting (can be multiline). Begins with 'key=', ends with newline without backslash</string>
+			<key>end</key>
+			<string>[^\\]
+</string>
 		</dict>
 	</array>
 	<key>scopeName</key>
