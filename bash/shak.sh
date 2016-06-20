@@ -82,8 +82,6 @@ gitvim() {
     git config --global core.editor "vim"
 }
 
-# TODO: move to git setup
-#git config --global rerere.enabled true
 git config --global diff.tool Kaleidoscope
 
 gityank() {
