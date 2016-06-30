@@ -42,6 +42,10 @@ alias restart="exec zsh"
 # Edit this file
 alias shakshock="subl $HOME/shak.sh"
 
+# Bicep curls
+alias bicep="curl $@"
+alias 💪="curl $@"
+
 ###################
 # Git utilities
 ###################
