@@ -46,6 +46,13 @@ alias shakshock="subl $HOME/shak.sh"
 alias bicep="curl $@"
 alias 💪="curl $@"
 
+mkgo() {
+    if [ ! -d "$1" ]; then
+        mkdir $1
+    fi
+    cd $1
+}
+
 ###################
 # Git utilities
 ###################
@@ -55,6 +62,9 @@ alias stowfiles="cd $HOME/work/git/stow-dotfiles"
 
 # alias for cd-ing to git dir
 alias gitgit="cd $HOME/work/git"
+alias gogit="gitgit"
+alias gitit="gitgit"
+alias ggit="gitgit"
 
 # clear git cache
 alias gitclear="git rm -r --cached ."
@@ -110,8 +120,7 @@ alias splunks="cd $SPLUNKS_LOCATION"
 alias spls="ls $SPLUNKS_LOCATION"
 
 splunk_version_file=$HOME/splunkver
-SPLUNK_VERSION_CMD()
-{
+SPLUNK_VERSION_CMD() {
     touch $splunk_version_file
     if [ "$#" -ne 1 ]; then
         cat $splunk_version_file
@@ -145,7 +154,7 @@ alias spl="echo $SPLUNK_HOME"
 # TODO: organize
 ###################
 
-# Sublime text!
+# Sublime text! - this should happen automatically with cask
 # TODO: add a step in setup script to symlink this
 #ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
 # alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
@@ -179,13 +188,6 @@ source $(brew --prefix nvm)/nvm.sh
 alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
 alias mvnpkg="mvn package -Dmaven.test.skip=true"
-
-mkgo() {
-    if [ ! -d "$1" ]; then
-        mkdir $1
-    fi
-    cd $1
-}
 
 # Upload a Splunk app: splapp user password host path-to-app
 splapp() {
@@ -256,9 +258,6 @@ alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.comman
 
 alias desk="cd $HOME/Desktop"
 
-# This is not the Jeep you're looking for
-export WRANGLER_HOME="$HOME/wrangler"
-
 backup() {
     if [ -d "$1" ]; then
         cp -r "$1" "$1-backup"
@@ -268,16 +267,15 @@ backup() {
 }
 
 # Print a random guid
-alias guid=uuidgen
+alias guid="uuidgen"
 
 function tableflip(){
     echo "(╯°□°）╯︵ ┻━┻"
 }
 
-alias copy=pbcopy
-alias update=upgrade_oh_my_zsh
+alias copy="pbcopy"
+alias update="upgrade_oh_my_zsh"
 
 # Who has time to type brew cask every time?
 alias cask="brew cask $@"
-
 
