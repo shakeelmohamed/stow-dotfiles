@@ -1,0 +1,14 @@
+cask
+emacs
+gdbm
+geoip
+git
+gnupg
+nvm
+openssl
+python
+readline
+sqlite
+stow
+tig
+wget
