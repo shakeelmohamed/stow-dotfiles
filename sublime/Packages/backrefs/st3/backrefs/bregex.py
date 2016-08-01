@@ -25,7 +25,7 @@ Recommended to use compiling.  Assuming the above compiling:
         text = replace(m)  # similar to m.expand(template)
 
 Licensed under MIT
-Copyright (c) 2011 - 2015 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2015 - 2016 Isaac Muse <isaacmuse@gmail.com>
 """
 from __future__ import unicode_literals
 import re
