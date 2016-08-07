@@ -2,7 +2,7 @@
 Common tokens shared between the different regex modules.
 
 Licensed under MIT
-Copyright (c) 2011 - 2015 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2015 - 2016 Isaac Muse <isaacmuse@gmail.com>
 """
 import re
 
