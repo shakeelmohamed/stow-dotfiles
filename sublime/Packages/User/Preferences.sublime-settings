@@ -12,7 +12,9 @@
 		"addon",
 		"splunk",
 		"admon",
-		"metadata"
+		"metadata",
+		"Flippy",
+		"bool"
 	],
 	"binary_file_patterns":
 	[
