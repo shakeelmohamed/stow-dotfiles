@@ -53,6 +53,9 @@ mkgo() {
     cd $1
 }
 
+# depends on "brew install coreutils"
+alias readlink=greadlink
+
 ###################
 # Git utilities
 ###################
@@ -85,7 +88,7 @@ alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
 # See 1 git commit in the future
 alias gitpeek="git show HEAD@{1}"
-alias gshow="git show --pretty=full $@"
+alias gshow="git show $@"
 alias gitgui="git gui $@"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
