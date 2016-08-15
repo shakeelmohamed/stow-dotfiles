@@ -258,7 +258,7 @@ clonego() {
 }
 
 alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
-alias bygp="sudo /Applications/GlobalProtect.app/Contents/Resources/uninstall_gp.sh"
+alias byegp="sudo /Applications/GlobalProtect.app/Contents/Resources/uninstall_gp.sh"
 
 alias desk="cd $HOME/Desktop"
 
