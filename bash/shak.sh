@@ -33,6 +33,8 @@ zipmeencrypted() {
     zip -er "$1.zip" "$1"
 }
 
+alias fixwifi="sudo route -n flush && sudo networksetup -setv4off Wi-Fi && sudo networksetup -setdhcp Wi-Fi"
+
 # Cross-platform notepad
 alias notepad.exe="vim $@"
 
