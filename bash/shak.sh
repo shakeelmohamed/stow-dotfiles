@@ -30,6 +30,7 @@ zipme() {
 }
 
 zipmeencrypted() {
+    echo "$1"
     zip -er "$1.zip" "$1"
 }
 
@@ -74,7 +75,7 @@ alias ggit="gitgit"
 # clear git cache
 alias gitclear="git rm -r --cached ."
 
-gitclone() {
+gclone() {
     cd $HOME/work/git
     git clone $@
     repo_name=$(echo $1 | sed 's/\.git$//' | sed 's/.*\///')
