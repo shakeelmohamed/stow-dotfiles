@@ -8,3 +8,4 @@ Package Control.system-ca-bundle
 Package Control.user-ca-bundle
 Package Control.last-run
 sublime/Packages/User/sftp_servers
+oscrypto-ca-bundle.crt
