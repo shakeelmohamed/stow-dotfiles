@@ -109,7 +109,7 @@ git config --global diff.tool Kaleidoscope
 
 gityank() {
     if [ "$#" -eq 0 ]; then
-        1="$(gb)"
+        gityank $(gb)
     elif [ "$#" -eq 1 ]; then
         git branch --set-upstream-to="origin/$1" $1
     else
