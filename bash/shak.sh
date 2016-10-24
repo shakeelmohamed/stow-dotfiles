@@ -262,6 +262,7 @@ clonego() {
         echo "Usage: clonego <github_repo_url>"
     fi
 }
+alias tempclone=clonego
 
 alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
 alias byegp="sudo /Applications/GlobalProtect.app/Contents/Resources/uninstall_gp.sh"

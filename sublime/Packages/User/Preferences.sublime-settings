@@ -27,7 +27,7 @@
 	"dictionary": "Packages/Language - English/en_US.dic",
 	"draw_centered": true,
 	"find_selected_text": false,
-	"font_size": 14,
+	"font_size": 15,
 	"highlight_line": true,
 	"ignored_packages":
 	[
