@@ -37,6 +37,11 @@ zipmeencrypted() {
     zip -er "$1.zip" "$1"
 }
 
+# long sha to short sha
+shortsha() {
+    echo "$1" | cut -c1-12
+}
+
 alias fixwifi="sudo route -n flush && sudo networksetup -setv4off Wi-Fi && sudo networksetup -setdhcp Wi-Fi"
 
 # Cross-platform notepad
