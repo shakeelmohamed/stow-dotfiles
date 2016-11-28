@@ -243,7 +243,7 @@ intellij() {
     if [ "$#" -eq 0 ]; then
         1="$(pwd)"
     fi
-    open -a "IntelliJ IDEA 14 CE" $1
+    open -a "IntelliJ IDEA 15 CE" $1
 }
 
 export RPI_MEDIA="$HOME/desktop/videos"
