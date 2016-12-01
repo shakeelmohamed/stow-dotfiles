@@ -48,6 +48,7 @@
 	],
 	"index_files": false,
 	"scroll_past_end": true,
+	"spacegray_fileicons": true,
 	"spell_check": true,
 	"tab_size": 4,
 	"theme": "Spacegray Eighties.sublime-theme",
