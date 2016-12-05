@@ -14,7 +14,8 @@
 		"admon",
 		"metadata",
 		"Flippy",
-		"bool"
+		"bool",
+		"username"
 	],
 	"binary_file_patterns":
 	[
