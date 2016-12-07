@@ -17,6 +17,7 @@ import sublime
 import re
 from . import version as ver
 from .rgba import RGBA
+from . import x11colors
 from .st_color_scheme_matcher import ColorSchemeMatcher
 import jinja2
 from pygments.formatters import HtmlFormatter
@@ -225,7 +226,7 @@ class Scheme2CSS(object):
                 break
 
         # Get general theme colors from color scheme file
-        self.bground = self.strip_color(color_settings.get("background", '#FFFFFF'), simple_strip=True)
+        self.bground = self.process_color(color_settings.get("background", '#FFFFFF'), simple_strip=True)
         rgba = RGBA(self.bground)
         self.lums = rgba.get_luminance()
         is_dark = self.lums <= LUM_MIDPOINT
@@ -237,10 +238,11 @@ class Scheme2CSS(object):
             "mdpopups_version": ver.version(),
             "color_scheme": self.scheme_file,
             "use_pygments": not settings.get('mdpopups.use_sublime_highlighter', False),
-            "default_formatting": settings.get('mdpopups.default_formatting', True)
+            "default_formatting": settings.get('mdpopups.default_formatting', True),
+            "default_style": settings.get('mdpopups.default_style', True)
         }
         self.html_border = rgba.get_rgb()
-        self.fground = self.strip_color(color_settings.get("foreground", '#000000'))
+        self.fground = self.process_color(color_settings.get("foreground", '#000000'))
 
         # Intialize colors with the global foreground, background, and fake html_border
         self.colors = OrderedDict()
@@ -270,7 +272,7 @@ class Scheme2CSS(object):
                     if "underline" in s and False:  # disabled
                         self.colors[key_scope]['text-decoration'] = 'text-decoration: %s; ' % 'underline'
 
-    def strip_color(self, color, simple_strip=False):
+    def process_color(self, color, simple_strip=False):
         """
         Strip transparency from the color value.
 
@@ -281,6 +283,11 @@ class Scheme2CSS(object):
 
         if color is None or color.strip() == "":
             return None
+
+        if not color.startswith('#'):
+            color = x11colors.name2hex(color)
+            if color is None:
+                return None
 
         rgba = RGBA(color.replace(" ", ""))
         if not simple_strip:

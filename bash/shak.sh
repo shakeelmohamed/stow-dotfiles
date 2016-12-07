@@ -4,6 +4,10 @@ echo "Shak shock."
 # General utilities
 ###################
 
+iphonebackups() {
+    cd "/Users/smohamed/Library/Application Support/MobileSync/Backup"
+}
+
 actuallyrm() {
     rm $@
 }

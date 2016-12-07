@@ -46,7 +46,16 @@ MdPopups also includes a couple of 3rd party extensions (some of which have been
     `nl2br` can be turned off via the `nl2br` parameter in `show_popup`, `add_phantom`, `update_popup`, `md2html`, and `Phantom`.
 
 ## API Usage
-MdPopups provides a handful of accessible functions.
+MdPopups provides a number of accessible functions.
+
+!!! caution "Developer Guidelines"
+    Plugin developers should not try to override the style of existing base classes and elements with plugin injection, but they should use custom plugin classes so that only the specific special elements that must be handled uniquely for the plugin get targeted.  You should use very unique class names (preferably with the plugin's name as part of the class). This way a user can target and override your class styling if desired. There are a couple of ways to approach this.
+
+    - For Sublime Text 3119+, it is advised to use the `wrapper_class` option of the `show_popup`, `update_popup`, and `add_phantom` commands to wrap your content in a div with the provided class.  That way the developer can provide CSS to style their specific elements via `#!css .mdpopups .myplugin-wrapper .myclass {}` or simply `#!css .myplugin-wrapper .myclass {}`. This is one of the easiest ways, but it is for 3119+ only.
+
+    - For Sublime Text <3119, when injecting your own CSS classes from a plugin, wrapper classes won't work as Sublime didn't add CSS support for parent child classes until later. In this case, it is recommend you namespace your classes by appending the plugin name as a prefix so it can be targeted like this: `#!css .myplugin-myclass {}`.  This will give your elements very unique classes that the user can target and override if they choose.
+
+    - To add classes to inline and some block markdown elements you can use the Python Markdown [attr_list extension syntax](https://pythonhosted.org/Markdown/extensions/attr_list.html).  This will work on inline elements and a number of block elements (though sometimes it can be difficult to target certain kinds of block elements).  If all else fails, you can insert raw HTML into your markdown and apply classes directly to the element.
 
 ### version
 (int,) mdpopups.version
@@ -75,28 +84,11 @@ mdpopups.show_popup
     | template_env_options | dict | No | None | A dictionary containing options for the Jinja2 template environment. This **only** applies to the **HTML/Markdown** content. Content plugin vars are found under the object: `plugin`. |
     | nl2br | bool | No | True | Determines whether the newline to br Python Markdown extension is enabled or not. |
 
-    !!! caution "Developers Guidelines"
-        For 3119+, it is advised you use the `wrapper_class` option to wrap your content in a div with the give class.  That way you can provide CSS to style your elements via `#!css .wrapper-class .myclass {}`.
-
-        For <3119, when injecting your own CSS classes from a plugin, please namespace them by either giving them a very unique name (preferably with the plugin's name as part of the class) or use an additional namespace class (preferably with the plugin's name) and a specific class.  This way a user can target and override your class styling if desired.
-
-        **Example - Unique Class Name**:
-        ```css
-        .myplugin-myclass { ... }
-        ```
-
-        **Example - Namespace Class**:
-        ```css
-        .myplugin.myclass { ... }
-        ```
-
-        Also, do not try to override the style of existing base classes and elements with plugin injection, but use custom plugin classes so that you will only target what your plugin has specifically added special classes to.
-
     !!! hint "New 1.9.0"
         `wrapper_class`, `template_vars`, `template_env_options`, and `nl2br` option added in `1.9.0`.
 
 
-## update_popup
+### update_popup
 mdpopups.update_popup
 : 
     Updates the current existing popup.  Set [`mdpopups.use_sublime_highlighter`](#mdpopupsuse_sublime_highlighter) to `true` in your `Preferences.sublime-settings` file if you would like to use the Sublime syntax highlighter.
@@ -157,23 +149,6 @@ int mdpopups.add_phantom
     | template_vars | dict | No | None | A dictionary containing template vars.  These can be used in either the CSS or the HTML/Markdown content. |
     | template_env_options | dict | No | None | A dictionary containing options for the Jinja2 template environment. This **only** applies to the **HTML/Markdown** content. Content plugin vars are found under the object: `plugin`. |
     | nl2br | bool | No | True | Determines whether the newline to br Python Markdown extension is enabled or not. |
-
-    !!! caution "Developers Guidelines"
-        For 3119+, it is advised you use the `wrapper_class` option to wrap your content in a div with the give class.  That way you can provide CSS to style your elements via `#!css .wrapper-class .myclass {}`.
-
-        For <3119, when injecting your own CSS classes from a plugin, please namespace them by either giving them a very unique name (preferably with the plugin's name as part of the class) or use an additional namespace class (preferably with the plugin's name) and a specific class.  This way a user can target and override your class styling if desired.
-
-        **Example - Unique Class Name**:
-        ```css
-        .myplugin-myclass { ... }
-        ```
-
-        **Example - Namespace Class**:
-        ```css
-        .myplugin.myclass { ... }
-        ```
-
-        Also, do not try to override the style of existing base classes and elements with plugin injection, but use custom plugin classes so that you will only target what your plugin has specifically added special classes to.
 
     !!! hint "New 1.9.0"
         `wrapper_class`, `template_vars`, `template_env_options`, and `nl2br` option added in `1.9.0`.
@@ -309,7 +284,7 @@ mdpopups.md2html
     | Parameter | Type | Required | Default | Description |
     | --------- | ---- | -------- | ------- | ----------- |
     | view | sublime.View |Yes | | Sublime text View object. |
-    | markup | bool | Yes | | The markup code to be converted. |
+    | markup | string | Yes | | The markup code to be converted. |
     | template_vars | dict | No | None | A dictionary containing template vars.  These can be used in either the CSS or the HTML/Markdown content. |
     | template_env_options | dict | No | None | A dictionary containing options for the Jinja2 template environment. This **only** applies to the **HTML/Markdown** content. Content plugin vars are found under the object: `plugin`. |
     | nl2br | bool | No | True | Determines whether the newline to br Python Markdown extension is enabled or not. |
@@ -430,7 +405,7 @@ mdpopups.syntax_highlight
     | language | string | No | None | Specifies the language to highlight as. |
     | inline | bool |No | False | Will return the code formatted for inline display. |
 
-## get_language_from_view
+### get_language_from_view
 mdpopups.get_language_from_view
 : 
     Allows a user to extract the equivalent language specifier for `mdpopups.syntax_highlight` from a view.  If the language cannot be determined, `None` will be returned.
@@ -478,17 +453,23 @@ Controls whether the Pygments or the native Sublime syntax highlighter is used f
 ```
 
 ### mdpopups.user_css
-Overrides the default CSS theme.  Value should be a relative path pointing to the CSS theme file: `Packages/User/my_custom_theme.css`.  Slashes should be forward slashes. By default, it will point to `Packages/User/mdpopups.css`.
+Overrides the default CSS theme.  Value should be a relative path pointing to the CSS theme file: `Packages/User/my_custom_theme.css`.  Slashes should be forward slashes. By default, it will point to `Packages/User/mdpopups.css`.  User CSS overrides all CSS: base, default, plugin, etc.
 
 ```js
     "mdpopups.use_sublime_highlighter": "Packages/User/mdpopups.css"
 ```
 
 ### mdpopups.default_formatting
-Controls whether mdpopups default formatting (contained in [`base.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/base.css)) will be applied or not.  There is no setting for [`default.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css) as it can be overridden simply by creating your own mdpopups.css file in `Packages/User`.
+Controls whether mdpopups default formatting (contained in [`base.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/base.css)) will be applied or not.
 
 !!! hint "New 1.9.0"
         Added in `1.9.0`.
+
+### mdpopups.default_style
+Controls whether mdpopups default styling (contained in [`default.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css)) will be applied or not.
+
+!!! hint "New 1.13.0"
+        Added in `1.13.0`.
 
 ### mdpopups.sublime_user_lang_map
 This is a special setting allowing the mapping of personal syntax languages which are not yet included or will not be included in the official mapping table.  You can either define your own new entry, or use the name of an existing entry to extend language keywords or syntax languages.  When extending, user keywords and languages will be cycled through first.
@@ -527,13 +508,13 @@ MdPopups has two syntax highlighting methods: one is Pygments, the other is Subl
 ### Pygments
 
 !!! note "Note"
-    Sublime Text 3119 allows for parent and child class in the form `#!css .class1 class2`.  If you are on 3119 or later, Pygments class will be formatted as `#!css .mdpopups .highight .class, .mdpopups .inline-highlight .class`.  Keep this in mind as you are reading.  The main thing you need to know is that you can customize the background and/or main font color by using the following for ST 3119+:
+    Sublime Text 3119 allows for parent and child class in the form `#!css .class1 .class2`.  If you are on 3119 or later, Pygments class will be formatted as `#!css .mdpopups .highight .class, .mdpopups .inline-highlight .class`.  Keep this in mind as you are reading.  The main thing you need to know is that you can customize the background and/or main font color by using the following for ST 3119+:
 
     ```css
     .mdpopups .highlight, .mdpopups .inline-highlight { background-color: #f8f8f8; color: #4d4d4c }
     ```
 
-    Or for ST <3199:
+    On ST < 3119, you cannot use the parent and child classes, so the CSS is limited:
 
     ```css
     .highlight, .inline-highlight { background-color: #f8f8f8; color: #4d4d4c }
@@ -646,9 +627,12 @@ MdPopups provides a simple base CSS that styles the basic HTML tags that can be 
 Templates are used so that a user can easily tap into all the colors, color filters, and other useful logic to control their tooltips and phantoms in one place without having to hard code a specific CSS for a specific color scheme.  Even though a plugin can additionally insert new scopes on demand when calling the popup API, a user can override anything and everything by providing their own [CSS template](#mdpopupsuser_css).  The template is fairly powerful and flexible.
 
 ## CSS Templates
-MdPoups provides a [`base.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/base.css) that formats the general look of the HTML elements (padding, size, etc.).  On top of that, it provides a [`default.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css) template which applies more superficial styling such as colors, Pygments themes, etc.  It uses the Jinja2 template environment to give direct access to things like color scheme colors, names, and other useful information.  In general, `default.css` should provide most of what everyone **needs**.  But if you **want** greater control, you can create your own CSS template which MdPopups will use instead of `default.css`.
+MdPoups provides a [`base.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/base.css) that formats the general look of the HTML elements (padding, size, etc.).  On top of that, it provides a [`default.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css) template which applies more superficial styling such as colors, Pygments themes, etc.  It uses the Jinja2 template environment to give direct access to things like color scheme colors, names, and other useful information.  In general, `base.css` and `default.css` should provide most of what everyone **needs**.  But if you **want** greater control, you can create your own CSS template which MdPopups which will override anything in `base.css` and `default.css`.
 
 All variables and filters below only apply the CSS, not the content.  The content only receives the variables **you** give it via `template_vars` and any options and filters you give it via the `template_env_options`.  The css will receive the variables fed in through `template_vars`, and in the case of CSS and content, both will place the plugin variables under the object `plugin`.
+
+!!! hint "New 1.13.0"
+    User CSS now overrides `base.css` and `default.css` instead of replacing `default.css`.  You can get the same effect as legacy by disabling [default styling](#) and creating your own user CSS.
 
 ### Sizes Relative to View's Font Size
 
@@ -940,6 +924,13 @@ var.default_formatting
 
     !!! hint "New 1.9.0"
         Added in `1.9.0`.
+
+var.default_style
+: 
+    Flag specifying whether default styling is being used.  See [mdpopups.default_style](#mdpopupsdefault_style) for how to control this flag.  And see [`default.css`](https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css) for an example of how it is used.
+
+    !!! hint "New 1.13.0"
+        Added in `1.13.0`.
 
 var.is_dark | var.is_light
 : 
