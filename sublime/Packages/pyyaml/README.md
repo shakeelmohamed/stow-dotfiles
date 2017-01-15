@@ -14,7 +14,7 @@ at a later point.
 
 this repo | pypi 
 ---- | ----
-![latest tag](https://img.shields.io/github/tag/packagecontrol/pyyaml.svg) | [![pypi](https://pypip.in/version/pyyaml/badge.svg)][pypi]
+![latest tag](https://img.shields.io/github/tag/packagecontrol/pyyaml.svg) | [![pypi](https://img.shields.io/pypi/v/pyyaml.svg)][pypi]
 
 
 ## How to use *pyyaml* as a dependency
