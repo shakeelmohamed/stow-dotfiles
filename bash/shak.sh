@@ -5,7 +5,7 @@ echo "Shak shock."
 ###################
 
 iphonebackups() {
-    cd "/Users/smohamed/Library/Application Support/MobileSync/Backup"
+    cd "$HOME/Library/Application Support/MobileSync/Backup"
 }
 
 actuallyrm() {
