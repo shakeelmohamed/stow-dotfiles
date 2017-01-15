@@ -15,5 +15,5 @@ mou
 omnidisksweeper
 recordit
 rescuetime
-sublime-text-dev
+sublime-text
 vlc
