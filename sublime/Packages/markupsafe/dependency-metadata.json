@@ -1,1 +1,1 @@
-{"description": "Python MarkupSafe module", "version": "0.23.0", "platforms": ["*"], "sublime_text": "*", "url": "https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-markupsafe/issues"}
+{"description": "Python MarkupSafe module", "sublime_text": "*", "version": "0.23.0", "url": "https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-markupsafe/issues", "platforms": ["*"]}
