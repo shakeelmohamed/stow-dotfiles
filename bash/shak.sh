@@ -9,7 +9,7 @@ iphonebackups() {
 }
 
 actuallyrm() {
-    rm $@
+    /bin/rm $@
 }
 
 # Moves to trash instead of wiping completely, npm install -g trash-cli
@@ -172,11 +172,6 @@ alias spl="echo $SPLUNK_HOME"
 # TODO: organize
 ###################
 
-# Sublime text! - this should happen automatically with cask
-# TODO: add a step in setup script to symlink this
-#ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
-# alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-
 # Android things
 export ANDROID_HOME="$HOME/Android"
 export PATH=$PATH:$ANDROID_HOME"/tools":$ANDROID_HOME"/platform-tools"
@@ -272,9 +267,6 @@ clonego() {
     fi
 }
 alias tempclone=clonego
-
-alias virus.exe="open $HOME/RemoveSymantecMacFiles/RemoveSymantecMacFiles.command"
-alias byegp="sudo /Applications/GlobalProtect.app/Contents/Resources/uninstall_gp.sh"
 
 alias desk="cd $HOME/Desktop"
 
