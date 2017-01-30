@@ -8,13 +8,14 @@ mkdir -p $HOME/work/git
 # git clone git@github.com/shakeelmohamed/dotfiles.git
 
 # Install zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-stow bash -t $HOME
-rm $HOME/.zshrc
-stow zsh -t $HOME
+#sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# Install brew
+#/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-# Get the Monokai terminal theme
-open ./Monokai.terminal
+# setup GH token here
+# https://github.com/settings/tokens/new?scopes=gist,public_repo&description=Homebrew
+#and then set the token as: export HOMEBREW_GITHUB_API_TOKEN="your_new_token"
+#Install brew/cask stuff here
 
 # Install all homebrew packages
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -23,18 +24,27 @@ done < "./brew.txt"
 
 # Install all cask packages
 while IFS='' read -r line || [[ -n "$line" ]]; do
-    brew install "$line"
+    brew cask install "$line"
 done < "./cask.txt"
 
 # SSH config
 stow ssh -t $HOME/
 
-# Node.js setup
-nvm install 6
-npm install -g trash-cli
+stow bash -t $HOME
+rm $HOME/.zshrc
+stow zsh -t $HOME
 
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 
+# Node.js setup
+nvm install 6
+npm install -g trash-cli
+
 # bro pages, simpler man pages
 gem install bropages
+
+# TODO: CLI tool for installing things from app store
+
+# Get the Monokai terminal theme - this should be last
+#open ./Monokai.terminal
