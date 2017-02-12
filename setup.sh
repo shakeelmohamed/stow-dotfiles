@@ -1,6 +1,9 @@
 # Basic file system setup
 mkdir -p $HOME/work/git
 
+# Remove Message of the day prompt
+touch $HOME/.hushlogin
+
 # TODO: add ssh setup script from github.com/shakeelmohamed/dotfiles
 # TODO: rename that repo to dotfiles-old
 # TODO: rename this repo to dotfiles
