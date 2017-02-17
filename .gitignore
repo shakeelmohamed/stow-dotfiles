@@ -9,3 +9,6 @@ Package Control.user-ca-bundle
 Package Control.last-run
 sublime/Packages/User/sftp_servers
 oscrypto-ca-bundle.crt
+ssh/.ssh/known_hosts
+ssh/.ssh/id_rsa
+ssh/.ssh/id_rsa.pub

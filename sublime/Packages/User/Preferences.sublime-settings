@@ -28,7 +28,14 @@
 	"dictionary": "Packages/Language - English/en_US.dic",
 	"draw_centered": true,
 	"find_selected_text": false,
-	"folder_exclude_patterns": [".svn", ".git", ".hg", "CVS", "node_modules"],
+	"folder_exclude_patterns":
+	[
+		".svn",
+		".git",
+		".hg",
+		"CVS",
+		"node_modules"
+	],
 	"font_size": 14,
 	"highlight_line": true,
 	"ignored_packages":
