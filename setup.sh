@@ -48,6 +48,7 @@ npm install -g trash-cli
 sudo gem install bropages
 
 # TODO: CLI tool for installing things from app store
+# https://github.com/herrbischoff/awesome-osx-command-line
 
 # Get the Monokai terminal theme - this should be last
 open ./Monokai.terminal
