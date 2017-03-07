@@ -21,6 +21,7 @@ touch $HOME/.hushlogin
 #and then set the token as: export HOMEBREW_GITHUB_API_TOKEN="your_new_token"
 
 # Install all homebrew packages
+# TODO: use a brewfile https://github.com/ahmedelgabri/dotfiles/blob/master/homebrew/Brewfile
 while IFS='' read -r line || [[ -n "$line" ]]; do
     brew install "$line"
 done < "./brew.txt"
@@ -48,6 +49,7 @@ npm install -g trash-cli
 sudo gem install bropages
 
 # TODO: CLI tool for installing things from app store
+# https://github.com/herrbischoff/awesome-osx-command-line
 
 # Get the Monokai terminal theme - this should be last
 open ./Monokai.terminal
