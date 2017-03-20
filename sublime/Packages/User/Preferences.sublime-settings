@@ -40,7 +40,9 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"CSS3",
 		"Gist",
+		"GitGutter",
 		"HTML-CSS-JS Prettify",
 		"JSHint",
 		"JSONLint",

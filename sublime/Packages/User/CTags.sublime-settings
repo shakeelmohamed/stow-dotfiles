@@ -1,4 +1,5 @@
 {
 	"autocomplete": false,
+    "command": "/usr/local/bin/ctags",
     "tag_file" : "tags"
 }

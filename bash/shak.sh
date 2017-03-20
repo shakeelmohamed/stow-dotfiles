@@ -229,7 +229,8 @@ sourcetree() {
 alias srctree=sourcetree
 alias srct=sourcetree
 
-alias stash="cd $HOME/work/stash"
+alias stash="cd $HOME/work/bitbucket"
+alias bitbucket=stash
 
 pycharm() {
     if [ "$#" -eq 0 ]; then

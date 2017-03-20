@@ -1,5 +1,6 @@
 cask
 cmake
+ctags
 emacs
 gdbm
 geoip
