@@ -38,6 +38,8 @@ stow bash -t $HOME
 rm $HOME/.zshrc
 stow zsh -t $HOME
 
+stow git -t $HOME/
+
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 

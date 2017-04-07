@@ -1,9 +1,12 @@
 cask
+cmake
+ctags
 emacs
 gdbm
 geoip
 git
 gnupg
+ninja
 nvm
 openssl
 python
