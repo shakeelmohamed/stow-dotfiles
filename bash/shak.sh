@@ -101,6 +101,7 @@ alias gb="git rev-parse --abbrev-ref HEAD"
 alias gf="git fetch"
 alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
+alias gdp="git diff -p"
 # See 1 git commit in the future
 alias gitpeek="git show HEAD@{1}"
 alias gshow="git show $@"
