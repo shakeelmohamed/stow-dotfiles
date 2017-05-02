@@ -94,6 +94,14 @@ gclone() {
     cd $repo_name
 }
 
+stashclone() {
+    cd $HOME/work/bitbucket
+    git clone $@
+    repo_name=$(echo $1 | sed 's/\.git$//' | sed 's/.*\///')
+    cd $repo_name
+}
+alias bbclone=stashclone
+
 alias gs="git status"
 alias gdt="git difftool $@"
 alias gdc="git diff --cached $@"
