@@ -15,7 +15,8 @@
 		"metadata",
 		"Flippy",
 		"bool",
-		"username"
+		"username",
+		"programatically"
 	],
 	"binary_file_patterns":
 	[

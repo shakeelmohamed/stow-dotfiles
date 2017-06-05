@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"ANSIescape",
+		"ANTLR syntax highlight",
 		"BracketHighlighter",
 		"C# Snippets",
 		"ChannelRepositoryTools",
