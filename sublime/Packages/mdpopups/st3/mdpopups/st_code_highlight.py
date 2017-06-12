@@ -31,13 +31,11 @@ INLINE_BODY_START = '<code class="inline-highlight">'
 BODY_START = '<div class="highlight"><pre>'
 LINE = '%(code)s<br>'
 INLINE_LINE = '%(code)s'
-CODE = '<span %(class)sstyle="color: %(color)s;">%(content)s</span>'
-CODEBG = '<span %(class)sstyle="background-color: %(highlight)s; color: %(color)s;">%(content)s</span>'
+CODE = '<span style="color: %(color)s;%(style)s">%(content)s</span>'
+CODEBG = '<span style="background-color: %(highlight)s; color: %(color)s;%(style)s">%(content)s</span>'
 BODY_END = '</pre></div>\n'
 INLINE_BODY_END = '</code>'
-
-USE_ST_SYNTAX = int(sublime.version()) >= 3084
-ST_LANGUAGES = ('.sublime-syntax', '.tmLanguage') if USE_ST_SYNTAX else ('.tmLanguage',)
+ST_LANGUAGES = ('.sublime-syntax', '.tmLanguage')
 
 
 class SublimeHighlight(object):
@@ -101,7 +99,7 @@ class SublimeHighlight(object):
         }
 
         return re.sub(
-            (r'(?!\s($|\S))\s' if self.inline else r'\s'),
+            (r'(?!\s($|\S))\s' if self.inline or self.code_wrap else r'\s'),
             '&nbsp;',
             ''.join(
                 encode_table.get(c, c) for c in text
@@ -114,18 +112,19 @@ class SublimeHighlight(object):
         if empty:
             text = '&nbsp;'
 
-        if self.inline:
-            style += " inline-highlight"
+        css_style = ''
+        if style and style == 'bold':
+            css_style += ' font-weight: bold;'
+        if style and style == 'italic':
+            css_style += ' font-style: italic;'
 
         if bgcolor is None:
             code = CODE % {
-                "color": color, "content": text,
-                "class": "class=\"%s\" " % style if style else ''
+                "color": color, "content": text, "style": css_style
             }
         else:
             code = CODEBG % {
-                "highlight": bgcolor, "color": color, "content": text,
-                "class": "class=\"%s\" " % style if style else ''
+                "highlight": bgcolor, "color": color, "content": text, "style": css_style
             }
 
         line.append(code)
@@ -168,7 +167,8 @@ class SublimeHighlight(object):
         """Write the body of the HTML."""
 
         processed_rows = ""
-        self.html.append(INLINE_BODY_START if self.inline else BODY_START)
+        if not self.no_wrap:
+            self.html.append(INLINE_BODY_START if self.inline else BODY_START)
 
         # Convert view to HTML
         self.setup_print_block(self.view.sel()[0])
@@ -177,7 +177,8 @@ class SublimeHighlight(object):
         processed_rows += str(self.curr_row) + "],"
 
         # Write empty line to allow copying of last line and line number without issue
-        self.html.append(INLINE_BODY_END if self.inline else BODY_END)
+        if not self.no_wrap:
+            self.html.append(INLINE_BODY_END if self.inline else BODY_END)
 
     def set_view(self, src, lang):
         """Setup view for conversion."""
@@ -226,12 +227,14 @@ class SublimeHighlight(object):
                     continue
                 self.view.set_syntax_file(sytnax_file)
 
-    def syntax_highlight(self, src, lang, hl_lines=[], inline=False):
+    def syntax_highlight(self, src, lang, hl_lines=[], inline=False, no_wrap=False, code_wrap=False):
         """Syntax Highlight."""
 
         self.set_view(src, 'text' if not lang else lang)
         self.inline = inline
         self.hl_lines = hl_lines
+        self.no_wrap = no_wrap
+        self.code_wrap = code_wrap
         self.setup()
         self.html = []
         self.write_body()

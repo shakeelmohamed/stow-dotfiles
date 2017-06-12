@@ -180,7 +180,6 @@ re_color = re.compile(r'(?<!-)(color\s*:\s*#[A-Fa-z\d]{6})')
 re_bgcolor = re.compile(r'(?<!-)(background(?:-color)?\s*:\s*#[A-Fa-z\d]{6})')
 re_pygments_selectors = re.compile(r'\.dummy (\.[a-zA-Z\d]+) ')
 CODE_BLOCKS = '.mdpopups .highlight, .mdpopups .inline-highlight { %s; %s; }'
-CODE_BLOCKS_LEGACY = '.highlight, .inline-highlight { %s; %s; }'
 
 
 def fmt_float(f, p=0):
@@ -205,16 +204,15 @@ class Scheme2CSS(object):
         """Initialize."""
 
         self.csm = ColorSchemeMatcher(scheme_file)
-        self.text = ''
-        self.colors = OrderedDict()
         self.scheme_file = scheme_file
         self.css_type = INVALID
-        self.gen_css()
+        self.setup()
 
     def guess_style(self, scope, selected=False, explicit_background=False):
         """Guess color."""
 
-        return self.csm.guess_color(scope, selected, explicit_background)
+        # Remove leading '.' to account for old style CSS class scopes.
+        return self.csm.guess_color(scope.lstrip('.'), selected, explicit_background)
 
     def parse_global(self):
         """Parse global settings."""
@@ -228,7 +226,7 @@ class Scheme2CSS(object):
         # Get general theme colors from color scheme file
         self.bground = self.process_color(color_settings.get("background", '#FFFFFF'), simple_strip=True)
         rgba = RGBA(self.bground)
-        self.lums = rgba.get_luminance()
+        self.lums = rgba.get_true_luminance()
         is_dark = self.lums <= LUM_MIDPOINT
         settings = sublime.load_settings("Preferences.sublime-settings")
         self.variables = {
@@ -237,40 +235,11 @@ class Scheme2CSS(object):
             "sublime_version": int(sublime.version()),
             "mdpopups_version": ver.version(),
             "color_scheme": self.scheme_file,
-            "use_pygments": not settings.get('mdpopups.use_sublime_highlighter', False),
-            "default_formatting": settings.get('mdpopups.default_formatting', True),
+            "use_pygments": not settings.get('mdpopups.use_sublime_highlighter', True),
             "default_style": settings.get('mdpopups.default_style', True)
         }
         self.html_border = rgba.get_rgb()
         self.fground = self.process_color(color_settings.get("foreground", '#000000'))
-
-        # Intialize colors with the global foreground, background, and fake html_border
-        self.colors = OrderedDict()
-        self.colors['.foreground'] = OrderedDict([('color', 'color: %s; ' % self.fground)])
-        self.colors['.background'] = OrderedDict([('background-color', 'background-color: %s; ' % self.bground)])
-
-    def parse_settings(self):
-        """Parse the color scheme."""
-
-        for tscope in sorted(all_scopes):
-            scope = self.guess_style(tscope, explicit_background=True)
-            key_scope = '.' + tscope
-            color = scope.fg_simulated
-            bgcolor = scope.bg_simulated
-            if color or bgcolor:
-                self.colors[key_scope] = OrderedDict()
-                if color:
-                    self.colors[key_scope]['color'] = 'color: %s; ' % color
-                if bgcolor:
-                    self.colors[key_scope]['background-color'] = 'background-color: %s; ' % bgcolor
-
-                for s in scope.style.split(' '):
-                    if "bold" in s:
-                        self.colors[key_scope]['font-weight'] = 'font-weight: %s; ' % 'bold'
-                    if "italic" in s:
-                        self.colors[key_scope]['font-style'] = 'font-style: %s; ' % 'italic'
-                    if "underline" in s and False:  # disabled
-                        self.colors[key_scope]['text-decoration'] = 'text-decoration: %s; ' % 'underline'
 
     def process_color(self, color, simple_strip=False):
         """
@@ -295,19 +264,10 @@ class Scheme2CSS(object):
 
         return rgba.get_rgb()
 
-    def gen_css(self):
-        """Generate the CSS and the associated template environment."""
+    def setup(self):
+        """Setup the template environment."""
 
-        self.colors = OrderedDict()
         self.parse_global()
-        self.parse_settings()
-
-        # Assemble the CSS text
-        text = []
-        css_entry = '%s { %s}' if int(sublime.version()) < 3119 else '.mdpopups %s { %s}'
-        for k, v in self.colors.items():
-            text.append(css_entry % (k, ''.join(v.values())))
-        self.text = '\n'.join(text)
 
         # Create Jinja template
         self.env = jinja2.Environment()
@@ -324,7 +284,6 @@ class Scheme2CSS(object):
         self.env.filters['sepia'] = self.sepia
         self.env.filters['fade'] = self.fade
         self.env.filters['getcss'] = self.read_css
-        self.env.filters['relativesize'] = self.relativesize
 
     def read_css(self, css):
         """Read the CSS file."""
@@ -340,46 +299,9 @@ class Scheme2CSS(object):
 
             return self.env.from_string(
                 clean_css(sublime.load_resource(css))
-            ).render(var=var, colors=self.colors, plugin=self.plugin_vars)
+            ).render(var=var, plugin=self.plugin_vars)
         except Exception:
             return ''
-
-    def relativesize(self, css, *args):
-        """Create a relative font from the current font."""
-
-        # Handle things the new way '+1.25em'
-        try:
-            if css.endswith(('em', 'px', 'pt')):
-                offset = css[:-2]
-                unit = css[-2:]
-                integer = bool(len(args) and args[0])
-            else:
-                offset = css
-                unit = args[0]
-                integer = False
-                assert isinstance(unit, str) and unit in ('em', 'px', 'pt'), 'Bad Arguments!'
-        except Exception:
-            return css
-
-        if unit == 'em':
-            size = self.font_size / 16.0
-        elif unit == 'px':
-            size = self.font_size
-        elif unit == 'pt':
-            size = (self.font_size / 16.0) * 12.0
-
-        precision = 0 if integer else 3
-
-        op = offset[0]
-        if op in ('+', '-', '*'):
-            value = size * float(offset[1:]) if op == '*' else size + float(offset)
-        else:
-            value = 0.0
-
-        if value < 0.0:
-            value = 0.0
-
-        return '%s%s' % (fmt_float(value, precision), unit)
 
     def fade(self, css, factor):
         """
@@ -390,10 +312,8 @@ class Scheme2CSS(object):
         try:
             parts = [c.strip('; ') for c in css.split(':')]
             if len(parts) == 2 and parts[0] in ('background-color', 'color'):
-                bgcolor = self.colors.get('.background').get('background-color')
-                bgparts = [c.strip('; ') for c in bgcolor.split(':')]
                 rgba = RGBA(parts[1] + "%02f" % int(255.0 * max(min(float(factor), 1.0), 0.0)))
-                rgba.apply_alpha(bgparts[1])
+                rgba.apply_alpha(self.bground)
                 return '%s: %s; ' % (parts[0], rgba.get_rgb())
         except Exception:
             pass
@@ -482,7 +402,7 @@ class Scheme2CSS(object):
         parts = [c.strip('; ') for c in css.split(':')]
         if len(parts) == 2 and parts[0] == 'background-color':
             parts[0] = 'color'
-            return '%s: %s ' % (parts[0], parts[1])
+            return '%s: %s; ' % (parts[0], parts[1])
         return css
 
     def to_bg(self, css):
@@ -499,49 +419,35 @@ class Scheme2CSS(object):
 
         return get_pygments(style)
 
-    def retrieve_selector(self, selector, key=None):
+    def retrieve_selector(self, selector, key=None, explicit_background=True):
         """Get the CSS key, value pairs for a rule."""
 
-        wanted = [s.strip() for s in selector.split(',')]
-        sel = {}
-        for w in wanted:
-            if w in self.colors:
-                sel = self.colors[w]
-                break
-        return ''.join(sel.values()) if key is None else sel.get(key, '')
+        scope = self.guess_style(selector, explicit_background=explicit_background)
+        color = scope.fg_simulated
+        bgcolor = scope.bg_simulated
+        css = []
+        if color and (key is None or key == 'color'):
+            css.append('color: %s' % color)
+        if bgcolor and (key is None or key == 'background-color'):
+            css.append('background-color: %s' % bgcolor)
+        for s in scope.style.split(' '):
+            if "bold" in s and (key is None or key == 'font-weight'):
+                css.append('font-weight: bold')
+            if "italic" in s and (key is None or key == 'font-style'):
+                css.append('font-style: italic')
+            if "underline" in s and (key is None or key == 'text-decoration') and False:  # disabled
+                css.append('text-decoration: underline')
+        text = ';'.join(css)
+        if text:
+            text += ';'
+        return text
 
-    def get_font_scale(self):
-        """Get font scale."""
-
-        scale = 1.0
-        try:
-            pref_scale = float(sublime.load_settings('Preferences.sublime-settings').get('mdpopups.font_scale', 0.0))
-        except Exception:
-            pref_scale = 0.0
-
-        if sublime.platform() == 'windows' and pref_scale <= 0.0:
-            try:
-                import ctypes
-
-                logpixelsy = 90
-                dc = ctypes.windll.user32.GetDC(0)
-                height = ctypes.windll.gdi32.GetDeviceCaps(dc, logpixelsy)
-                scale = float(height) / 96.0
-                ctypes.windll.user32.ReleaseDC(0, dc)
-            except Exception:
-                pass
-        elif pref_scale > 0.0:
-            scale = pref_scale
-
-        return scale
-
-    def apply_template(self, css, css_type, font_size, template_vars=None):
+    def apply_template(self, css, css_type, template_vars=None):
         """Apply template to css."""
 
         if css_type not in (POPUP, PHANTOM):
             return ''
 
-        self.font_size = float(font_size) * self.get_font_scale()
         self.css_type = css_type
 
         var = copy.copy(self.variables)
@@ -557,12 +463,43 @@ class Scheme2CSS(object):
             }
         )
 
-        return self.env.from_string(css).render(var=var, colors=self.colors, plugin=self.plugin_vars)
+        return self.env.from_string(css).render(var=var, plugin=self.plugin_vars)
 
     def get_css(self):
         """Get css."""
 
-        return self.text
+        # Intialize colors with the global foreground, background, and fake html_border
+        colors = OrderedDict()
+        colors['.foreground'] = OrderedDict([('color', self.fground)])
+        colors['.background'] = OrderedDict([('background-color', self.bground)])
+
+        # Assemble the rest of the CSS
+        for tscope in sorted(all_scopes):
+            scope = self.guess_style(tscope, explicit_background=True)
+            key_scope = '.' + tscope
+            color = scope.fg_simulated
+            bgcolor = scope.bg_simulated
+            if color or bgcolor:
+                colors[key_scope] = OrderedDict()
+                if color:
+                    colors[key_scope]['color'] = color
+                if bgcolor:
+                    colors[key_scope]['background-color'] = bgcolor
+
+                for s in scope.style.split(' '):
+                    if "bold" in s:
+                        colors[key_scope]['font-weight'] = 'bold'
+                    if "italic" in s:
+                        colors[key_scope]['font-style'] = 'italic'
+                    if "underline" in s and False:  # disabled
+                        colors[key_scope]['text-decoration'] = 'underline'
+
+        text = []
+        css_entry = '%s { %s}'
+        for k, v in colors.items():
+            text.append(css_entry % (k, ''.join(['%s: %s;' % (k1, v1) for k1, v1 in v.items()])))
+
+        return '\n'.join(text) + '\n'
 
 
 def get_pygments(style):
@@ -610,7 +547,7 @@ def get_pygments(style):
 
     # Reassemble replacing .highlight {...} with .codehilite, .inlinehilite {...}
     # All other classes will be left bare with only their syntax class.
-    code_blocks = CODE_BLOCKS_LEGACY if int(sublime.version()) < 3119 else CODE_BLOCKS
+    code_blocks = CODE_BLOCKS
     if m:
         css = clean_css(
             (
@@ -627,7 +564,4 @@ def get_pygments(style):
             )
         )
 
-    if int(sublime.version()) < 3119:
-        return css.replace('.dummy ', '')
-    else:
-        return re_pygments_selectors.sub(r'.mdpopups .highlight \1, .mdpopups .inline-highlight \1', css)
+    return re_pygments_selectors.sub(r'.mdpopups .highlight \1, .mdpopups .inline-highlight \1', css)

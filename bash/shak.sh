@@ -252,7 +252,7 @@ intellij() {
     if [ "$#" -eq 0 ]; then
         1="$(pwd)"
     fi
-    open -a "IntelliJ IDEA 15 CE" $1
+    open -a "IntelliJ IDEA" $1
 }
 
 export RPI_MEDIA="$HOME/desktop/videos"
@@ -301,3 +301,4 @@ alias update="upgrade_oh_my_zsh"
 # Who has time to type brew cask every time?
 alias cask="brew cask $@"
 
+# export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home"

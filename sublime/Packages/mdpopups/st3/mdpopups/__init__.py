@@ -29,17 +29,13 @@ try:
 except Exception:
     bs4 = None
 
-PHANTOM_SUPPORT = int(sublime.version()) >= 3118
-BASE_CSS = 'Packages/mdpopups/css/base.css'
 DEFAULT_CSS = 'Packages/mdpopups/css/default.css'
 DEFAULT_USER_CSS = 'Packages/User/mdpopups.css'
-base_css = None
 IDK = '''
 <style>html {background-color: #333; color: red}</style>
 <div><p>¯\_(ツ)_/¯'</p></div>
 '''
 HL_SETTING = 'mdpopups.use_sublime_highlighter'
-FORMAT_SETTING = 'mdpopups.default_formatting'
 STYLE_SETTING = 'mdpopups.default_style'
 RE_BAD_ENTITIES = re.compile(r'(&(?!amp;|lt;|gt;|nbsp;)(?:\w+;|#\d+;))')
 
@@ -105,8 +101,6 @@ def _clear_cache():
 
     global _scheme_cache
     global _highlighter_cache
-    global base_css
-    base_css = None
     _scheme_cache = OrderedDict()
     _highlighter_cache = OrderedDict()
 
@@ -168,8 +162,7 @@ def _get_scheme(view):
             # Check if cache expired or user changed pygments setting.
             if (
                 _is_cache_expired(t) or
-                obj.variables.get('use_pygments', True) != (not settings.get(HL_SETTING, False)) or
-                obj.variables.get('default_formatting', True) != settings.get(FORMAT_SETTING, True) or
+                obj.variables.get('use_pygments', False) != (not settings.get(HL_SETTING, True)) or
                 obj.variables.get('default_style', True) != settings.get(STYLE_SETTING, True)
             ):
                 obj = None
@@ -261,20 +254,13 @@ class _MdWrapper(markdown.Markdown):
 def _get_theme(view, css=None, css_type=POPUP, template_vars=None):
     """Get the theme."""
 
-    global base_css
-    if base_css is None:
-        base_css = clean_css(sublime.load_resource(BASE_CSS))
     obj, user_css, default_css = _get_scheme(view)
-    font_size = view.settings().get('font_size', 12)
     try:
         return obj.apply_template(
-            base_css +
-            default_css +
-            obj.get_css() +
-            (clean_css(css) if css else '') +
+            default_css + '\n' +
+            ((clean_css(css) + '\n') if css else '') +
             user_css,
             css_type,
-            font_size,
             template_vars
         ) if obj is not None else ''
     except Exception:
@@ -298,7 +284,8 @@ def _remove_entities(text):
 
 def _create_html(
     view, content, md=True, css=None, debug=False, css_type=POPUP,
-    wrapper_class=None, template_vars=None, template_env_options=None, nl2br=True
+    wrapper_class=None, template_vars=None, template_env_options=None, nl2br=True,
+    allow_code_wrap=False
 ):
     """Create html from content."""
 
@@ -316,7 +303,8 @@ def _create_html(
     if md:
         content = md2html(
             view, content, template_vars=template_vars,
-            template_env_options=template_env_options, nl2br=nl2br
+            template_env_options=template_env_options, nl2br=nl2br,
+            allow_code_wrap=allow_code_wrap
         )
     else:
         content = _markup_template(content, template_vars, template_env_options)
@@ -359,7 +347,10 @@ def version():
     return ver.version()
 
 
-def md2html(view, markup, template_vars=None, template_env_options=None, nl2br=True):
+def md2html(
+    view, markup, template_vars=None, template_env_options=None,
+    nl2br=True, allow_code_wrap=False
+):
     """Convert Markdown to HTML."""
 
     if _get_setting('mdpopups.use_sublime_highlighter'):
@@ -369,7 +360,7 @@ def md2html(view, markup, template_vars=None, template_env_options=None, nl2br=T
 
     extensions = [
         "markdown.extensions.attr_list",
-        "markdown.extensions.codehilite",
+        "mdpopups.mdx.highlight",
         "mdpopups.mdx.superfences",
         "mdpopups.mdx.betterem",
         "mdpopups.mdx.magiclink",
@@ -385,19 +376,16 @@ def md2html(view, markup, template_vars=None, template_env_options=None, nl2br=T
     configs = {
         "mdpopups.mdx.inlinehilite": {
             "style_plain_text": True,
-            "css_class": "inline-highlight",
-            "use_codehilite_settings": False,
-            "guess_lang": False,
-            "sublime_hl": sublime_hl
-        },
-        "markdown.extensions.codehilite": {
-            "guess_lang": False,
-            "css_class": "highlight"
+            "css_class": "inline-highlight"
         },
         "mdpopups.mdx.superfences": {
-            "uml_flow": False,
-            "uml_sequence": False,
-            "sublime_hl": sublime_hl
+            "custom_fences": [],
+            "css_class": "highlight"
+        },
+        "mdpopups.mdx.highlight": {
+            "sublime_hl": sublime_hl,
+            "sublime_wrap": allow_code_wrap,
+            "guess_lang": False
         }
     }
 
@@ -473,15 +461,19 @@ def get_language_from_view(view):
     return lang
 
 
-def syntax_highlight(view, src, language=None, inline=False):
+def syntax_highlight(view, src, language=None, inline=False, allow_code_wrap=False):
     """Syntax highlighting for code."""
 
     try:
         if _get_setting('mdpopups.use_sublime_highlighter'):
             highlighter = _get_sublime_highlighter(view)
-            code = highlighter.syntax_highlight(src, language, inline=inline)
+            code = highlighter.syntax_highlight(
+                src, language, inline=inline, code_wrap=(not inline and allow_code_wrap)
+            )
         else:
-            code = pyg_syntax_hl(src, language, inline=inline)
+            code = pyg_syntax_hl(
+                src, language, inline=inline, code_wrap=(not inline and allow_code_wrap)
+            )
     except Exception:
         code = src
         _log('Failed to highlight code!')
@@ -520,7 +512,8 @@ def hide_popup(view):
 
 def update_popup(
     view, content, md=True, css=None, wrapper_class=None,
-    template_vars=None, template_env_options=None, nl2br=True
+    template_vars=None, template_env_options=None, nl2br=True,
+    allow_code_wrap=False
 ):
     """Update the popup."""
 
@@ -532,7 +525,8 @@ def update_popup(
     try:
         html = _create_html(
             view, content, md, css, css_type=POPUP, wrapper_class=wrapper_class,
-            template_vars=template_vars, template_env_options=template_env_options, nl2br=nl2br
+            template_vars=template_vars, template_env_options=template_env_options, nl2br=nl2br,
+            allow_code_wrap=allow_code_wrap
         )
     except Exception:
         _log(traceback.format_exc())
@@ -545,7 +539,8 @@ def show_popup(
     view, content, md=True, css=None,
     flags=0, location=-1, max_width=320, max_height=240,
     on_navigate=None, on_hide=None, wrapper_class=None,
-    template_vars=None, template_env_options=None, nl2br=True
+    template_vars=None, template_env_options=None, nl2br=True,
+    allow_code_wrap=False
 ):
     """Parse the color scheme if needed and show the styled pop-up."""
 
@@ -561,7 +556,7 @@ def show_popup(
         html = _create_html(
             view, content, md, css, css_type=POPUP, wrapper_class=wrapper_class,
             template_vars=template_vars, template_env_options=template_env_options,
-            nl2br=nl2br
+            nl2br=nl2br, allow_code_wrap=allow_code_wrap
         )
     except Exception:
         _log(traceback.format_exc())
@@ -579,136 +574,147 @@ def is_popup_visible(view):
     return view.is_popup_visible()
 
 
-if PHANTOM_SUPPORT:
-    def add_phantom(
-        view, key, region, content, layout, md=True,
+def add_phantom(
+    view, key, region, content, layout, md=True,
+    css=None, on_navigate=None, wrapper_class=None,
+    template_vars=None, template_env_options=None, nl2br=True,
+    allow_code_wrap=False
+):
+    """Add a phantom and return phantom id."""
+
+    disabled = _get_setting('mdpopups.disable', False)
+    if disabled:
+        _debug('Phantoms disabled', WARNING)
+        return
+
+    try:
+        html = _create_html(
+            view, content, md, css, css_type=PHANTOM, wrapper_class=wrapper_class,
+            template_vars=template_vars, template_env_options=template_env_options,
+            nl2br=nl2br, allow_code_wrap=allow_code_wrap
+        )
+    except Exception:
+        _log(traceback.format_exc())
+        html = IDK
+
+    return view.add_phantom(key, region, html, layout, on_navigate)
+
+
+def erase_phantoms(view, key):
+    """Erase phantoms."""
+
+    view.erase_phantoms(key)
+
+
+def erase_phantom_by_id(view, pid):
+    """Erase phantom by ID."""
+
+    view.erase_phantom_by_id(pid)
+
+
+def query_phantom(view, pid):
+    """Query phantom."""
+
+    return view.query_phantom(pid)
+
+
+def query_phantoms(view, pids):
+    """Query phantoms."""
+
+    return view.query_phantoms(pids)
+
+
+class Phantom(sublime.Phantom):
+    """A phantom object."""
+
+    def __init__(
+        self, region, content, layout, md=True,
         css=None, on_navigate=None, wrapper_class=None,
-        template_vars=None, template_env_options=None, nl2br=True
+        template_vars=None, template_env_options=None, nl2br=True,
+        allow_code_wrap=False
     ):
-        """Add a phantom and return phantom id."""
+        """Initialize."""
 
-        disabled = _get_setting('mdpopups.disable', False)
-        if disabled:
-            _debug('Phantoms disabled', WARNING)
-            return
+        super().__init__(region, content, layout, on_navigate)
+        self.md = md
+        self.css = css
+        self.wrapper_class = wrapper_class
+        self.template_vars = template_vars
+        self.template_env_options = template_env_options
+        self.nl2br = nl2br
+        self.allow_code_wrap = allow_code_wrap
 
-        try:
-            html = _create_html(
-                view, content, md, css, css_type=PHANTOM, wrapper_class=wrapper_class,
-                template_vars=template_vars, template_env_options=template_env_options,
-                nl2br=nl2br
-            )
-        except Exception:
-            _log(traceback.format_exc())
-            html = IDK
+    def __eq__(self, rhs):
+        """Check if phantoms are equal."""
 
-        return view.add_phantom(key, region, html, layout, on_navigate)
+        # Note that self.id is not considered
+        return (
+            self.region == rhs.region and self.content == rhs.content and
+            self.layout == rhs.layout and self.on_navigate == rhs.on_navigate and
+            self.md == rhs.md and self.css == rhs.css and self.nl2br == rhs.nl2br and
+            self.wrapper_class == rhs.wrapper_class and self.template_vars == rhs.template_vars and
+            self.template_env_options == rhs.template_env_options and
+            self.allow_code_wrap == rhs.allow_code_wrap
+        )
 
-    def erase_phantoms(view, key):
-        """Erase phantoms."""
 
-        view.erase_phantoms(key)
+class PhantomSet(sublime.PhantomSet):
+    """Object that allows easy updating of phantoms."""
 
-    def erase_phantom_by_id(view, pid):
-        """Erase phantom by ID."""
+    def __init__(self, view, key=""):
+        """Initialize."""
 
-        view.erase_phantom_by_id(pid)
+        super().__init__(view, key)
 
-    def query_phantom(view, pid):
-        """Query phantom."""
+    def __del__(self):
+        """Delete phantoms."""
 
-        return view.query_phantom(pid)
+        for p in self.phantoms:
+            erase_phantom_by_id(self.view, p.id)
 
-    def query_phantoms(view, pids):
-        """Query phantoms."""
+    def update(self, new_phantoms):
+        """Update the list of phantoms that exist in the text buffer with their current location."""
 
-        return view.query_phantoms(pids)
+        regions = query_phantoms(self.view, [p.id for p in self.phantoms])
+        for i in range(len(regions)):
+            self.phantoms[i].region = regions[i]
 
-    class Phantom(sublime.Phantom):
-        """A phantom object."""
+        count = 0
+        for p in new_phantoms:
+            if not isinstance(p, Phantom):
+                # Convert sublime.Phantom to mdpopups.Phantom
+                p = Phantom(
+                    p.region, p.content, p.layout,
+                    md=False, css=None, on_navigate=p.on_navigate, wrapper_class=None,
+                    template_vars=None, template_env_options=None, nl2br=False,
+                    allow_code_wrap=False
+                )
+                new_phantoms[count] = p
+            try:
+                # Phantom already exists, copy the id from the current one
+                idx = self.phantoms.index(p)
+                p.id = self.phantoms[idx].id
+            except ValueError:
+                p.id = add_phantom(
+                    self.view,
+                    self.key,
+                    p.region,
+                    p.content,
+                    p.layout,
+                    p.md,
+                    p.css,
+                    p.on_navigate,
+                    p.wrapper_class,
+                    p.template_vars,
+                    p.template_env_options,
+                    p.nl2br,
+                    p.allow_code_wrap
+                )
+            count += 1
 
-        def __init__(
-            self, region, content, layout, md=True,
-            css=None, on_navigate=None, wrapper_class=None,
-            template_vars=None, template_env_options=None, nl2br=True
-        ):
-            """Initialize."""
-
-            super().__init__(region, content, layout, on_navigate)
-            self.md = md
-            self.css = css
-            self.wrapper_class = wrapper_class
-            self.template_vars = template_vars
-            self.template_env_options = template_env_options
-            self.nl2br = nl2br
-
-        def __eq__(self, rhs):
-            """Check if phantoms are equal."""
-
-            # Note that self.id is not considered
-            return (
-                self.region == rhs.region and self.content == rhs.content and
-                self.layout == rhs.layout and self.on_navigate == rhs.on_navigate and
-                self.md == rhs.md and self.css == rhs.css and self.nl2br == rhs.nl2br and
-                self.wrapper_class == rhs.wrapper_class and self.template_vars == rhs.template_vars and
-                self.template_env_options == rhs.template_env_options
-            )
-
-    class PhantomSet(sublime.PhantomSet):
-        """Object that allows easy updating of phantoms."""
-
-        def __init__(self, view, key=""):
-            """Initialize."""
-
-            super().__init__(view, key)
-
-        def __del__(self):
-            """Delete phantoms."""
-
-            for p in self.phantoms:
+        for p in self.phantoms:
+            # if the region is -1, then it's already been deleted, no need to call erase
+            if p not in new_phantoms and p.region != sublime.Region(-1):
                 erase_phantom_by_id(self.view, p.id)
 
-        def update(self, new_phantoms):
-            """Update the list of phantoms that exist in the text buffer with their current location."""
-
-            regions = query_phantoms(self.view, [p.id for p in self.phantoms])
-            for i in range(len(regions)):
-                self.phantoms[i].region = regions[i]
-
-            count = 0
-            for p in new_phantoms:
-                if not isinstance(p, Phantom):
-                    # Convert sublime.Phantom to mdpopups.Phantom
-                    p = Phantom(
-                        p.region, p.content, p.layout,
-                        md=False, css=None, on_navigate=p.on_navigate, wrapper_class=None,
-                        template_vars=None, template_env_options=None, nl2br=False
-                    )
-                    new_phantoms[count] = p
-                try:
-                    # Phantom already exists, copy the id from the current one
-                    idx = self.phantoms.index(p)
-                    p.id = self.phantoms[idx].id
-                except ValueError:
-                    p.id = add_phantom(
-                        self.view,
-                        self.key,
-                        p.region,
-                        p.content,
-                        p.layout,
-                        p.md,
-                        p.css,
-                        p.on_navigate,
-                        p.wrapper_class,
-                        p.template_vars,
-                        p.template_env_options,
-                        p.nl2br
-                    )
-                count += 1
-
-            for p in self.phantoms:
-                # if the region is -1, then it's already been deleted, no need to call erase
-                if p not in new_phantoms and p.region != sublime.Region(-1):
-                    erase_phantom_by_id(self.view, p.id)
-
-            self.phantoms = new_phantoms
+        self.phantoms = new_phantoms
