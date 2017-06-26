@@ -164,9 +164,10 @@ class SuperFencesCodeExtension(Extension):
                 "- Default: None"
             ],
             'css_class': [
-                "highlight",
-                "Set class name for wrapper element - "
-                "Default: highlight"
+                '',
+                "Set class name for wrapper element. The default of CodeHilite or Highlight will be used"
+                "if nothing is set. - "
+                "Default: ''"
             ]
         }
         super(SuperFencesCodeExtension, self).__init__(*args, **kwargs)
@@ -285,10 +286,8 @@ class SuperFencesBlockPreprocessor(Preprocessor):
             self.highlight_code = self.config['highlight_code']
 
             config = hl.get_hl_settings(self.markdown)
-            if 'extend_pygments_lang' not in config:
-                self.css_class = config['css_class']
-            else:
-                self.css_class = self.config['css_class']
+            css_class = self.config['css_class']
+            self.css_class = css_class if css_class else config['css_class']
 
             self.extend_pygments_lang = config.get('extend_pygments_lang', None)
             self.guess_lang = config['guess_lang']
@@ -296,8 +295,6 @@ class SuperFencesBlockPreprocessor(Preprocessor):
             self.use_pygments = config['use_pygments']
             self.noclasses = config['noclasses']
             self.linenums = config['linenums']
-            self.sublime_hl = config['sublime_hl']
-            self.sublime_wrap = config['sublime_wrap']
 
     def clear(self):
         """Reset the class variables."""
@@ -477,9 +474,7 @@ class SuperFencesBlockPreprocessor(Preprocessor):
                 use_pygments=self.use_pygments,
                 noclasses=self.noclasses,
                 linenums=self.linenums,
-                extend_pygments_lang=self.extend_pygments_lang,
-                sublime_hl=self.sublime_hl,
-                sublime_wrap=self.sublime_wrap
+                extend_pygments_lang=self.extend_pygments_lang
             ).highlight(
                 src,
                 language,

@@ -1,6 +1,7 @@
 [admonition]: https://pythonhosted.org/Markdown/extensions/admonition.html
 [attr_list]: https://pythonhosted.org/Markdown/extensions/attr_list.html
 [betterem]: http://facelessuser.github.io/pymdown-extensions/extensions/betterem/
+[custom-fences]: http://facelessuser.github.io/pymdown-extensions/extensions/superfences/#custom-fences
 [def_list]: https://pythonhosted.org/Markdown/extensions/definition_lists.html
 [default-css]: https://github.com/facelessuser/sublime-markdown-popups/blob/master/css/default.css
 [extrarawhtml]: http://facelessuser.github.io/pymdown-extensions/extensions/extrarawhtml/
@@ -8,6 +9,7 @@
 [inlinehilite]: http://facelessuser.github.io/pymdown-extensions/extensions/inlinehilite/
 [language-map]: https://github.com/facelessuser/sublime-markdown-popups/blob/master/st3/mdpopups/st_mapping.py
 [magiclink]: http://facelessuser.github.io/pymdown-extensions/extensions/magiclink/
+[mdpopup_test]: https://github.com/facelessuser/mdpopup_test
 [mkdocs]: http://www.mkdocs.org
 [minihtml]: https://www.sublimetext.com/docs/3/minihtml.html
 [mkdocs-material]: https://github.com/squidfunk/mkdocs-material

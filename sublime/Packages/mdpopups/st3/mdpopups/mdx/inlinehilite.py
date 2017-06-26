@@ -61,19 +61,16 @@ class InlineHilitePattern(Pattern):
         if not self.get_hl_settings:
             self.get_hl_settings = True
             self.style_plain_text = self.config['style_plain_text']
-            config = hl.get_hl_settings(self.markdown)
 
-            if 'extend_pygments_lang' not in config:
-                self.css_class = config['css_class']
-            else:
-                self.css_class = self.config['css_class']
+            config = hl.get_hl_settings(self.markdown)
+            css_class = self.config['css_class']
+            self.css_class = css_class if css_class else config['css_class']
 
             self.extend_pygments_lang = config.get('extend_pygments_lang', None)
             self.guess_lang = config['guess_lang']
             self.pygments_style = config['pygments_style']
             self.use_pygments = config['use_pygments']
             self.noclasses = config['noclasses']
-            self.sublime_hl = config['sublime_hl']
 
     def highlight_code(self, language, src):
         """Syntax highlite the inline code block."""
@@ -86,8 +83,7 @@ class InlineHilitePattern(Pattern):
                 pygments_style=self.pygments_style,
                 use_pygments=self.use_pygments,
                 noclasses=self.noclasses,
-                extend_pygments_lang=self.extend_pygments_lang,
-                sublime_hl=self.sublime_hl
+                extend_pygments_lang=self.extend_pygments_lang
             ).highlight(src, language, self.css_class, inline=True)
             el.text = self.markdown.htmlStash.store(el.text, safe=True)
         else:
@@ -128,9 +124,10 @@ class InlineHiliteExtension(Extension):
                 "- Default: False"
             ],
             'css_class': [
-                "highight",
-                "Set class name for wrapper <div> - "
-                "Default: inlinehilite"
+                '',
+                "Set class name for wrapper element. The default of CodeHilite or Highlight will be used"
+                "if nothing is set. - "
+                "Default: ''"
             ]
         }
         super(InlineHiliteExtension, self).__init__(*args, **kwargs)

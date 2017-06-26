@@ -1,4 +1,24 @@
-# 2.0
+# Changelog
+
+## 2.1.1
+
+> June 21, 2017
+
+- **FIX**: Strip frontmatter when `md=False`. Throw it away as we only use the frontmatter for Markdown.
+
+## 2.1.0
+
+> June 20, 2017
+
+- **NEW**: Allow adding and configuring extensions via YAML frontmatter. This feature deprecates `nl2br` function parameter which will be removed some time in the future.
+- **NEW**: Allow setting whether block, code tags will allow word wrapping via YAML frontmatter. This feature deprecates the `allow_word_wrap` function parameter which will be removed some time in the future.
+- **NEW**: Expose SuperFences' `custom_fences` feature via YAML frontmatter.
+- **NEW**: Upgrade internal extensions.
+- **NEW**: Import official `pymdownx` extension if `pymdownx` is installed as a dependency so we can drop internal vendored extension copies in the future. This is allowed to be optional for a time until people can update their dependencies.
+- **NEW**: Import `pyyaml` extension if `pyyaml` is installed for frontmatter. This is allowed to be optional for a time until people can update their dependencies.
+- **NEW**: `inline-highlight` class in no longer applied to inline code.  Instead `highlight` is applied to both inline and block code.
+
+## 2.0
 
 > June 1, 2017
 
@@ -16,7 +36,7 @@
 - **FIX**: Fix foreground output that was missing semicolon according to spec.
 - **FIX**: Numerous CSS fixes.
 
-# 1.0
+## 1.0
 
 > Nov 12, 2015
 
