@@ -135,6 +135,16 @@ gityank() {
     fi
 }
 
+ghfork() {
+    git remote add $1 "https://github.com/$1/$(basename `pwd`).git"
+    gfa
+    if [ "$#" -eq 1 ]; then
+        gco "$1/master"
+    else
+        gco "$1/$2"
+    fi
+}
+
 ###################
 # Splunk utilities
 ###################
