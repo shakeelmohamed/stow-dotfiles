@@ -84,6 +84,10 @@ alias gogit="gitgit"
 alias gitit="gitgit"
 alias ggit="gitgit"
 
+gitback() {
+    echo "Don't even think about it."
+}
+
 # clear git cache
 alias gitclear="git rm -r --cached ."
 
