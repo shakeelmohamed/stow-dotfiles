@@ -83,6 +83,7 @@ alias gitgit="cd $HOME/work/git"
 alias gogit="gitgit"
 alias gitit="gitgit"
 alias ggit="gitgit"
+alias gau="git add -u $@"
 
 gitback() {
     echo "Don't even think about it."
