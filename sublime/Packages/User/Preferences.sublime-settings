@@ -37,7 +37,7 @@
 		"CVS",
 		"node_modules"
 	],
-	"font_size": 14,
+	"font_size": 17,
 	"highlight_line": true,
 	"ignored_packages":
 	[
