@@ -56,6 +56,10 @@
 		"WordCount",
 		"xmllint"
 	],
+	"ignored_words":
+	[
+		"webserver"
+	],
 	"index_files": false,
 	"scroll_past_end": true,
 	"spacegray_fileicons": true,
