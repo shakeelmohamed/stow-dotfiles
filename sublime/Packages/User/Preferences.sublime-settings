@@ -41,19 +41,16 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Gist",
 		"HTML-CSS-JS Prettify",
 		"JSHint",
 		"JSONLint",
 		"Markdown",
 		"Markdown Preview",
 		"Pretty JSON",
-		"SideBarEnhancements",
 		"SublimeCodeIntel",
 		"Theme - itg.flat",
 		"VBScript",
 		"Vintage",
-		"WordCount",
 		"xmllint"
 	],
 	"ignored_words":

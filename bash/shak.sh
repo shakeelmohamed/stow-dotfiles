@@ -142,7 +142,7 @@ gityank() {
 
 ghfork() {
     git remote add $1 "https://github.com/$1/$(basename `pwd`).git"
-    gfa
+    git fetch $1
     if [ "$#" -eq 1 ]; then
         gco "$1/master"
     else

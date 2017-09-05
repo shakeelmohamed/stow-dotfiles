@@ -52,10 +52,11 @@ def _handle_word(s, t):
         return 'id', t[1:]
     return t, t
 
+
 _scanner = Scanner([
-    (r'[^ ]+=".*?"', _handle_double_quote),
-    (r"[^ ]+='.*?'", _handle_single_quote),
-    (r'[^ ]+=[^ =]+', _handle_key_value),
+    (r'[^ =]+=".*?"', _handle_double_quote),
+    (r"[^ =]+='.*?'", _handle_single_quote),
+    (r'[^ =]+=[^ =]+', _handle_key_value),
     (r'[^ =]+', _handle_word),
     (r' ', None)
 ])
@@ -83,7 +84,7 @@ class AttrListTreeprocessor(Treeprocessor):
                          r'\:\-\.0-9\u00b7\u0300-\u036f\u203f-\u2040]+')
 
     def run(self, doc):
-        for elem in doc.getiterator():
+        for elem in doc.iter():
             if isBlockLevel(elem.tag):
                 # Block level: check for attrs on last line of text
                 RE = self.BLOCK_RE

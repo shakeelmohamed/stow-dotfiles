@@ -1,5 +1,8 @@
 # sublime-markdown
+
 Sublime dependency for Python Markdown
+
+Current version: 2.6.9
 
 # License
 
