@@ -1,0 +1,18 @@
+{
+	"hidden_extensions":
+	[
+		"rss",
+		"vcproj",
+		"tmLanguage",
+		"tmTheme",
+		"tmSnippet",
+		"dae"
+	],
+	"package_dev.bootstrapped":
+	[
+		3126,
+		2017,
+		3,
+		13
+	]
+}

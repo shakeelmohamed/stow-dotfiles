@@ -16,7 +16,11 @@
 		"Flippy",
 		"bool",
 		"username",
-		"programatically"
+		"programatically",
+		"simdata",
+		"repo",
+		"Artifactory",
+		"Akka"
 	],
 	"binary_file_patterns":
 	[
@@ -37,7 +41,7 @@
 		"CVS",
 		"node_modules"
 	],
-	"font_size": 13,
+	"font_size": 14,
 	"highlight_line": true,
 	"ignored_packages":
 	[
