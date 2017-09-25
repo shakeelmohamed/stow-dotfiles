@@ -20,7 +20,11 @@
 		"simdata",
 		"repo",
 		"Artifactory",
-		"Akka"
+		"Akka",
+		"conf",
+		"eventgen",
+		"checkbox",
+		"enum"
 	],
 	"binary_file_patterns":
 	[
