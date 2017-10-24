@@ -1,7 +1,7 @@
 """Backrefs package."""
 
 #   (major, minor, micro, release type, pre-release build, post-release build)
-version_info = (1, 0, 0, 'final', 0, 1)
+version_info = (2, 1, 0, 'final', 0, 0)
 
 
 def _version():
@@ -34,5 +34,6 @@ def _version():
     postrel = '.post%d' % version_info[5] if version_info[5] > 0 else ''
 
     return ''.join((main, prerel, postrel))
+
 
 version = _version()

@@ -56,4 +56,4 @@ docs/_build/
 # PyBuilder
 target/
 
-tools/unicodedata/*
+tools/unicodedata/*/*.txt

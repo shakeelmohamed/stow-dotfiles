@@ -25,18 +25,22 @@ utokens = {
     "nl": '\n',
     "negate": '^',
     "verbose_flag": 'x',
-    "re_replace_ref": re.compile(
-        r'''(?x)
-        (\\)+
-        (
-            [cClLE]
-        )? |
-        (
-            [cClLE]
-        )
-        '''
+    "unicode_flag": 'u',
+    "group": "g",
+    "lc_bracket": "{",
+    "rc_bracket": "}",
+    "group_start": r"\g<",
+    "group_end": ">",
+    "format_replace_group": re.compile(
+        r'(\{{2}|\}{2})|(\{(?:[a-zA-Z]+[a-zA-Z\d_]*|0*(?:[1-9][0-9]?)?)?(?:\[[^\]]+\])?\})'
     ),
-    "unicode_flag": 'u'
+    "minus": "-",
+    "binary": "b",
+    "octal": "o",
+    "hex": "x",
+    "zero": "0",
+    "unicode_narrow": "u",
+    "unicode_wide": "U"
 }
 
 # Byte string related references
@@ -60,19 +64,20 @@ btokens = {
     "nl": b'\n',
     "negate": b'^',
     "verbose_flag": b'x',
-    "re_replace_ref": re.compile(
-        br'''(?x)
-        (\\)+
-        (
-            [cClLE]
-        )? |
-        (
-            [cClLE]
-        )
-        '''
+    "unicode_flag": b'u',
+    "group": b"g",
+    "lc_bracket": b"{",
+    "rc_bracket": b"}",
+    "group_start": br"\g<",
+    "group_end": b">",
+    "format_replace_group": re.compile(
+        br'(\{{2}|\}{2})|(\{(?:[a-zA-Z]+[a-zA-Z\d_]*|0*(?:[1-9][0-9]?)?)?(?:\[[^\]]+\])?\})'
     ),
-    "re_flags": re.compile(
-        br'(?s)(\\.)|\(\?([iLmsux]+)\)|(.)'
-    ),
-    "unicode_flag": b'u'
+    "minus": b"-",
+    "binary": b"b",
+    "octal": b"o",
+    "hex": b"x",
+    "zero": b"0",
+    "unicode_narrow": b"u",
+    "unicode_wide": b"U"
 }

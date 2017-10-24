@@ -32,10 +32,10 @@ else:
 
 ALL_CHARS = set([x for x in range(UNICODE_RANGE[0], UNICODE_RANGE[1] + 1)])
 HEADER = '''\
-"""Unicode Properties (autogen)."""
+"""Unicode Properties from Unicode version %s (autogen)."""
 from __future__ import unicode_literals
 
-'''
+''' % UNIVERSION
 
 
 def uchr(i):

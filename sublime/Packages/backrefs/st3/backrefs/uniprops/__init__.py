@@ -47,7 +47,7 @@ def get_gc_property(value):
 
 
 def get_binary_property(value):
-    """"Get BINARY property."""
+    """Get BINARY property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -59,7 +59,7 @@ def get_binary_property(value):
 
 
 def get_canonical_combining_class_property(value):
-    """"Get CANONICAL COMBINING CLASS property."""
+    """Get CANONICAL COMBINING CLASS property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -71,7 +71,7 @@ def get_canonical_combining_class_property(value):
 
 
 def get_east_asian_width_property(value):
-    """"Get EAST ASIAN WIDTH property."""
+    """Get EAST ASIAN WIDTH property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -83,7 +83,7 @@ def get_east_asian_width_property(value):
 
 
 def get_grapheme_cluster_break_property(value):
-    """"Get GRAPHEME CLUSTER BREAK property."""
+    """Get GRAPHEME CLUSTER BREAK property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -95,7 +95,7 @@ def get_grapheme_cluster_break_property(value):
 
 
 def get_line_break_property(value):
-    """"Get LINE BREAK property."""
+    """Get LINE BREAK property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -107,7 +107,7 @@ def get_line_break_property(value):
 
 
 def get_sentence_break_property(value):
-    """"Get SENTENCE BREAK property."""
+    """Get SENTENCE BREAK property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -119,7 +119,7 @@ def get_sentence_break_property(value):
 
 
 def get_word_break_property(value):
-    """"Get WORD BREAK property."""
+    """Get WORD BREAK property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -251,7 +251,7 @@ def get_joining_type_property(value):
 
 
 def get_joining_group_property(value):
-    """"Get JOINING GROUP property."""
+    """Get JOINING GROUP property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -263,7 +263,7 @@ def get_joining_group_property(value):
 
 
 def get_script_property(value):
-    """"Get SC property."""
+    """Get SC property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -275,7 +275,7 @@ def get_script_property(value):
 
 
 def get_block_property(value):
-    """"Get BLK property."""
+    """Get BLK property."""
 
     if value.startswith('^'):
         negated = value[1:]
@@ -287,7 +287,7 @@ def get_block_property(value):
 
 
 def get_bidi_property(value):
-    """"Get BC property."""
+    """Get BC property."""
 
     if value.startswith('^'):
         negated = value[1:]

@@ -1,4 +1,4 @@
-"""Unicode Properties (autogen)."""
+"""Unicode Properties from Unicode version 6.1.0 (autogen)."""
 from __future__ import unicode_literals
 
 unicode_numeric_type = {
