@@ -141,8 +141,15 @@ gityank() {
     fi
 }
 
+export ghuser="shakeelmohamed"
+
 ghfork() {
-    git remote add $1 "https://github.com/$1/$(basename `pwd`).git"
+    if [ "$1" == $ghuser ]; then
+        remote="git://github.com:$1/$(basename `pwd`).git"
+    else
+        remote="https://github.com/$1/$(basename `pwd`).git"
+    fi
+    git remote add $1 $remote
     git fetch $1
     if [ "$#" -eq 1 ]; then
         gco "$1/master"
@@ -150,6 +157,8 @@ ghfork() {
         gco "$1/$2"
     fi
 }
+
+alias myfork="ghfork $ghuser"
 
 ###################
 # Splunk utilities

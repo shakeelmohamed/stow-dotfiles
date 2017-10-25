@@ -24,7 +24,10 @@
 		"conf",
 		"eventgen",
 		"checkbox",
-		"enum"
+		"enum",
+		"playlist",
+		"autoplay",
+		"querystring"
 	],
 	"binary_file_patterns":
 	[
@@ -43,7 +46,10 @@
 		".git",
 		".hg",
 		"CVS",
-		"node_modules"
+		"node_modules",
+		".tags",
+		".tags_sorted_by_file",
+		".gemtags"
 	],
 	"font_size": 14,
 	"highlight_line": true,
