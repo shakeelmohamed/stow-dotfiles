@@ -1,5 +1,7 @@
 # Dotfiles
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b749c115177c4041a69a12cff91dc60e)](https://www.codacy.com/app/contact_45/stow-dotfiles?utm_source=github.com&utm_medium=referral&utm_content=shakeelmohamed/stow-dotfiles&utm_campaign=badger)
+
 My configuration files, for OS X.
 
 ## Usage
