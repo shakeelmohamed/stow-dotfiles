@@ -1,0 +1,9 @@
+# Mac
+.DS_Store
+
+# Python
+*.py[cd]
+
+# ctags
+tags
+tags_sorted_by_file

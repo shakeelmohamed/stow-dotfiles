@@ -43,6 +43,10 @@ stow git -t $HOME/
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 
+# Global .gitignore
+ln -s ./git/.gitignore $HOME/.gitignore_global
+git config --global core.excludesfile "$HOME/.gitignore_global"
+
 # Node.js setup
 nvm install 6
 npm install -g trash-cli

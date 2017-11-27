@@ -90,3 +90,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 source $HOME/shak.sh
 # added by travis gem
 [ -f /Users/shakeelmohamed/.travis/travis.sh ] && source /Users/shakeelmohamed/.travis/travis.sh
+
+export PATH="$HOME/.yarn/bin:$PATH"
