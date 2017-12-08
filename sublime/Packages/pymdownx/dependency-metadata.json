@@ -1,1 +1,1 @@
-{"sublime_text": ">=3000", "platforms": ["*"], "url": "https://github.com/facelessuser/sublime-pymdownx/issues", "version": "1.4.0", "description": "PyMdown Extensions for Python Markdown"}
+{"version": "1.5.0", "sublime_text": ">=3000", "platforms": ["*"], "url": "https://github.com/facelessuser/sublime-pymdownx/issues", "description": "PyMdown Extensions for Python Markdown"}

@@ -3,20 +3,46 @@ from __future__ import unicode_literals
 import subprocess
 import os
 import sys
-import yaml
 import codecs
+import bs4
+import yaml
+import re
+from collections import namedtuple
 
 PY3 = sys.version_info >= (3, 0)
 
-USER_DICT = '.dictionary'
-BUILD_DIR = os.path.join('.', 'build', 'docs')
-MKDOCS_CFG = 'mkdocs.yml'
-COMPILED_DICT = os.path.join(BUILD_DIR, 'dictionary.bin')
-MKDOCS_SPELL = os.path.join(BUILD_DIR, MKDOCS_CFG)
-MKDOCS_BUILD = os.path.join(BUILD_DIR, 'site')
+
+def yaml_load(source, loader=yaml.Loader):
+    """
+    Wrap PyYaml's loader so we can extend it to suit our needs.
+
+    Load all strings as unicode: http://stackoverflow.com/a/2967461/3609487.
+    """
+
+    def construct_yaml_str(self, node):
+        """Override the default string handling function to always return Unicode objects."""
+        return self.construct_scalar(node)
+
+    class Loader(loader):
+        """Define a custom loader to leave the global loader unaltered."""
+
+    # Attach our unicode constructor to our custom loader ensuring all strings
+    # will be unicode on translation.
+    Loader.add_constructor('tag:yaml.org,2002:str', construct_yaml_str)
+
+    return yaml.load(source, Loader)
 
 
-def console(cmd, input_file=None):
+def read_config(file_name):
+    """Read configuration."""
+
+    config = {}
+    with codecs.open(file_name, 'r', encoding='utf-8') as f:
+        config = yaml_load(f.read())
+    return config
+
+
+def console(cmd, input_file=None, input_text=None):
     """Call with arguments."""
 
     returncode = None
@@ -45,6 +71,8 @@ def console(cmd, input_file=None):
     if input_file is not None:
         with open(input_file, 'rb') as f:
             process.stdin.write(f.read())
+    if input_text is not None:
+        process.stdin.write(input_text)
     output = process.communicate()
     returncode = process.returncode
 
@@ -55,157 +83,183 @@ def console(cmd, input_file=None):
     return output[0].decode('utf-8') if PY3 else output[0]
 
 
-def yaml_dump(data, stream=None, dumper=yaml.Dumper, **kwargs):
-    """Special dumper wrapper to modify the yaml dumper."""
+class IgnoreRule (namedtuple('IgnoreRule', ['tag', 'id', 'classes'])):
+    """Ignore rule."""
 
-    class Dumper(dumper):
-        """Custom dumper."""
 
-    if not PY3:
-        # Unicode
-        Dumper.add_representer(
-            unicode,  # noqa
-            lambda dumper, value: dumper.represent_scalar(u'tag:yaml.org,2002:str', value)
+class Spelling(object):
+    """Spell check object."""
+
+    DICTIONARY = 'dictionary.bin'
+    RE_SELECTOR = re.compile(r'(\#|\.)?[-\w]+')
+
+    def __init__(self, config_file):
+        """Initialize."""
+
+        config = read_config(config_file)
+        self.docs = config.get('docs', [])
+        self.dictionary = ('\n'.join(config.get('dictionary', []))).encode('utf-8')
+        self.attributes = set(config.get('attributes', []))
+        self.ignores = self.ignore_rules(*config.get('ignores', []))
+        self.dict_bin = os.path.abspath(self.DICTIONARY)
+
+    def ignore_rules(self, *args):
+        """
+        Process ignore rules.
+
+        Split ignore selector string into tag, id, and classes.
+        """
+
+        ignores = []
+
+        for arg in args:
+            selector = arg.lower()
+            tag = None
+            tag_id = None
+            classes = set()
+
+            for m in self.RE_SELECTOR.finditer(selector):
+                selector = m.group(0)
+                if selector.startswith('.'):
+                    classes.add(selector[1:])
+                elif selector.startswith('#') and tag_id is None:
+                    tag_id = selector[1:]
+                elif tag is None:
+                    tag = selector
+                else:
+                    raise ValueError('Bad selector!')
+
+            if tag or tag_id or classes:
+                ignores.append(IgnoreRule(tag, tag_id, tuple(classes)))
+
+        return ignores
+
+    def compile_dictionaries(self):
+        """Compile user dictionary."""
+
+        if os.path.exists(self.dict_bin):
+            os.remove(self.dict_bin)
+        print("Compiling Dictionary...")
+        print(
+            console(
+                [
+                    'aspell',
+                    '--lang=en',
+                    '--encoding=utf-8',
+                    'create',
+                    'master',
+                    os.path.abspath(self.dict_bin)
+                ],
+                input_text=self.dictionary
+            )
         )
 
-    return yaml.dump(data, stream, Dumper, **kwargs)
+    def skip_tag(self, el):
+        """Determine if tag should be skipped."""
 
-
-def yaml_load(source, loader=yaml.Loader):
-    """
-    Wrap PyYaml's loader so we can extend it to suit our needs.
-
-    Load all strings as unicode: http://stackoverflow.com/a/2967461/3609487.
-    """
-
-    def construct_yaml_str(self, node):
-        """Override the default string handling function to always return Unicode objects."""
-        return self.construct_scalar(node)
-
-    class Loader(loader):
-        """Define a custom loader to leave the global loader unaltered."""
-
-    # Attach our unicode constructor to our custom loader ensuring all strings
-    # will be unicode on translation.
-    Loader.add_constructor('tag:yaml.org,2002:str', construct_yaml_str)
-
-    return yaml.load(source, Loader)
-
-
-def patch_doc_config(config_file):
-    """Patch the config file to wrap arithmatex with a tag aspell can ignore."""
-
-    nospell = {
-        'tex_inline_wrap': ['<nospell>\\(', '</nospell>\\)'],
-        'tex_block_wrap': ['<nospell>\\[', '</nospell>\\]']
-    }
-    with open(config_file, 'rb') as f:
-        config = yaml_load(f)
-
-    index = 0
-    for extension in config.get('markdown_extensions', []):
-        if isinstance(extension, str if PY3 else unicode) and extension == 'pymdownx.arithmatex':  # noqa
-            config['markdown_extensions'][index] = {'pymdownx.arithmatex': nospell}
+        skip = False
+        for rule in self.ignores:
+            if rule.tag and el.name.lower() != rule.tag:
+                continue
+            if rule.id and rule.id != el.attrs.get('id', '').lower():
+                continue
+            if rule.classes:
+                current_classes = [c.lower() for c in el.attrs.get('class', [])]
+                found = True
+                for c in rule.classes:
+                    if c not in current_classes:
+                        found = False
+                        break
+                if not found:
+                    continue
+            skip = True
             break
-        elif isinstance(extension, dict) and 'pymdownx.arithmatex' in extension:
-            extension['pymdownx.arithmatex'] = nospell
-            break
-        index += 1
+        return skip
 
-    with codecs.open(MKDOCS_SPELL, "w", encoding="utf-8") as f:
-        yaml_dump(
-            config, f,
-            width=None,
-            indent=4,
-            allow_unicode=True,
-            default_flow_style=False
-        )
-    return MKDOCS_SPELL
+    def html_to_text(self, tree, root=True):
+        """
+        Parse the HTML creating a buffer with each tags content.
 
+        Skip any selectors specified and include attributes if specified.
+        Ignored tags will not have their attributes scanned either.
+        """
 
-def build_docs():
-    """Build docs with MkDocs."""
-    print('Building Docs...')
-    print(
-        console(
-            [
-                sys.executable,
-                '-m', 'mkdocs', 'build', '--clean',
-                '-d', MKDOCS_BUILD,
-                '-f', patch_doc_config(MKDOCS_CFG)
-            ]
-        )
-    )
+        text = []
 
+        if not self.skip_tag(tree):
+            for attr in self.attributes:
+                value = tree.attrs.get(attr)
+                if value:
+                    text.append(value)
 
-def compile_dictionary():
-    """Compile user dictionary."""
-    if os.path.exists(COMPILED_DICT):
-        os.remove(COMPILED_DICT)
-    print("Compiling Custom Dictionary...")
-    print(
-        console(
+            for child in tree:
+                if isinstance(child, bs4.element.Tag):
+                    if child.contents:
+                        text.extend(self.html_to_text(child, False))
+                else:
+                    text.append(str(child))
+
+        return ' '.join(text) if root else text
+
+    def check_spelling(self, html_file):
+        """Check spelling."""
+
+        fail = False
+        with codecs.open(html_file, 'r', encoding='utf-8') as file_obj:
+            html = bs4.BeautifulSoup(file_obj.read(), "html5lib")
+            text = self.html_to_text(html.html)
+
+        wordlist = console(
             [
                 'aspell',
+                'list',
                 '--lang=en',
+                '--mode=url',
                 '--encoding=utf-8',
-                'create',
-                'master',
-                COMPILED_DICT
+                '--extra-dicts',
+                self.dict_bin
             ],
-            USER_DICT
+            input_text=text.encode('utf-8')
         )
-    )
+        words = [w for w in sorted(set(wordlist.split('\n'))) if w]
 
+        if words:
+            fail = True
+            print('Misspelled words in %s' % html_file)
+            print('-' * 80)
+            for word in words:
+                print(word)
+            print('-' * 80)
+            print('\n')
+        return fail
 
-def check_spelling():
-    """Check spelling."""
-    print('Spell Checking...')
+    def check(self):
+        """Walk documents and initiate spell check."""
 
-    fail = False
+        self.compile_dictionaries()
 
-    for base, dirs, files in os.walk(MKDOCS_BUILD):
-        # Remove child folders based on exclude rules
-        for f in files:
-            if f.endswith('.html'):
-                file_name = os.path.join(base, f)
-                wordlist = console(
-                    [
-                        'aspell',
-                        'list',
-                        '--lang=en',
-                        '--mode=html',
-                        '--encoding=utf-8',
-                        '--add-html-skip=code',
-                        '--add-html-skip=pre',
-                        '--add-html-skip=nospell',
-                        '--add-html-skip=nav',
-                        '--add-html-skip=footer',
-                        '--extra-dicts=%s' % COMPILED_DICT
-                    ],
-                    file_name
-                )
-
-                words = [w for w in sorted(set(wordlist.split('\n'))) if w]
-
-                if words:
+        print('Spell Checking...')
+        fail = False
+        for doc in self.docs:
+            if os.path.isdir(doc):
+                for base, dirs, files in os.walk(doc):
+                    # Remove child folders based on exclude rules
+                    for f in files:
+                        if f.lower().endswith('.html'):
+                            file_name = os.path.join(base, f)
+                            if self.check_spelling(file_name):
+                                fail = True
+            elif doc.lower().endswith('.html'):
+                if self.check_spelling(doc):
                     fail = True
-                    print('Misspelled words in %s' % file_name)
-                    print('-' * 80)
-                    for word in words:
-                        print(word)
-                    print('-' * 80)
-                    print('\n')
-    return fail
+        return fail
 
 
 def main():
     """Main."""
-    if not os.path.exists(BUILD_DIR):
-        os.makedirs(BUILD_DIR)
-    build_docs()
-    compile_dictionary()
-    return check_spelling()
+
+    spelling = Spelling('.spelling.yml')
+    return spelling.check()
 
 
 if __name__ == "__main__":

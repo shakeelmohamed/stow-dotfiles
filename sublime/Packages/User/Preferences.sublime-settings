@@ -31,8 +31,10 @@
 	],
 	"binary_file_patterns":
 	[
-		".DS_Store",
 		"*.psd",
+		".DS_Store",
+		".gradle/**",
+		".idea/**",
 		".o"
 	],
 	"bold_folder_labels": true,
