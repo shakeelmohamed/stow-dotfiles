@@ -27,7 +27,8 @@
 		"enum",
 		"playlist",
 		"autoplay",
-		"querystring"
+		"querystring",
+		"config"
 	],
 	"binary_file_patterns":
 	[
