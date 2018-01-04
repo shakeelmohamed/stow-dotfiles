@@ -160,6 +160,15 @@ ghfork() {
 
 alias myfork="ghfork $ghuser"
 
+gitmergeto() {
+    cur="$(gb)"
+    if [ "$#" -eq 1 ]; then
+        gfp && git pull && gco $1 && git pull && git merge $cur
+    else
+        echo "gitmergeto needs 1 argument, the branch to merge to"
+    fi
+}
+
 ###################
 # Splunk utilities
 ###################
