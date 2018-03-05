@@ -113,11 +113,14 @@ class Engine():
 		return self.extract(self.files())
 
 	def resolve(self, directory):
-		return os.path.realpath(os.path.expanduser(os.path.abspath(directory)))
+		if settings.get('resolve_symlinks', True):
+			return os.path.realpath(os.path.expanduser(os.path.abspath(directory)))
+		else:
+			return os.path.expanduser(os.path.abspath(directory))
 
 class Thread(threading.Thread):
 	def __init__(self, engine, callback):
-		self.i = 0;
+		self.i = 0
 		self.engine = engine
 		self.callback = callback
 		self.lock = threading.RLock()
@@ -126,9 +129,9 @@ class Thread(threading.Thread):
 	def run(self):
 		self.start = timeit.default_timer()
 		if sys.version_info < (3,0,0):
-			sublime.set_timeout(self.thread, 1);
+			sublime.set_timeout(self.thread, 1)
 		else:
-			self.thread();
+			self.thread()
 
 	def thread(self):
 		results = list(self.engine.process())

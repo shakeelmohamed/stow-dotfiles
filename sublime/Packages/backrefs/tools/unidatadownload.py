@@ -1,4 +1,4 @@
-"""Download Unicodedata files."""
+"""Download `Unicodedata` files."""
 from __future__ import unicode_literals
 import sys
 import os
@@ -46,7 +46,7 @@ def unzip_unicode(output, version):
 
 
 def download_unicodedata(version, output=HOME, no_zip=False):
-    """Download unicode data scripts and blocks."""
+    """Download Unicode data scripts and blocks."""
     files = (
         'UnicodeData.txt',
         'Scripts.txt',

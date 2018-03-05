@@ -174,6 +174,10 @@ gitmergeto() {
 ###################
 alias splgo="open http://localhost:8000"
 
+# support MacOS High Sierra
+export OPTIMISTIC_ABOUT_FILE_LOCKING=1
+
+
 SPLUNKS_LOCATION=$HOME/work/splunks
 
 alias splunks="cd $SPLUNKS_LOCATION"
