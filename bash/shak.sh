@@ -329,7 +329,7 @@ backup() {
 # Print a random guid
 alias guid="uuidgen"
 
-function tableflip(){
+tableflip() {
     echo "(╯°□°）╯︵ ┻━┻"
 }
 
@@ -340,3 +340,18 @@ alias update="upgrade_oh_my_zsh"
 alias cask="brew cask $@"
 
 # export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home"
+
+# golang
+# TODO: add setup for these directories
+# TODO: set this up to be a bit more dynamic
+export GOPATH=$HOME/work/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+export GOSPLUNKSRC=$GOPATH/src/github.com/splunk
+alias goroot="cd $GOSPLUNKSRC"
+gosplunkclone() {
+    if [ -d "$1" ]; then
+        goroot && git clone $1
+    else
+        echo "provide a git repo to clone first"
+    fi
+}
