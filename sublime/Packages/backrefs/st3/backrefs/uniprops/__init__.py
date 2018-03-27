@@ -10,6 +10,8 @@ else:
     UNICODE_RANGE = '\u0000-\U0010ffff'
 
 PY3 = sys.version_info >= (3, 0) and sys.version_info[0:2] < (4, 0)
+PY35 = sys.version_info >= (3, 5)
+PY37 = sys.version_info >= (3, 7)
 if PY3:
     binary_type = bytes  # noqa
 else:
@@ -172,6 +174,39 @@ def get_hangul_syllable_type_property(value, binary=False):
     return obj[value]
 
 
+def get_indic_positional_category_property(value, binary=False):
+    """Get `INDIC POSITIONAL/MATRA CATEGORY` property."""
+
+    if PY35:
+        obj = unidata.ascii_indic_positional_category if binary else unidata.unicode_indic_positional_category
+        alias_key = 'indicpositionalcategory'
+    else:
+        obj = unidata.ascii_indic_matra_category if binary else unidata.unicode_indic_matra_category
+        alias_key = 'indicmatracategory'
+
+    if value.startswith('^'):
+        negated = value[1:]
+        value = '^' + unidata.unicode_alias[alias_key].get(negated, negated)
+    else:
+        value = unidata.unicode_alias[alias_key].get(value, value)
+
+    return obj[value]
+
+
+def get_indic_syllabic_category_property(value, binary=False):
+    """Get `INDIC SYLLABIC CATEGORY` property."""
+
+    obj = unidata.ascii_indic_syllabic_category if binary else unidata.unicode_indic_syllabic_category
+
+    if value.startswith('^'):
+        negated = value[1:]
+        value = '^' + unidata.unicode_alias['indicsyllabiccategory'].get(negated, negated)
+    else:
+        value = unidata.unicode_alias['indicsyllabiccategory'].get(value, value)
+
+    return obj[value]
+
+
 def get_decomposition_type_property(value, binary=False):
     """Get `DECOMPOSITION TYPE` property."""
 
@@ -326,6 +361,20 @@ def get_script_property(value, binary=False):
     return obj[value]
 
 
+def get_script_extension_property(value, binary=False):
+    """Get `SCX` property."""
+
+    obj = unidata.ascii_script_extensions if binary else unidata.unicode_script_extensions
+
+    if value.startswith('^'):
+        negated = value[1:]
+        value = '^' + unidata.unicode_alias['script'].get(negated, negated)
+    else:
+        value = unidata.unicode_alias['script'].get(value, value)
+
+    return obj[value]
+
+
 def get_block_property(value, binary=False):
     """Get `BLK` property."""
 
@@ -354,6 +403,87 @@ def get_bidi_property(value, binary=False):
     return obj[value]
 
 
+def get_bidi_paired_bracket_type_property(value, binary=False):
+    """Get `BPT` property."""
+
+    obj = unidata.ascii_bidi_paired_bracket_type if binary else unidata.unicode_bidi_paired_bracket_type
+
+    if value.startswith('^'):
+        negated = value[1:]
+        value = '^' + unidata.unicode_alias['bidipairedbrackettype'].get(negated, negated)
+    else:
+        value = unidata.unicode_alias['bidipairedbrackettype'].get(value, value)
+
+    return obj[value]
+
+
+def get_vertical_orientation_property(value, binary=False):
+    """Get `VO` property."""
+
+    obj = unidata.ascii_vertical_orientation if binary else unidata.unicode_vertical_orientation
+
+    if value.startswith('^'):
+        negated = value[1:]
+        value = '^' + unidata.unicode_alias['verticalorientation'].get(negated, negated)
+    else:
+        value = unidata.unicode_alias['verticalorientation'].get(value, value)
+
+    return obj[value]
+
+
+def get_is_property(value, binary=False):
+    """Get shortcut for `SC` or `Binary` property."""
+
+    if value.startswith('^'):
+        prefix = value[1:3]
+        temp = value[3:]
+        negate = '^'
+    else:
+        prefix = value[:2]
+        temp = value[2:]
+        negate = ''
+
+    if prefix != 'is':
+        raise ValueError("Does not start with 'is'!")
+
+    if PY3:
+        script_obj = unidata.ascii_script_extensions if binary else unidata.unicode_script_extensions
+    else:
+        script_obj = unidata.ascii_scripts if binary else unidata.unicode_scripts
+    bin_obj = unidata.ascii_binary if binary else unidata.unicode_binary
+
+    value = negate + unidata.unicode_alias['script'].get(temp, temp)
+
+    if value not in script_obj:
+        value = negate + unidata.unicode_alias['binary'].get(temp, temp)
+        obj = bin_obj
+    else:
+        obj = script_obj
+
+    return obj[value]
+
+
+def get_in_property(value, binary=False):
+    """Get shortcut for `Block` property."""
+
+    if value.startswith('^'):
+        prefix = value[1:3]
+        temp = value[3:]
+        negate = '^'
+    else:
+        prefix = value[:2]
+        temp = value[2:]
+        negate = ''
+
+    if prefix != 'in':
+        raise ValueError("Does not start with 'in'!")
+
+    value = negate + unidata.unicode_alias['block'].get(temp, temp)
+    obj = unidata.ascii_blocks if binary else unidata.unicode_blocks
+
+    return obj[value]
+
+
 def is_enum(name):
     """Check if name is an enum (not a binary) property."""
 
@@ -370,16 +500,26 @@ def get_unicode_property(value, prop=None, binary=False):
                 return get_gc_property(value, binary)
             elif prop == 'script':
                 return get_script_property(value, binary)
+            elif PY3 and prop == 'scriptextensions':
+                return get_script_extension_property(value, binary)
             elif prop == 'block':
                 return get_block_property(value, binary)
             elif prop == 'binary':
                 return get_binary_property(value, binary)
             elif prop == 'bidiclass':
                 return get_bidi_property(value, binary)
+            elif prop == 'bidipairedbrackettype':
+                return get_bidi_paired_bracket_type_property(value, binary)
             elif prop == 'age':
                 return get_age_property(value, binary)
             elif prop == 'eastasianwidth':
                 return get_east_asian_width_property(value, binary)
+            elif PY35 and prop == 'indicpositionalcategory':
+                return get_indic_positional_category_property(value, binary)
+            elif PY3 and not PY35 and prop == 'indicmatracategory':
+                return get_indic_positional_category_property(value, binary)
+            elif PY3 and prop == 'indicsyllabiccategory':
+                return get_indic_syllabic_category_property(value, binary)
             elif prop == 'hangulsyllabletype':
                 return get_hangul_syllable_type_property(value, binary)
             elif prop == 'decompositiontype':
@@ -410,43 +550,43 @@ def get_unicode_property(value, prop=None, binary=False):
                 return get_nfkc_quick_check_property(value, binary)
             elif prop == 'nfkdquickcheck':
                 return get_nfkd_quick_check_property(value, binary)
+            elif PY37 and prop == 'verticalorientation':
+                return get_vertical_orientation_property(value, binary)
             else:
                 raise ValueError('Invalid Unicode property!')
         except Exception:
             raise ValueError('Invalid Unicode property!')
-
-    if value.startswith('^'):
-        temp = value[1:]
-        negate = '^'
-    else:
-        temp = value
-        negate = ''
 
     try:
         return get_gc_property(value, binary)
     except Exception:
         pass
 
-    if temp.startswith('is'):
-        try:
-            return get_script_property(negate + temp[2:], binary)
-        except Exception:
-            pass
     try:
-        return get_script_property(value, binary)
+        if PY3:
+            return get_script_extension_property(value, binary)
+        else:
+            return get_script_property(value, binary)
     except Exception:
         pass
-    if temp.startswith('in'):
-        try:
-            return get_block_property(negate + temp[2:], binary)
-        except Exception:
-            pass
+
     try:
         return get_block_property(value, binary)
     except Exception:
         pass
+
     try:
         return get_binary_property(value, binary)
+    except Exception:
+        pass
+
+    try:
+        return get_is_property(value, binary)
+    except Exception:
+        pass
+
+    try:
+        return get_in_property(value, binary)
     except Exception:
         pass
 

@@ -40,6 +40,9 @@ stow zsh -t $HOME
 
 stow git -t $HOME/
 
+# setup global gitignore file
+git config --global core.excludesfile $HOME/work/git/stow-dotfiles/git/.gitignore
+
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 

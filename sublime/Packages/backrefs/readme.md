@@ -1,6 +1,6 @@
 # Backrefs
 
-Current Version: 3.1.2
+Current Version: 3.5.0
 
 Wraps the Python `re` or `regex` module to provide additional back references.  On Sublime, currently only `re` is available.  But if your system has some how made `regex` available, it should work for `regex` as well.
 

@@ -25,81 +25,13 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import unicode_literals
 from markdown import Extension
-from markdown.postprocessors import Postprocessor
-import re
-
-
-RE_TAG_HTML = re.compile(
-    r'''(?x)
-    (?:
-        (?P<comments>(\r?\n?\s*)<!--[\s\S]*?-->(\s*)(?=\r?\n)|<!--[\s\S]*?-->)|
-        (?P<open><(?P<name>[\w\:\.\-]+))
-        (?P<attr>(?:\s+[\w\-:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)
-        (?P<close>\s*(?P<self_close>/)?>)|
-        (?P<close_tag></(?P<close_name>[\w\:\.\-]+)>)
-    )
-    ''',
-    re.DOTALL | re.UNICODE
-)
-
-TAG_BAD_ATTR = r'''(?x)
-(?P<attr>
-    (?:
-        \s+(?:%s)
-        (?:\s*=\s*(?:"[^"]*"|'[^']*'))
-    )*
-)
-'''
-
-
-class PlainHtmlPostprocessor(Postprocessor):
-    """Post processor to strip out unwanted content."""
-
-    def repl(self, m):
-        """Replace comments and unwanted attributes."""
-
-        if m.group('comments'):
-            tag = '' if self.strip_comments and not self.script else m.group('comments')
-        else:
-            if self.script:
-                if m.group('close_tag') and m.group('close_name') == 'script':
-                    self.script = False
-                tag = m.group(0)
-            elif m.group('close_tag'):
-                tag = m.group(0)
-            else:
-                tag = m.group('open')
-                if self.re_attributes is not None:
-                    tag += self.re_attributes.sub('', m.group('attr'))
-                else:
-                    tag += m.group('attr')
-                tag += m.group('close')
-                if m.group('name') == "script" and m.group('self_close') is None:
-                    self.script = True
-        return tag
-
-    def run(self, text):
-        """Strip out ids and classes for a simplified HTML output."""
-
-        attr_str = self.config.get('strip_attributes', 'id class style').strip()
-        attributes = [re.escape(a) for a in attr_str.split(' ')] if attr_str else []
-        if self.config.get('strip_js_on_attributes', True):
-            attributes.append(r'on[\w]+')
-        if len(attributes):
-            self.re_attributes = re.compile(
-                TAG_BAD_ATTR % '|'.join(attributes),
-                re.DOTALL | re.UNICODE
-            )
-        else:
-            self.re_attributes = None
-        self.strip_comments = self.config.get('strip_comments', True)
-
-        self.script = False
-        return RE_TAG_HTML.sub(self.repl, text)
+from . import striphtml
+from .util import PymdownxDeprecationWarning
+import warnings
 
 
 class PlainHtmlExtension(Extension):
-    """PlainHtml extension."""
+    """Plain HTML extension."""
 
     def __init__(self, *args, **kwargs):
         """Initialize."""
@@ -126,8 +58,22 @@ class PlainHtmlExtension(Extension):
     def extendMarkdown(self, md, md_globals):
         """Strip unwanted attributes to give a plain HTML."""
 
-        plainhtml = PlainHtmlPostprocessor(md)
-        plainhtml.config = self.getConfigs()
+        warnings.warn(
+            "'PlainHTML' has been renamed to 'StripHTML' (pymdownx.striphtml).\n"
+            "The usage of pymdownx.plainhtml is deprecated and will be removed\n"
+            "in the future.  It is advised to switch over to StripHTML, but please\n"
+            "read the documentation as some of the option formats and defaults are\n"
+            "are different in the new StripHTML extension.",
+            PymdownxDeprecationWarning
+        )
+
+        config = self.getConfigs()
+        plainhtml = striphtml.StripHtmlPostprocessor(
+            config.get('strip_comments'),
+            config.get('strip_js_on_attributes'),
+            config.get('strip_attributes').split(),
+            md
+        )
         md.postprocessors.add("plain-html", plainhtml, "_end")
         md.registerExtension(self)
 

@@ -12,6 +12,8 @@ unicode_alias = {
         "gc": "generalcategory",
         "gcb": "graphemeclusterbreak",
         "hst": "hangulsyllabletype",
+        "inmc": "indicmatracategory",
+        "insc": "indicsyllabiccategory",
         "jg": "joininggroup",
         "jt": "joiningtype",
         "lb": "linebreak",
@@ -23,6 +25,7 @@ unicode_alias = {
         "nv": "numericvalue",
         "sb": "sentencebreak",
         "sc": "script",
+        "scx": "scriptextensions",
         "wb": "wordbreak"
     },
     "age": {
@@ -395,6 +398,10 @@ unicode_alias = {
         "trailingjamo": "t",
         "voweljamo": "v"
     },
+    "indicmatracategory": {
+    },
+    "indicsyllabiccategory": {
+    },
     "joininggroup": {
         "tehmarbutagoal": "hamzaonhehgoal"
     },
@@ -573,6 +580,8 @@ unicode_alias = {
         "zyyy": "common",
         "zzzz": "unknown"
     },
+    "scriptextensions": {
+    },
     "sentencebreak": {
         "at": "aterm",
         "cl": "close",
@@ -618,6 +627,10 @@ enum_names = {
     "graphemeclusterbreak",
     "hangulsyllabletype",
     "hst",
+    "indicmatracategory",
+    "indicsyllabiccategory",
+    "inmc",
+    "insc",
     "jg",
     "joininggroup",
     "joiningtype",
@@ -639,6 +652,8 @@ enum_names = {
     "sb",
     "sc",
     "script",
+    "scriptextensions",
+    "scx",
     "sentencebreak",
     "wb",
     "wordbreak"

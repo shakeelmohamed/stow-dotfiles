@@ -80,14 +80,14 @@ _REGEX_TYPE = type(_regex.compile('', 0))
 
 
 @_util.lru_cache(maxsize=_MAXCACHE)
-def _cached_search_compile(pattern, re_verbose, re_version):
+def _cached_search_compile(pattern, re_verbose, re_version, pattern_type):
     """Cached search compile."""
 
     return _bregex_parse._SearchParser(pattern, re_verbose, re_version).parse()
 
 
 @_util.lru_cache(maxsize=_MAXCACHE)
-def _cached_replace_compile(pattern, repl, flags):
+def _cached_replace_compile(pattern, repl, flags, pattern_type):
     """Cached replace compile."""
 
     return _bregex_parse._ReplaceParser().parse(pattern, repl, bool(flags & FORMAT))
@@ -140,7 +140,7 @@ def _apply_search_backrefs(pattern, flags=0):
         else:
             re_version = 0
         if not (flags & DEBUG):
-            pattern = _cached_search_compile(pattern, re_verbose, re_version)
+            pattern = _cached_search_compile(pattern, re_verbose, re_version, type(pattern))
         else:  # pragma: no cover
             pattern = _bregex_parse._SearchParser(pattern, re_verbose, re_version).parse()
     elif isinstance(pattern, Bregex):
@@ -197,7 +197,7 @@ def compile_replace(pattern, repl, flags=0):
     if pattern is not None and isinstance(pattern, _REGEX_TYPE):
         if isinstance(repl, (_util.string_type, _util.binary_type)):
             if not (pattern.flags & DEBUG):
-                call = _cached_replace_compile(pattern, repl, flags)
+                call = _cached_replace_compile(pattern, repl, flags, type(repl))
             else:  # pragma: no cover
                 call = _bregex_parse._ReplaceParser().parse(pattern, repl, bool(flags & FORMAT))
         elif isinstance(repl, ReplaceTemplate):
@@ -227,7 +227,7 @@ class Bregex(_util.Immutable):
         super(Bregex, self).__init__(
             _pattern=pattern,
             auto_compile=auto_compile,
-            _hash=hash((type(self), pattern, auto_compile))
+            _hash=hash((type(self), type(pattern), pattern, auto_compile))
         )
 
     @property

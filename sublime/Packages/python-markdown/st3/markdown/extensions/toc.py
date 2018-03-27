@@ -2,7 +2,7 @@
 Table of Contents Extension for Python-Markdown
 ===============================================
 
-See <https://pythonhosted.org/Markdown/extensions/toc.html>
+See <https://Python-Markdown.github.io/extensions/toc>
 for documentation.
 
 Oringinal code Copyright 2008 [Jack Miller](http://codezen.org)
@@ -25,8 +25,8 @@ import unicodedata
 def slugify(value, separator):
     """ Slugify a string, to make it URL friendly. """
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = re.sub('[^\w\s-]', '', value.decode('ascii')).strip().lower()
-    return re.sub('[%s\s]+' % separator, separator, value)
+    value = re.sub(r'[^\w\s-]', '', value.decode('ascii')).strip().lower()
+    return re.sub(r'[%s\s]+' % separator, separator, value)
 
 
 IDCOUNT_RE = re.compile(r'^(.*)_([0-9]+)$')

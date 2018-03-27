@@ -189,6 +189,8 @@ The pattern classes
 class Pattern(object):
     """Base class that inline patterns subclass. """
 
+    ANCESTOR_EXCLUDES = tuple()
+
     def __init__(self, pattern, markdown_instance=None):
         """
         Create an instant of an inline pattern.
@@ -199,7 +201,7 @@ class Pattern(object):
 
         """
         self.pattern = pattern
-        self.compiled_re = re.compile("^(.*?)%s(.*)$" % pattern,
+        self.compiled_re = re.compile(r"^(.*?)%s(.*)$" % pattern,
                                       re.DOTALL | re.UNICODE)
 
         # Api for Markdown to pass safe_mode into instance
@@ -350,7 +352,7 @@ class HtmlPattern(Pattern):
             if value is not None:
                 try:
                     return self.markdown.serializer(value)
-                except:
+                except Exception:
                     return r'\%s' % value
 
         return util.INLINE_PLACEHOLDER_RE.sub(get_stash, text)

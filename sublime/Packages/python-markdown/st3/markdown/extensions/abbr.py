@@ -4,7 +4,7 @@ Abbreviation Extension for Python-Markdown
 
 This extension adds abbreviation handling to Python-Markdown.
 
-See <https://pythonhosted.org/Markdown/extensions/abbreviations.html>
+See <https://Python-Markdown.github.io/extensions/abbreviations>
 for documentation.
 
 Oringinal code Copyright 2007-2008 [Waylan Limberg](http://achinghead.com/) and
@@ -53,6 +53,9 @@ class AbbrPreprocessor(Preprocessor):
                 title = m.group('title').strip()
                 self.markdown.inlinePatterns['abbr-%s' % abbr] = \
                     AbbrPattern(self._generate_pattern(abbr), title)
+                # Preserve the line to prevent raw HTML indexing issue.
+                # https://github.com/Python-Markdown/markdown/issues/584
+                new_text.append('')
             else:
                 new_text.append(line)
         return new_text

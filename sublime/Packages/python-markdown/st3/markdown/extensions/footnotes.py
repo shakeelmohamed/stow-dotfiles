@@ -4,7 +4,7 @@ Footnotes Extension for Python-Markdown
 
 Adds footnote handling to Python-Markdown.
 
-See <https://pythonhosted.org/Markdown/extensions/footnotes.html>
+See <https://Python-Markdown.github.io/extensions/footnotes>
 for documentation.
 
 Copyright The Python Markdown Project
@@ -49,7 +49,12 @@ class FootnoteExtension(Extension):
             "BACKLINK_TEXT":
                 ["&#8617;",
                  "The text string that links from the footnote "
-                 "to the reader's place."]
+                 "to the reader's place."],
+            "BACKLINK_TITLE":
+                ["Jump back to footnote %d in the text",
+                 "The text string used for the title HTML attribute "
+                 "of the backlink. %d will be replaced by the "
+                 "footnote number."]
         }
         super(FootnoteExtension, self).__init__(*args, **kwargs)
 
@@ -192,12 +197,12 @@ class FootnoteExtension(Extension):
             backlink.set("class", "footnote-backref")
             backlink.set(
                 "title",
-                "Jump back to footnote %d in the text" %
+                self.getConfig("BACKLINK_TITLE") %
                 (self.footnotes.index(id)+1)
             )
             backlink.text = FN_BACKLINK_TEXT
 
-            if li.getchildren():
+            if len(li):
                 node = li[-1]
                 if node.tag == "p":
                     node.text = node.text + NBSP_PLACEHOLDER
@@ -233,7 +238,12 @@ class FootnotePreprocessor(Preprocessor):
                 fn, _i = self.detectTabbed(lines[i+1:])
                 fn.insert(0, m.group(2))
                 i += _i-1  # skip past footnote
-                self.footnotes.setFootnote(m.group(1), "\n".join(fn))
+                footnote = "\n".join(fn)
+                self.footnotes.setFootnote(m.group(1), footnote.rstrip())
+                # Preserve a line for each block to prevent raw HTML indexing issue.
+                # https://github.com/Python-Markdown/markdown/issues/584
+                num_blocks = (len(footnote.split('\n\n')) * 2)
+                newlines.extend([''] * (num_blocks))
             else:
                 newlines.append(lines[i])
             if len(lines) > i+1:
@@ -285,6 +295,11 @@ class FootnotePreprocessor(Preprocessor):
                     if lines[j].strip():
                         next_line = lines[j]
                         break
+                    else:
+                        # Include extreaneous padding to prevent raw HTML
+                        # parsing issue: https://github.com/Python-Markdown/markdown/issues/584
+                        items.append("")
+                        i += 1
                 else:
                     break  # There is no more text; we are done.
 
@@ -388,7 +403,7 @@ class FootnoteTreeprocessor(Treeprocessor):
             result = self.footnotes.findFootnotesPlaceholder(root)
             if result:
                 child, parent, isText = result
-                ind = parent.getchildren().index(child)
+                ind = list(parent).index(child)
                 if isText:
                     parent.remove(child)
                     parent.insert(ind, footnotesDiv)

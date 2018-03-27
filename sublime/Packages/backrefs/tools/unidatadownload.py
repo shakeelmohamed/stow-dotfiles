@@ -4,9 +4,12 @@ import sys
 import os
 import zipfile
 
-__version__ = '1.0.0'
+__version__ = '2.2.0'
 
 PY3 = sys.version_info >= (3, 0) and sys.version_info[0:2] < (4, 0)
+PY34 = sys.version_info >= (3, 4)
+PY35 = sys.version_info >= (3, 5)
+PY37 = sys.version_info >= (3, 7)
 
 if PY3:
     from urllib.request import urlopen
@@ -47,7 +50,7 @@ def unzip_unicode(output, version):
 
 def download_unicodedata(version, output=HOME, no_zip=False):
     """Download Unicode data scripts and blocks."""
-    files = (
+    files = [
         'UnicodeData.txt',
         'Scripts.txt',
         'Blocks.txt',
@@ -70,7 +73,22 @@ def download_unicodedata(version, output=HOME, no_zip=False):
         'extracted/DerivedJoiningType.txt',
         'extracted/DerivedJoiningGroup.txt',
         'extracted/DerivedCombiningClass.txt'
-    )
+    ]
+
+    if PY3:
+        files.append('ScriptExtensions.txt')
+        if PY35:
+            files.append('IndicPositionalCategory.txt')
+        else:
+            files.append('IndicMatraCategory.txt')
+        files.append('IndicSyllabicCategory.txt')
+
+    if PY34:
+        files.append('BidiBrackets.txt')
+
+    if PY37:
+        files.append('VerticalOrientation.txt')
+
     http_url = 'http://www.unicode.org/Public/%s/ucd/' % version
     ftp_url = 'ftp://ftp.unicode.org/Public/%s/ucd/' % version
 
@@ -129,7 +147,7 @@ if __name__ == '__main__':
     import argparse
     import unicodedata
 
-    parser = argparse.ArgumentParser(prog='unipropgen', description='Generate a unicode property table.')
+    parser = argparse.ArgumentParser(prog='unidatadownload', description='Generate a unicode property table.')
     parser.add_argument('--version', action='version', version="%(prog)s " + __version__)
     parser.add_argument('--output', default=HOME, help='Output file.')
     parser.add_argument('--unicode-version', default=None, help='Force a specific Unicode version.')

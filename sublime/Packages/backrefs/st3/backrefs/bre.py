@@ -17,8 +17,10 @@ Add the ability to use the following backrefs with re:
  - `\N{Black Club Suit}`                                         - Unicode character by name (search & replace)
  - `\u0000` and `\U00000000`                                     - Unicode characters (replace)
  - `\e`                                                          - Escape character (search)
- - `\<`                                                          - Starting word boundary (search)
- - `\>`                                                          - Ending word boundary (search)
+ - `\m`                                                          - Starting word boundary (search)
+ - `\M`                                                          - Ending word boundary (search)
+ - `\R`                                                          - Generic line breaks (search)
+ - `\X`                                                          - Simplified grapheme clusters (search)
 
 Licensed under MIT
 Copyright (c) 2011 - 2018 Isaac Muse <isaacmuse@gmail.com>
@@ -67,14 +69,14 @@ _RE_TYPE = type(_re.compile('', 0))
 
 
 @_util.lru_cache(maxsize=_MAXCACHE)
-def _cached_search_compile(pattern, re_verbose, re_version):
+def _cached_search_compile(pattern, re_verbose, re_version, pattern_type):
     """Cached search compile."""
 
     return _bre_parse._SearchParser(pattern, re_verbose, re_version).parse()
 
 
 @_util.lru_cache(maxsize=_MAXCACHE)
-def _cached_replace_compile(pattern, repl, flags):
+def _cached_replace_compile(pattern, repl, flags, pattern_type):
     """Cached replace compile."""
 
     return _bre_parse._ReplaceParser().parse(pattern, repl, bool(flags & FORMAT))
@@ -126,7 +128,7 @@ def _apply_search_backrefs(pattern, flags=0):
         elif bool(UNICODE & flags):
             re_unicode = True
         if not (flags & DEBUG):
-            pattern = _cached_search_compile(pattern, re_verbose, re_unicode)
+            pattern = _cached_search_compile(pattern, re_verbose, re_unicode, type(pattern))
         else:  # pragma: no cover
             pattern = _bre_parse._SearchParser(pattern, re_verbose, re_unicode).parse()
     elif isinstance(pattern, Bre):
@@ -168,7 +170,7 @@ class Bre(_util.Immutable):
         super(Bre, self).__init__(
             _pattern=pattern,
             auto_compile=auto_compile,
-            _hash=hash((type(self), pattern, auto_compile))
+            _hash=hash((type(self), type(pattern), pattern, auto_compile))
         )
 
     @property
@@ -334,7 +336,7 @@ def compile_replace(pattern, repl, flags=0):
     if pattern is not None and isinstance(pattern, _RE_TYPE):
         if isinstance(repl, (_util.string_type, _util.binary_type)):
             if not (pattern.flags & DEBUG):
-                call = _cached_replace_compile(pattern, repl, flags)
+                call = _cached_replace_compile(pattern, repl, flags, type(repl))
             else:  # pragma: no cover
                 call = _bre_parse._ReplaceParser().parse(pattern, repl, bool(flags & FORMAT))
         elif isinstance(repl, ReplaceTemplate):
