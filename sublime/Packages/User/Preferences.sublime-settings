@@ -28,7 +28,8 @@
 		"playlist",
 		"autoplay",
 		"querystring",
-		"config"
+		"config",
+		"Javascript"
 	],
 	"binary_file_patterns":
 	[

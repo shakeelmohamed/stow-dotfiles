@@ -1,1 +1,1 @@
-{"description": "Python Jinja2 module", "sublime_text": "*", "version": "2.8.0", "url": "https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-jinja2/issues", "platforms": ["*"]}
+{"platforms": ["*"], "url": "https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-jinja2/issues", "version": "2.8.0", "description": "Python Jinja2 module", "sublime_text": "*"}
