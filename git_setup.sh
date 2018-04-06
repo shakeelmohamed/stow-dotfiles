@@ -28,6 +28,8 @@ gitsetup() {
 
     # Use the patience algorithm for diffing
     git config --global diff.algorithm patience
+
+    git config --global diff.colorMoved default
 }
 
 gitsetup
