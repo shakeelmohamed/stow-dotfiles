@@ -29,7 +29,13 @@
 		"autoplay",
 		"querystring",
 		"config",
-		"Javascript"
+		"Javascript",
+		"Shakeel",
+		"url",
+		"jirabrancher",
+		"dotenv",
+		"https",
+		"shakeelmohamed"
 	],
 	"binary_file_patterns":
 	[
