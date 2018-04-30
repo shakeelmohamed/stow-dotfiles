@@ -328,6 +328,9 @@ backup() {
 
 # Print a random guid
 alias guid="uuidgen"
+lowerguid() {
+    guid | awk '{print tolower($0)}'
+}
 
 tableflip() {
     echo "(╯°□°）╯︵ ┻━┻"
