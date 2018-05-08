@@ -351,6 +351,7 @@ export GOPATH=$HOME/work/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 export GOSPLUNKSRC=$GOPATH/src/github.com/splunk
 alias goroot="cd $GOSPLUNKSRC"
+alias gohome=goroot
 goclone() {
     if [ "$#" -eq 1 ]; then
         goroot && git clone $1
