@@ -359,3 +359,5 @@ goclone() {
         echo "provide a git repo to clone first"
     fi
 }
+
+alias wipeawaydocker="docker rmi -f $(docker images)"
