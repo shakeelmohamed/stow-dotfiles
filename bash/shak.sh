@@ -360,4 +360,6 @@ goclone() {
     fi
 }
 
-alias wipeawaydocker="docker rmi -f $(docker images)"
+wipeawaydocker() {
+    docker rmi -f $(docker images)
+}
