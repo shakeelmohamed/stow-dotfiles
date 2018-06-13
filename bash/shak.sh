@@ -363,3 +363,5 @@ goclone() {
 wipeawaydocker() {
     docker rmi -f $(docker images)
 }
+
+alias jb="jirabrancher"

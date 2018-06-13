@@ -53,6 +53,7 @@ git config --global core.excludesfile "$HOME/.gitignore_global"
 # Node.js setup
 nvm install 6
 npm install -g trash-cli
+npm install -g jira-brancher
 
 # bro pages, simpler man pages
 sudo gem install bropages
