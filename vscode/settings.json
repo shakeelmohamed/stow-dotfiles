@@ -1,0 +1,12 @@
+{
+    "window.zoomLevel": 0,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.snippetSuggestions": "top",
+    "editor.formatOnPaste": true,
+    "editor.find.seedSearchStringFromSelection": false,
+    "editor.fontSize": 14,
+    "editor.scrollBeyondLastLine": true,
+    "editor.tabSize": 4,
+    "editor.wordWrap": "on",
+    "workbench.colorTheme": "Monokai Dimmed"
+}

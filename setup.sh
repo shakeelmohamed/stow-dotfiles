@@ -41,6 +41,7 @@ stow zsh -t $HOME
 stow git -t $HOME/
 
 stow vscode -t $HOME
+ln -s "$HOME/work/git/stow-dotfiles/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 
 # setup global gitignore file
 git config --global core.excludesfile $HOME/work/git/stow-dotfiles/git/.gitignore
