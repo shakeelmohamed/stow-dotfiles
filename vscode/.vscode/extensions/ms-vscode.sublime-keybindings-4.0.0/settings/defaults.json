@@ -1,0 +1,18 @@
+[
+    [
+        "editor.multiCursorModifier",
+        "ctrlCmd"
+    ],
+    [
+        "editor.snippetSuggestions",
+        "top"
+    ],
+    [
+        "editor.formatOnPaste",
+        true
+    ],
+    [
+        "workbench.colorTheme",
+        "Monokai"
+    ]
+]

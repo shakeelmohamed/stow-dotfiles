@@ -1,0 +1,54 @@
+{
+  "name": "simcim",
+  "displayName": "simcim",
+  "description": "Syntax highlighting for simcim",
+  "version": "0.0.1",
+  "publisher": "splunk",
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "simcim",
+        "aliases": [
+          "simcim"
+        ],
+        "extensions": [
+          ".sim",
+          ".simulation"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "scene",
+        "extensions": [
+          ".scene"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "simcim",
+        "scopeName": "source.simcim",
+        "path": "./syntaxes/simcim.tmLanguage.json"
+      },
+      {
+        "language": "scene",
+        "scopeName": "source.simcim.scene",
+        "path": "./syntaxes/scene.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "./node_modules/vsce/out/vsce package -o ./build/splunkSimulation.vsix"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vsce": "^1.18.0"
+  }
+}

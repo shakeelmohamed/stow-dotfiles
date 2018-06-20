@@ -1,0 +1,90 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "simcim",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.simcim",
+				"match": "\\b(simulation)\\b"
+			},{
+				"name": "keyword.operator.simcim",
+				"match": "\\b(tell|to|\\+|\\-|=)\\b"
+			},{
+				"name": "support.function",
+				"match": "\\b(die|spawn|log)\\b"
+			},{
+				"name": "variable.language.self.simcim",
+				"match": "\\bself"
+			},{
+				"name": "constant.numeric",
+				"match": "\\b\\d+"
+			},{
+				"match": "\\b(entity)\\s+(\\w+)\\s*(\\(\\w*\\))?\\s*{",
+				"captures": {
+					"1": {
+						"name": "storage.type.simcim"
+					},
+					"2": {
+						"name": "entity.name.class.simcim"
+					}
+				}
+			},{
+				"match": "\\b(action|rule)\\s+(\\w+)\\s*(\\(\\w*\\))?\\s*{",
+				"captures": {
+					"1": {
+						"name": "storage.type.simcim"
+					},
+					"2": {
+						"name": "entity.name.function.simcim"
+					}
+				}
+			},{
+				"match": "\\b(tell)\\s+(\\w+)\\s+(to)?\\s*(\\w)",
+				"captures": {
+					"1": {
+						"name": "keyword.operator.simcim"
+					},
+					"2": {
+						"name": "variable.name.simcim"
+					},
+					"3": {
+						"name": "keyword.operator.simcim"
+					},
+					"4": {
+						"name": "entity.name.function.simcim"
+					}
+				}
+
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.simcim",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "keyword.control.simcim",
+					"match": "{{[^{]*}}"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [{
+				"name": "comment.line.number-sign.simcim",
+				"match": "#.*$"
+			}]
+		}
+	},
+	"scopeName": "source.simcim"
+}

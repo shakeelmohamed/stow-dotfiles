@@ -1,0 +1,74 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "scene",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"match": "\\b(use)\\s+(simulation)\\s+(\\w+)\\b",
+				"captures": {
+					"1":{
+						"name": "keyword.control.simcim.scene"
+					},
+					"2": {
+						"name": "keyword.control.simcim.scene"
+					},
+					"3": {
+						"name": "entity.name.function.simcim.scene"
+					}
+				}
+			},{
+				"match": "\\b(scene)\\s*(\\w+)",
+				"captures": {
+					"1": {
+						"name": "storage.type.simcim.scene"
+					},
+					"2": {
+						"name": "entity.name.function.simcim.scene"
+					}
+				}
+			},{
+				"match": "\\b(build)\\s*\\(((\\d+),)?\\s*(\\w+)",
+				"captures": {
+					"1": {
+						"name": "keyword.control.less.simcim.scene"
+					},
+					"3": {
+						"name": "constant.numeric"
+					},
+					"4": {
+						"name": "variable.parameter.simsim.scene"
+					}
+				}
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.simcim.scene",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "keyword.control.simcim.scene",
+					"match": "{{[^{]*}}"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [{
+				"name": "comment.line.number-sign.simcim.scene",
+				"match": "#.*$"
+			}]
+		}
+	},
+	"scopeName": "source.simcim.scene"
+}
