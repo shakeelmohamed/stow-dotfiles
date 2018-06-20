@@ -79,16 +79,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
 # added by travis gem
 [ -f $HOME/.travis/travis.sh ] && source $HOME/.travis/travis.sh
 
 source $HOME/shak.sh
-# added by travis gem
-[ -f /Users/shakeelmohamed/.travis/travis.sh ] && source /Users/shakeelmohamed/.travis/travis.sh
 
 export PATH="$HOME/.yarn/bin:$PATH"

@@ -242,7 +242,12 @@ SDKREL() {
 
 # NVM
 export NVM_DIR=$HOME/.nvm
-source $(brew --prefix nvm)/nvm.sh
+# Made this a function so prompt loads 95% faster, actually.
+# See: http://github.com/creationix/nvm/issues/539
+nvminit() {
+    source $(brew --prefix nvm)/nvm.sh
+}
+
 
 # tree command
 alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
@@ -365,3 +370,5 @@ wipeawaydocker() {
 }
 
 alias jb="jirabrancher"
+
+alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
