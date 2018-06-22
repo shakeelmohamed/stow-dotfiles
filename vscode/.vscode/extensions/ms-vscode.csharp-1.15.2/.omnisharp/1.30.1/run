@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+BASE_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+
+PLATFORM_SUFFIX=""
+ARCH_SUFFIX=""
+
+case `uname` in
+    "Darwin") PLATFORM_SUFFIX=".osx" ;;
+    "Linux")
+        PLATFORM_SUFFIX=".linux"
+        case `uname -m` in
+            "x86" | "i386" | "i686") ARCH_SUFFIX="-x86" ;;
+            "x86_64") ARCH_SUFFIX="-x86_64" ;;
+        esac
+        ;;
+esac
+
+BIN_DIR=${BASE_DIR}/bin
+LIB_DIR=${BASE_DIR}/lib
+ETC_DIR=${BASE_DIR}/etc
+FRAMEWORK_DIR=${BASE_DIR}/framework
+OMNISHARP_DIR=${BASE_DIR}/omnisharp
+
+MONO_CMD=${BIN_DIR}/mono${PLATFORM_SUFFIX}${ARCH_SUFFIX}
+CONFIG_FILE=${ETC_DIR}/config${PLATFORM_SUFFIX}
+OMNISHARP_CMD=${OMNISHARP_DIR}/OmniSharp.exe
+
+chmod 755 ${MONO_CMD}
+
+NO_OMNISHARP=false
+
+name=$1
+case $name in
+    --no-omnisharp)
+        shift
+        NO_OMNISHARP=true
+        ;;
+esac
+
+export MONO_CFG_DIR=${ETC_DIR}
+export MONO_ENV_OPTIONS="--assembly-loader=strict --config ${CONFIG_FILE}"
+
+if [ "$NO_OMNISHARP" = true ]; then
+    export MONO_PATH=${FRAMEWORK_DIR}
+    "${MONO_CMD}" "$@"
+else
+    export MONO_PATH=${FRAMEWORK_DIR}:${OMNISHARP_DIR}
+    "${MONO_CMD}" "${OMNISHARP_CMD}" "$@"
+fi
