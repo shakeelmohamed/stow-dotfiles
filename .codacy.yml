@@ -1,5 +1,5 @@
 exclude_paths:
-  - sublime
-  - vscode
+  - 'sublime/**'
+  - 'vscode/**'
 shellcheck:
  - enabled: true
