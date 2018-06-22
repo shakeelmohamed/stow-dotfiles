@@ -1,4 +1,5 @@
 exclude_paths:
   - sublime
+  - vscode
 shellcheck:
  - enabled: true
