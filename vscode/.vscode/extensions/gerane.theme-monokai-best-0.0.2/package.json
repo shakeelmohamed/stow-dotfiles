@@ -1,0 +1,33 @@
+{
+	"name": "Theme-monokai-best",
+	"displayName": "monokai-best Theme",
+	"description": "monokai-best Theme ported from the monokai-best TextMate Theme",
+	"version": "0.0.2",
+	"publisher": "gerane",
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"categories": [
+		"Themes"
+	],
+	"icon": "icon.png",
+	"homepage": "https://github.com/gerane/VSCodeThemes/blob/master/gerane.Theme-monokai-best/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gerane/VSCodeThemes.git"
+	},
+	"contributes": {
+		"themes": [
+			{
+				"label": "monokai-best",
+				"uiTheme": "vs-dark",
+				"path": "./themes/monokai-best.tmTheme"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "68c0dd43-5cbd-4088-9b42-09f21c864023",
+		"publisherId": "a5c25faf-bf60-4941-81b9-9a852b96c5fb",
+		"publisherDisplayName": "gerane"
+	}
+}

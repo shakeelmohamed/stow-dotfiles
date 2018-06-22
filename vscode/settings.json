@@ -8,5 +8,5 @@
     "editor.scrollBeyondLastLine": true,
     "editor.tabSize": 4,
     "editor.wordWrap": "on",
-    "workbench.colorTheme": "Monokai Dimmed"
+    "workbench.colorTheme": "monokai-best"
 }
