@@ -43,7 +43,8 @@
 		".DS_Store",
 		".gradle/**",
 		".idea/**",
-		".o"
+		".o",
+		"contrib/**"
 	],
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
