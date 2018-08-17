@@ -35,7 +35,8 @@
 		"jirabrancher",
 		"dotenv",
 		"https",
-		"shakeelmohamed"
+		"shakeelmohamed",
+		"namespace"
 	],
 	"binary_file_patterns":
 	[
