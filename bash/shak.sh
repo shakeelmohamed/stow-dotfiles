@@ -372,3 +372,7 @@ wipeawaydocker() {
 alias jb="jirabrancher"
 
 alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
+
+alias ag="echo \"ag is slow, use rg instead... brew install rg if needed\""
+
+alias duh="du -h"
