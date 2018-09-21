@@ -41,10 +41,13 @@
 	"binary_file_patterns":
 	[
 		"*.psd",
+		"*.png",
+		"*.jpg",
 		".DS_Store",
 		".gradle/**",
 		".idea/**",
 		".o",
+		"*.d.ts",
 		"contrib/**"
 	],
 	"bold_folder_labels": true,
