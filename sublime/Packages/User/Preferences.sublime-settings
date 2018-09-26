@@ -40,15 +40,16 @@
 	],
 	"binary_file_patterns":
 	[
-		"*.psd",
-		"*.png",
+		"*.d.ts",
 		"*.jpg",
+		"*.png",
+		"*.psd",
 		".DS_Store",
 		".gradle/**",
 		".idea/**",
 		".o",
-		"*.d.ts",
-		"contrib/**"
+		"contrib/**",
+		"demo/build/**"
 	],
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
