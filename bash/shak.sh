@@ -1,4 +1,4 @@
-echo "Shak shock."
+# echo "Shak shock."
 
 ###################
 # General utilities
@@ -298,8 +298,6 @@ intellij() {
     open -a "IntelliJ IDEA" $1
 }
 
-export RPI_MEDIA="$HOME/desktop/videos"
-
 timestamp() {
     echo "$(date +%s)"
 }
@@ -322,6 +320,7 @@ clonego() {
 alias tempclone=clonego
 
 alias desk="cd $HOME/Desktop"
+alias down="cd $HOME/Downloads"
 
 backup() {
     if [ -d "$1" ]; then
