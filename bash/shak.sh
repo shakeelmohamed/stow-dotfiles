@@ -144,17 +144,20 @@ gityank() {
 export ghuser="shakeelmohamed"
 
 ghfork() {
-    if [ "$1" == $ghuser ]; then
-        remote="git://github.com:$1/$(basename `pwd`).git"
-    else
-        remote="https://github.com/$1/$(basename `pwd`).git"
-    fi
-    git remote add $1 $remote
-    git fetch $1
+    echo "Trying to checkout a fork for $1"
+
     if [ "$#" -eq 1 ]; then
-        gco "$1/master"
+        remote="git://github.com/$1/$(basename `pwd`).git"
+        echo "\tremote: $remote"
+        git remote add $1 $remote
+        git fetch $1
+        if [ "$#" -eq 1 ]; then
+            gco "$1/master"
+        else
+            gco "$1/$2"
+        fi
     else
-        gco "$1/$2"
+        echo "No GitHub username provided"
     fi
 }
 
