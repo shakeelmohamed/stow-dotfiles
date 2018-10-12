@@ -147,7 +147,7 @@ ghfork() {
     echo "Trying to checkout a fork for $1"
 
     if [ "$#" -eq 1 ]; then
-        remote="git://github.com/$1/$(basename `pwd`).git"
+        remote="git@github.com:$1/$(basename `pwd`).git"
         echo "\tremote: $remote"
         git remote add $1 $remote
         git fetch $1
