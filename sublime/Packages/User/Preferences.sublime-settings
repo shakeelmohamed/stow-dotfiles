@@ -44,14 +44,14 @@
 		"*.jpg",
 		"*.png",
 		"*.psd",
+		"*/git/tk/extras/**",
 		".DS_Store",
 		".gradle/**",
 		".idea/**",
 		".o",
-		"demo/build/**",
-		"*/git/tk/extras/**",
 		"bower_components/**",
-		"contrib/**"
+		"contrib/**",
+		"demo/build/**"
 	],
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
