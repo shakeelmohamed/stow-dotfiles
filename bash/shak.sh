@@ -16,6 +16,9 @@ actuallyrm() {
 rm() {
     trash $@
 }
+trashcli() {
+    npm i -g trash-cli
+}
 
 # Remove OS X Terminal logs, see http://osxdaily.com/2010/05/06/speed-up-a-slow-terminal-by-clearing-log-files/
 alias wipelogs="sudo rm -rf /private/var/log/asl/*.asl"

@@ -18,10 +18,8 @@
 		"CTags",
 		"DocBlockr",
 		"Dockerfile Syntax Highlighting",
-		"Evernote",
 		"Git",
 		"GitGutter",
-		"Github Tools",
 		"Gradle_Language",
 		"Handlebars",
 		"Highlight Dodgy Chars",
@@ -45,14 +43,12 @@
 		"SideBarEnhancements",
 		"Splunk Conf File Syntax Highlighting",
 		"Splunk Syntax",
-		"SublimeCodeIntel",
 		"SublimeLinter-contrib-pug-lint",
 		"Theme - Spacegray",
 		"Themr",
 		"TodoReview",
 		"TWiki",
 		"TypeScript Syntax",
-		"TypescriptCompletion",
 		"WordCount"
 	]
 }
