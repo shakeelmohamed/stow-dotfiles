@@ -36,7 +36,8 @@
 		"dotenv",
 		"https",
 		"shakeelmohamed",
-		"namespace"
+		"namespace",
+		"dict"
 	],
 	"binary_file_patterns":
 	[

@@ -371,7 +371,8 @@ goclone() {
     fi
 }
 
-wipeawaydocker() {
+dockerclean() {
+    docker system prune --volumes -f
     docker rmi -f $(docker images)
 }
 
