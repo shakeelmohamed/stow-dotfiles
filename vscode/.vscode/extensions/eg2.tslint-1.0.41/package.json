@@ -1,0 +1,262 @@
+{
+	"name": "tslint",
+	"displayName": "TSLint",
+	"description": "TSLint for Visual Studio Code",
+	"version": "1.0.41",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"publisher": "eg2",
+	"icon": "TSLint_icon.png",
+	"galleryBanner": {
+		"color": "#5c2d91",
+		"theme": "dark"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-tslint.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Microsoft/vscode-tslint/issues"
+	},
+	"categories": [
+		"Programming Languages",
+		"Linters"
+	],
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.26.0"
+	},
+	"activationEvents": [
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact",
+		"onLanguage:javascript",
+		"onLanguage:javascriptreact",
+		"onCommand:tslint.fixAllProblems",
+		"onCommand:tslint.createConfig",
+		"onCommand:tslint.showOutputChannel"
+	],
+	"main": "./out/extension",
+	"contributes": {
+		"languages": [
+			{
+				"id": "jsonc",
+				"filenames": [
+					"tslint.json"
+				]
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "TSLint",
+			"properties": {
+				"tslint.enable": {
+					"type": "boolean",
+					"default": true,
+					"description": "Control whether tslint is enabled for TypeScript files or not.",
+					"scope": "resource"
+				},
+				"tslint.jsEnable": {
+					"type": "boolean",
+					"default": false,
+					"description": "Control whether tslint is enabled for JavaScript files or not.",
+					"scope": "resource"
+				},
+				"tslint.rulesDirectory": {
+					"type": [
+						"string",
+						"array"
+					],
+					"items": {
+						"type": "string"
+					},
+					"description": "An additional rules directory",
+					"default": "",
+					"scope": "resource"
+				},
+				"tslint.validateWithDefaultConfig": {
+					"type": "boolean",
+					"description": "Validate a file when there is only a default tslint configuration is found",
+					"default": false,
+					"scope": "resource"
+				},
+				"tslint.configFile": {
+					"type": "string",
+					"description": "The path to the rules configuration file",
+					"default": "",
+					"scope": "resource"
+				},
+				"tslint.ignoreDefinitionFiles": {
+					"type": "boolean",
+					"default": true,
+					"description": "Control if TypeScript definition files should be ignored",
+					"scope": "resource"
+				},
+				"tslint.exclude": {
+					"type": [
+						"string",
+						"array"
+					],
+					"items": {
+						"type": "string"
+					},
+					"description": "Configure glob patterns of file paths to exclude from linting",
+					"scope": "resource"
+				},
+				"tslint.run": {
+					"type": "string",
+					"enum": [
+						"onSave",
+						"onType"
+					],
+					"default": "onType",
+					"description": "Run the linter on save (onSave) or on type (onType)",
+					"scope": "resource"
+				},
+				"tslint.nodePath": {
+					"type": "string",
+					"default": "",
+					"description": "A path added to NODE_PATH when resolving the tslint module.",
+					"scope": "resource"
+				},
+				"tslint.autoFixOnSave": {
+					"type": [
+						"boolean",
+						"array"
+					],
+					"items": {
+						"type": "string"
+					},
+					"default": [
+						"RuleName"
+					],
+					"defaultSnippets": [
+						"RuleName"
+					],
+					"description": "Turns auto fix on save on or off, or defines which rules (e.g. `no-var-keyword`) to auto fix on save.",
+					"scope": "resource"
+				},
+				"tslint.alwaysShowRuleFailuresAsWarnings": {
+					"type": "boolean",
+					"default": false,
+					"description": "Always show rule failures as warnings, independent of the tslint configuration.",
+					"scope": "resource"
+				},
+				"tslint.alwaysShowStatus": {
+					"type": "boolean",
+					"default": false,
+					"description": "Always show the TSlint status bar item, not only when there are errors or warnings.",
+					"scope": "window"
+				},
+				"tslint.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VSCode and the tslint linter service."
+				},
+				"tslint.packageManager": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"npm",
+						"yarn"
+					],
+					"default": "npm",
+					"description": "The package manager to use to locate the tslint module."
+				}
+			}
+		},
+		"commands": [
+			{
+				"title": "Fix all auto-fixable problems",
+				"category": "TSLint",
+				"command": "tslint.fixAllProblems"
+			},
+			{
+				"title": "Create a 'tslint.json' file",
+				"category": "TSLint",
+				"command": "tslint.createConfig"
+			},
+			{
+				"title": "Show output",
+				"category": "TSLint",
+				"command": "tslint.showOutputChannel"
+			}
+		],
+		"jsonValidation": [
+			{
+				"fileMatch": "tslint.json",
+				"url": "http://json.schemastore.org/tslint"
+			}
+		],
+		"problemPatterns": [
+			{
+				"name": "tslint4",
+				"regexp": "^(\\(\\S*\\)\\s+)?(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
+				"file": 2,
+				"line": 3,
+				"column": 4,
+				"message": 5
+			},
+			{
+				"name": "tslint5",
+				"regexp": "^(WARNING|ERROR):(\\s+\\(\\S*\\))?\\s+(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
+				"severity": 1,
+				"file": 3,
+				"line": 4,
+				"column": 5,
+				"message": 6
+			}
+		],
+		"problemMatchers": [
+			{
+				"name": "tslint4",
+				"label": "tslint (version 4) warnings",
+				"owner": "tslint",
+				"source": "tslint",
+				"applyTo": "closedDocuments",
+				"fileLocation": "absolute",
+				"severity": "warning",
+				"pattern": "$tslint4"
+			},
+			{
+				"name": "tslint5",
+				"owner": "tslint",
+				"source": "tslint",
+				"label": "tslint (version 5) warnings",
+				"applyTo": "closedDocuments",
+				"fileLocation": "absolute",
+				"severity": "warning",
+				"pattern": "$tslint5"
+			}
+		]
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"update-vscode": "node ./node_modules/vscode/bin/install"
+	},
+	"devDependencies": {
+		"@types/mocha": "^5.2.1",
+		"@types/node": "^10.3.0",
+		"typescript": "^2.9.1",
+		"vscode": "^1.1.21"
+	},
+	"dependencies": {
+		"global": "^4.3.2",
+		"vscode-languageclient": "^5.0.1"
+	},
+	"__metadata": {
+		"id": "513cf511-3894-4ee2-8c34-13ab83ddfd37",
+		"publisherId": "0b5821dc-b7ab-4fa0-bcee-c2add1d8f9db",
+		"publisherDisplayName": "egamma"
+	}
+}
