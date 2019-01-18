@@ -8,6 +8,8 @@ iphonebackups() {
     cd "$HOME/Library/Application Support/MobileSync/Backup"
 }
 
+alias gdrive="cd $HOME/Google Drive File Stream/My Drive"
+
 actuallyrm() {
     /bin/rm $@
 }
@@ -124,6 +126,7 @@ alias gdp="git diff -p"
 alias gitpeek="git show HEAD@{1}"
 alias gshow="git show $@"
 alias gitgui="git gui $@"
+alias p="git pull $@"
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
