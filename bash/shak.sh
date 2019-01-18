@@ -8,7 +8,9 @@ iphonebackups() {
     cd "$HOME/Library/Application Support/MobileSync/Backup"
 }
 
-alias gdrive="cd $HOME/Google Drive File Stream/My Drive"
+gdrive() {
+    cd "$HOME/Google Drive File Stream/My Drive"
+}
 
 actuallyrm() {
     /bin/rm $@
