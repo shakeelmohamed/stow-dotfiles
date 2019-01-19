@@ -12,6 +12,8 @@ gdrive() {
     cd "$HOME/Google Drive File Stream/My Drive"
 }
 
+alias o=open
+
 actuallyrm() {
     /bin/rm $@
 }
