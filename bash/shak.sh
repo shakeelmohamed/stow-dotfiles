@@ -37,7 +37,7 @@ tarme() {
 
 untar() {
     for filename in $@; do
-        tar xf $filename
+        tar xf "$filename"
     done
 }
 
@@ -72,9 +72,9 @@ alias 💪="curl $@"
 
 mkgo() {
     if [ ! -d "$1" ]; then
-        mkdir $1
+        mkdir "$1"
     fi
-    cd $1
+    cd "$1"
 }
 
 # depends on "brew install coreutils"
@@ -102,17 +102,17 @@ gitback() {
 alias gitclear="git rm -r --cached ."
 
 gclone() {
-    cd $HOME/work/git
+    cd "$HOME"/work/git
     git clone $@
-    repo_name=$(echo $1 | sed 's/\.git$//' | sed 's/.*\///')
-    cd $repo_name
+    repo_name=$(echo "$1" | sed 's/\.git$//' | sed 's/.*\///')
+    cd "$repo_name"
 }
 
 stashclone() {
-    cd $HOME/work/bitbucket
+    cd "$HOME"/work/bitbucket
     git clone $@
-    repo_name=$(echo $1 | sed 's/\.git$//' | sed 's/.*\///')
-    cd $repo_name
+    repo_name=$(echo "$1" | sed 's/\.git$//' | sed 's/.*\///')
+    cd "$repo_name"
 }
 alias bbclone=stashclone
 
@@ -146,9 +146,9 @@ gityank() {
     if [ "$#" -eq 0 ]; then
         gityank $(gb)
     elif [ "$#" -eq 1 ]; then
-        git branch --set-upstream-to="origin/$1" $1
+        git branch --set-upstream-to="origin/$1" "$1"
     else
-        git branch --set-upstream-to="$1/$2" $2
+        git branch --set-upstream-to="$1/$2" "$2"
     fi
 }
 
@@ -158,10 +158,10 @@ ghfork() {
     echo "Trying to checkout a fork for $1"
 
     if [ "$#" -eq 1 ]; then
-        remote="git@github.com:$1/$(basename `pwd`).git"
+        remote="git@github.com:$1/$(basename $(pwd)).git"
         echo "\tremote: $remote"
-        git remote add $1 $remote
-        git fetch $1
+        git remote add "$1" "$remote"
+        git fetch "$1"
         if [ "$#" -eq 1 ]; then
             gco "$1/master"
         else
@@ -177,7 +177,7 @@ alias myfork="ghfork $ghuser"
 gitmergeto() {
     cur="$(gb)"
     if [ "$#" -eq 1 ]; then
-        gfp && git pull && gco $1 && git pull && git merge $cur
+        gfp && git pull && gco "$1" && git pull && git merge "$cur"
     else
         echo "gitmergeto needs 1 argument, the branch to merge to"
     fi
@@ -200,11 +200,11 @@ alias spls="ls $SPLUNKS_LOCATION"
 
 splunk_version_file=$HOME/splunkver
 SPLUNK_VERSION_CMD() {
-    touch $splunk_version_file
+    touch "$splunk_version_file"
     if [ "$#" -ne 1 ]; then
-        cat $splunk_version_file
+        cat "$splunk_version_file"
     else
-        echo $1 > $splunk_version_file
+        echo "$1" > "$splunk_version_file"
         SPLUNK_VERSION_CMD
         restart
     fi
@@ -221,7 +221,7 @@ export SPLUNK_HOME=$SPLUNK_HOME_BASE$SPLUNK_VERSION_STR
 
 # Alias to do something with splunk
 SPLUNKCMD() {
-    $SPLUNK_HOME/bin/splunk $@
+    "$SPLUNK_HOME"/bin/splunk $@
 }
 alias SPLUNK=SPLUNKCMD
 
@@ -248,8 +248,8 @@ fi
 # Splunk SDK release
 SDKREL() {
     for filename in $@; do
-        md5 $filename
-        openssl dgst -sha512 $filename
+        md5 "$filename"
+        openssl dgst -sha512 "$filename"
         echo ""
     done
 }
@@ -273,7 +273,7 @@ splapp() {
     if [ "$#" -lt 4 ]; then
         echo "Usage: splapp user password host path-to-app"
     else
-        curl -k -u $1:$2 "https://$3:8089/services/apps/appinstall" -d "name=$4" "${@:5}"
+        curl -k -u "$1":"$2" "https://$3:8089/services/apps/appinstall" -d "name=$4" "${@:5}"
     fi
 }
 
@@ -282,7 +282,7 @@ DELETEMYSPLUNKEVENTS() {
         1="admin"
         2="1"
     fi
-    curl -k -u $1:$2 https://localhost:8089/services/search/jobs --data search="search * | delete"
+    curl -k -u "$1":"$2" https://localhost:8089/services/search/jobs --data search="search * | delete"
 }
 
 
@@ -290,7 +290,7 @@ sourcetree() {
     if [ "$#" -eq 0 ]; then
         1="$(pwd)"
     fi
-    open -a SourceTree $1
+    open -a SourceTree "$1"
 }
 alias srctree=sourcetree
 alias srct=sourcetree
@@ -302,14 +302,14 @@ pycharm() {
     if [ "$#" -eq 0 ]; then
         1="$(pwd)"
     fi
-    open -a Pycharm $1
+    open -a Pycharm "$1"
 }
 
 intellij() {
     if [ "$#" -eq 0 ]; then
         1="$(pwd)"
     fi
-    open -a "IntelliJ IDEA" $1
+    open -a "IntelliJ IDEA" "$1"
 }
 
 timestamp() {
@@ -317,7 +317,7 @@ timestamp() {
 }
 
 tempgo() {
-    mkgo $HOME/_temp
+    mkgo "$HOME"/_temp
     mkgo "$(timestamp)"
 }
 
@@ -372,7 +372,7 @@ alias goroot="cd $GOSPLUNKSRC"
 alias gohome=goroot
 goclone() {
     if [ "$#" -eq 1 ]; then
-        goroot && git clone $1
+        goroot && git clone "$1"
     else
         echo "provide a git repo to clone first"
     fi
