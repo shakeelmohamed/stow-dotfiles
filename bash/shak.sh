@@ -1,4 +1,4 @@
-# echo "Shak shock."
+#!/bin/bash
 
 ###################
 # General utilities
@@ -15,12 +15,12 @@ gdrive() {
 alias o=open
 
 actuallyrm() {
-    /bin/rm $@
+    /bin/rm "$@"
 }
 
 # Moves to trash instead of wiping completely, npm install -g trash-cli
 rm() {
-    trash $@
+    trash "$@"
 }
 trashcli() {
     npm i -g trash-cli
@@ -103,14 +103,14 @@ alias gitclear="git rm -r --cached ."
 
 gclone() {
     cd "$HOME"/work/git
-    git clone $@
+    git clone "$@"
     repo_name=$(echo "$1" | sed 's/\.git$//' | sed 's/.*\///')
     cd "$repo_name"
 }
 
 stashclone() {
     cd "$HOME"/work/bitbucket
-    git clone $@
+    git clone "$@"
     repo_name=$(echo "$1" | sed 's/\.git$//' | sed 's/.*\///')
     cd "$repo_name"
 }
@@ -221,7 +221,7 @@ export SPLUNK_HOME=$SPLUNK_HOME_BASE$SPLUNK_VERSION_STR
 
 # Alias to do something with splunk
 SPLUNKCMD() {
-    "$SPLUNK_HOME"/bin/splunk $@
+    "$SPLUNK_HOME"/bin/splunk "$@"
 }
 alias SPLUNK=SPLUNKCMD
 
@@ -359,8 +359,6 @@ alias update="upgrade_oh_my_zsh"
 
 # Who has time to type brew cask every time?
 alias cask="brew cask $@"
-
-# export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home"
 
 # golang
 # TODO: add setup for these directories
