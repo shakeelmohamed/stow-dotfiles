@@ -50,6 +50,7 @@
 		".gradle/**",
 		".idea/**",
 		".o",
+		".tox/**",
 		"bower_components/**",
 		"contrib/**",
 		"demo/build/**"
