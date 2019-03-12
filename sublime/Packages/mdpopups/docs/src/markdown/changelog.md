@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.0
+
+- **NEW**: Add support for parsing `hwb()` and `alpha()`/`a()` in color schemes.
+
+## 3.3.4
+
+- **FIX**: Update code highlight languages.
+
 ## 3.3.3
 
 - **FIX**: Fix tab logic inside `st_code_highlight`.
@@ -146,4 +154,4 @@ Nov 12, 2015
 
 - **NEW**: First release.
 
---8<-- "refs.md"
+--8<-- "refs.txt"

@@ -365,7 +365,7 @@ alias cask="brew cask $@"
 # TODO: set this up to be a bit more dynamic
 export GOPATH=$HOME/work/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-export GOSPLUNKSRC=$GOPATH/src/github.com/splunk
+export GOSPLUNKSRC=$GOPATH/src/
 alias goroot="cd $GOSPLUNKSRC"
 alias gohome=goroot
 goclone() {
@@ -388,3 +388,6 @@ alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
 alias ag="echo \"ag is slow, use rg instead... brew install rg if needed\""
 
 alias duh="du -h"
+
+alias cci="circleci"
+alias k="kubectl"
