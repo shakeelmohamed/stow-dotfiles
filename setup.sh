@@ -49,6 +49,9 @@ git config --global core.excludesfile $HOME/work/git/stow-dotfiles/git/.gitignor
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 
+# Karabiner https://github.com/tekezo/Karabiner-Elements
+stow karabiner -t $HOME/
+
 # Global .gitignore
 ln -s ./git/.gitignore $HOME/.gitignore_global
 git config --global core.excludesfile "$HOME/.gitignore_global"
@@ -66,3 +69,6 @@ sudo gem install bropages
 
 # Get the Monokai terminal theme - this should be last
 open ./Monokai.terminal
+
+# Show hidden files in finder
+defaults write com.apple.finder AppleShowAllFiles YES
