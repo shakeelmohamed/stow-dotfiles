@@ -75,6 +75,7 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"GitGutter",
 		"HTML-CSS-JS Prettify",
 		"JSHint",
 		"JSONLint",

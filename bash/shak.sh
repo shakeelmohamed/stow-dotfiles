@@ -126,11 +126,12 @@ alias gf="git fetch"
 alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
 alias gdp="git diff -p"
-# See 1 git commit in the future
-alias gitpeek="git show HEAD@{1}"
+alias gpa="git pull --all"
+alias gitpeek="git show HEAD@{1}" # See 1 git commit in the future
 alias gshow="git show $@"
 alias gitgui="git gui $@"
 alias p="git pull $@"
+
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff
 gitsubl() {
