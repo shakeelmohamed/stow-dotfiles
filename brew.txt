@@ -1,20 +1,3 @@
-cask
-cmake
-ctags
-emacs
-gdbm
-geoip
-git
-gnupg
-ninja
-nvm
-openssl
-python
-readline
-sqlite
-stow
-tig
-wgetadns
 ant
 apr
 apr-util
@@ -108,4 +91,5 @@ tig
 unixodbc
 webp
 wget
+wgetadns
 xz
