@@ -71,7 +71,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 14,
+	"font_size": 15,
 	"highlight_line": true,
 	"ignored_packages":
 	[
