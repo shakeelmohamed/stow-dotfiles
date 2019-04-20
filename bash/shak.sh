@@ -339,9 +339,9 @@ alias down="cd $HOME/Downloads"
 
 backup() {
     if [ -d "$1" ]; then
-        cp -r "$1" "$1-backup"
+        cp -r "$1" "$1.bk"
     else
-        cp "$1" "$1-backup"
+        cp "$1" "$1.bk"
     fi
 }
 
@@ -380,6 +380,10 @@ goclone() {
 dockerclean() {
     docker system prune --volumes -f
     docker rmi -f $(docker images)
+}
+
+dockerkill() {
+    docker kill $(docker ps -q)
 }
 
 alias jb="jirabrancher"

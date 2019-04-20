@@ -1,8 +1,12 @@
-# Basic file system setup
-mkdir -p $HOME/work/git
 
+# MacOS System
 # Remove Message of the day prompt
 touch $HOME/.hushlogin
+# Show hidden files in finder
+defaults write com.apple.finder AppleShowAllFiles YES
+
+# Basic file system setup
+mkdir -p $HOME/work/git
 
 # TODO: add ssh setup script from github.com/shakeelmohamed/dotfiles
 # TODO: rename that repo to dotfiles-old
@@ -38,13 +42,12 @@ stow bash -t $HOME
 rm $HOME/.zshrc
 stow zsh -t $HOME
 
-stow git -t $HOME/
-
 stow vscode -t $HOME
 ln -s "$HOME/work/git/stow-dotfiles/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 
-# setup global gitignore file
-git config --global core.excludesfile $HOME/work/git/stow-dotfiles/git/.gitignore
+# git
+stow git -t $HOME/
+git config --global core.excludesfile $HOME/.gitignore
 
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
@@ -52,20 +55,13 @@ stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 # Karabiner https://github.com/tekezo/Karabiner-Elements; cask install karabiner-elements
 stow karabiner -t $HOME/
 
-# Global .gitignore
-ln -s ./git/.gitignore $HOME/.gitignore_global
-git config --global core.excludesfile "$HOME/.gitignore_global"
-
 # Node.js setup
-nvm install 6
+nvm install 8
 npm install -g trash-cli
 npm install -g jira-brancher
 
 # bro pages, simpler man pages
 sudo gem install bropages
-
-# Show hidden files in finder
-defaults write com.apple.finder AppleShowAllFiles YES
 
 # TODO: CLI tool for installing things from app store
 # https://github.com/herrbischoff/awesome-osx-command-line
