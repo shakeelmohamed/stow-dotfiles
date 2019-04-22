@@ -100,6 +100,7 @@ gitback() {
 
 # clear git cache
 alias gitclear="git rm -r --cached ."
+alias gitclean="git clean -dfxn" # dry run
 
 gclone() {
     cd "$HOME"/work/git
