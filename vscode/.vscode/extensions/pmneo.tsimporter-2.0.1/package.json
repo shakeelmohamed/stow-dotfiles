@@ -1,0 +1,145 @@
+{
+	"name": "tsimporter",
+	"displayName": "TypeScript Importer",
+	"description": "Automatically searches for TypeScript definitions in workspace files and provides all known symbols as completion item to allow code completion.",
+	"version": "2.0.1",
+	"publisher": "pmneo",
+	"engines": {
+		"vscode": "^1.5.3"
+	},
+	"galleryBanner": {
+		"color": "#2d4794",
+		"theme": "dark"
+	},
+	"keywords": [
+		"typescript",
+		"import",
+		"tsi",
+		"auto",
+		"require"
+	],
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact",
+		"onLanguage:vue"
+	],
+	"main": "./out/TypeScriptImporter",
+	"contributes": {
+		"commands": [
+			{
+				"command": "tsimporter.reindex",
+				"title": "Reindex TypeScript Importer",
+				"category": "TypeScript Importer"
+			},
+			{
+				"command": "tsimporter.dumpIndex",
+				"title": "Dumps index to a new document",
+				"category": "TypeScript Importer"
+			},
+			{
+				"command": "tsimporter.addImport",
+				"title": "Add Import",
+				"category": "TypeScript Importer"
+			},
+			{
+				"command": "tsimporter.openSymbol",
+				"title": "Open Symbol",
+				"category": "TypeScript Importer"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "TypeScript Importer configuration",
+			"properties": {
+				"tsimporter.filesToScan": {
+					"type": "array",
+					"default": [
+						"**/*.ts",
+						"**/*.tsx",
+						"**/*.vue"
+					],
+					"description": "Glob for files to watch and scan, e.g ./src/** ./src/app/**/*.ts. Defaults to [**/*.ts,**/*.tsx]"
+				},
+				"tsimporter.filesToExclude": {
+					"type": "array",
+					"default": [],
+					"description": "Glob for files to exclude from watch and scan, e.g ./out/**. Defaults to nothing"
+				},
+				"tsimporter.disabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Extension is disabled when set to true"
+				},
+				"tsimporter.showNotifications": {
+					"type": "boolean",
+					"default": false,
+					"description": "Disables the extension"
+				},
+				"tsimporter.noStatusBar": {
+					"type": "boolean",
+					"default": false,
+					"description": "Disables the status bar of this extension"
+				},
+				"tsimporter.doubleQuotes": {
+					"type": "boolean",
+					"default": false,
+					"description": "Specifies wether to use double quotes"
+				},
+				"tsimporter.spaceBetweenBraces": {
+					"type": "boolean",
+					"default": true,
+					"description": "Insert spaces between the import braces. ( import {test} from 'test' vs. import { test } from 'test' )"
+				},
+				"tsimporter.removeFileExtensions": {
+					"type": "string",
+					"default": ".d.ts,.ts,.tsx",
+					"description": "File Extensions to remove. default is '.d.ts,.ts,.tsx'"
+				},
+				"tsimporter.lowImportance": {
+					"type": "boolean",
+					"default": false,
+					"description": "If true, the code completion items will be sorted back to the build in completion items"
+				},
+				"tsimporter.emitSemicolon": {
+					"type": "boolean",
+					"default": true,
+					"description": "If false, no semicolon will be written"
+				},
+				"tsimporter.tsconfigName": {
+					"type": "string",
+					"default": "tsconfig.json",
+					"description": "tsconfig name to search for"
+				},
+				"tsimporter.preferRelative": {
+					"type": "boolean",
+					"default": false,
+					"description": "When true shorter relative imports will be be prefered instead of absolute imports"
+				}
+			}
+		}
+	},
+	"icon": "icon.png",
+	"homepage": "https://github.com/pmneo/ts-importer",
+	"scripts": {
+		"vscode:prepublish": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"vsce": "vsce"
+	},
+	"devDependencies": {
+		"@types/lodash": "^4.14.123",
+		"@types/node": "^11.11.4",
+		"typescript": "^3.3.4000",
+		"vsce": "1.58.0",
+		"vscode": "^1.1.32"
+	},
+	"dependencies": {},
+	"__metadata": {
+		"id": "6bc1e3ad-c0e2-46b6-bbad-246c5f59215b",
+		"publisherId": "ac96449c-f71e-48bb-8040-d1271325cc21",
+		"publisherDisplayName": "pmneo"
+	}
+}
