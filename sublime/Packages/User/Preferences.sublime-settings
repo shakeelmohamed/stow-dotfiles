@@ -53,7 +53,8 @@
 		".tox/**",
 		"bower_components/**",
 		"contrib/**",
-		"demo/build/**"
+		"demo/build/**",
+		"public/bower_components/**"
 	],
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",

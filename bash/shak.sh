@@ -388,6 +388,9 @@ dockerkill() {
     docker kill $(docker ps -q)
 }
 
+alias dcub="docker-compose up"
+alias dcub="docker-compose up --build"
+
 alias jb="jirabrancher"
 
 alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
