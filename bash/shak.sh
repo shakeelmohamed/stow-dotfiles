@@ -405,3 +405,5 @@ alias k="kubectl"
 export SIMDATA_JAR="$HOME/work/git/simdata/build/libs/simdata-1.0.1.jar"
 
 source $HOME/design.sh
+
+alias x=exercism
