@@ -4,6 +4,10 @@
 # Python
 *.py[cd]
 
+# Node
+node_modules
+npm-debug.log
+
 # ctags
 tags
 tags_sorted_by_file
@@ -13,6 +17,10 @@ codeship.aes
 
 # Jetbrains
 .idea/
+.iml
 
 # general
 /tmp
+
+# secrets
+.env

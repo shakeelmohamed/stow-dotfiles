@@ -55,6 +55,9 @@ stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 # Karabiner https://github.com/tekezo/Karabiner-Elements; cask install karabiner-elements
 stow karabiner -t $HOME/
 
+# Forklift
+stow forklift -t $HOME/Library/Preferences/
+
 # Node.js setup
 nvm install 8
 npm install -g trash-cli
