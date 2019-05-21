@@ -247,6 +247,10 @@ export PATH=$PYENV_ROOT:$PATH
 if which pyenv > /dev/null;
     then eval "$(pyenv init -)";
 fi
+if which pyenv-virtualenv-init > /dev/null;
+    then eval eval "$(pyenv virtualenv-init -)"
+fi
+
 
 # Splunk SDK release
 SDKREL() {
