@@ -331,14 +331,17 @@ tempgo() {
 # Make a new temp directory, go there, then clone the passed in repo
 clonego() {
     if [ "$#" -eq 1 ]; then
-        tempgo
         git clone "$1"
-        cd *
+        repo_name=$(echo "$1" | sed 's/\.git$//' | sed 's/.*\///')
+        cd "$repo_name"
     else
-        echo "Usage: clonego <github_repo_url>"
+        echo "Usage: clonego <git_repo_url>"
     fi
 }
-alias tempclone=clonego
+tempclone() {
+    tempgo
+    goclone $@
+}
 
 alias desk="cd $HOME/Desktop"
 alias down="cd $HOME/Downloads"
