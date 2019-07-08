@@ -73,6 +73,7 @@
 		".gemtags"
 	],
 	"font_size": 14,
+	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":
 	[
@@ -102,6 +103,5 @@
 	"tab_size": 4,
 	"theme": "Spacegray Eighties.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"word_wrap": true,
-	"gpu_window_buffer": false
+	"word_wrap": true
 }
