@@ -340,7 +340,7 @@ clonego() {
 }
 tempclone() {
     tempgo
-    goclone $@
+    clonego $@
 }
 
 alias desk="cd $HOME/Desktop"
