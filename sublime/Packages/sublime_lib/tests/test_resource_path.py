@@ -3,7 +3,7 @@ import shutil
 import tempfile
 
 from sublime_lib import ResourcePath
-from sublime_lib.vendor.pathlib.pathlib import Path
+from sublime_lib._compat.pathlib import Path
 
 from unittesting import DeferrableTestCase
 
@@ -30,6 +30,18 @@ class TestResourcePath(DeferrableTestCase):
             [
                 ResourcePath("Packages/test_package/helloworld.txt"),
                 ResourcePath("Packages/test_package/UTF-8-test.txt"),
+            ]
+        )
+
+        self.assertEqual(
+            ResourcePath.glob_resources("ks27jArEz4"),
+            []
+        )
+
+        self.assertEqual(
+            ResourcePath.glob_resources("*ks27jArEz4"),
+            [
+                ResourcePath('Packages/sublime_lib/tests/uniquely_named_file_ks27jArEz4')
             ]
         )
 
@@ -95,6 +107,12 @@ class TestResourcePath(DeferrableTestCase):
         self.assertEqual(
             ResourcePath("Packages/Foo/bar.py").file_path(),
             Path(sublime.packages_path(), 'Foo/bar.py')
+        )
+
+    def test_file_path_packages_root(self):
+        self.assertEqual(
+            ResourcePath("Packages").file_path(),
+            Path(sublime.packages_path())
         )
 
     def test_file_path_cache(self):
