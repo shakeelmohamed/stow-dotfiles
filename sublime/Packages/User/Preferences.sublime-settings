@@ -37,7 +37,9 @@
 		"https",
 		"shakeelmohamed",
 		"namespace",
-		"dict"
+		"dict",
+		"wildcard",
+		"admin"
 	],
 	"binary_file_patterns":
 	[
