@@ -117,7 +117,7 @@ stashclone() {
 }
 alias bbclone=stashclone
 
-alias gs="git status"
+alias s="git status"
 alias gdt="git difftool $@"
 alias gdc="git diff --cached $@"
 alias gb="git rev-parse --abbrev-ref HEAD"
@@ -340,7 +340,7 @@ clonego() {
 }
 tempclone() {
     tempgo
-    goclone $@
+    clonego $@
 }
 
 alias desk="cd $HOME/Desktop"
@@ -395,7 +395,7 @@ dockerkill() {
     docker kill $(docker ps -q)
 }
 
-alias dcub="docker-compose up"
+alias dcu="docker-compose up"
 alias dcub="docker-compose up --build"
 
 alias jb="jirabrancher"

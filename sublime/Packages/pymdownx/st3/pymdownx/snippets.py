@@ -37,17 +37,17 @@ class SnippetPreprocessor(Preprocessor):
         r'''(?x)
         ^(?P<space>[ \t]*)
         (?P<all>
-            (?P<inline_marker>-{2,}8<-{2,}[ ]+)
-            (?P<snippet>(?:"(?:\\"|[^"\n])+?"|'(?:\\'|[^'\n])+?'))(?![ \t]) |
+            (?P<inline_marker>-{2,}8<-{2,}[ \t]+)
+            (?P<snippet>(?:"(?:\\"|[^"\n\r])+?"|'(?:\\'|[^'\n\r])+?'))(?![ \t]) |
             (?P<block_marker>-{2,}8<-{2,})(?![ \t])
-        )$
+        )\r?$
         '''
     )
 
     RE_SNIPPET = re.compile(
         r'''(?x)
         ^(?P<space>[ \t]*)
-        (?P<snippet>.*?)$
+        (?P<snippet>.*?)\r?$
         '''
     )
 
@@ -56,6 +56,7 @@ class SnippetPreprocessor(Preprocessor):
 
         self.base_path = config.get('base_path')
         self.encoding = config.get('encoding')
+        self.check_paths = config.get('check_paths')
         self.tab_length = md.tab_length
         super(SnippetPreprocessor, self).__init__()
 
@@ -66,6 +67,7 @@ class SnippetPreprocessor(Preprocessor):
         inline = False
         block = False
         for line in lines:
+            inline = False
             m = self.RE_ALL_SNIPPETS.match(line)
             if m:
                 if block and m.group('inline_marker'):
@@ -92,7 +94,7 @@ class SnippetPreprocessor(Preprocessor):
 
             if m:
                 # Get spaces and snippet path.  Remove quotes if inline.
-                space = m.group('space').replace('\t', ' ' * self.tab_length)
+                space = m.group('space').expandtabs(self.tab_length)
                 path = m.group('snippet')[1:-1].strip() if inline else m.group('snippet').strip()
 
                 if not inline:
@@ -107,22 +109,25 @@ class SnippetPreprocessor(Preprocessor):
                     continue
 
                 snippet = os.path.join(self.base_path, path)
-                if snippet and os.path.exists(snippet):
-                    if snippet in self.seen:
-                        # This is in the stack and we don't want an infinite loop!
-                        continue
-                    if file_name:
-                        # Track this file.
-                        self.seen.add(file_name)
-                    try:
-                        with codecs.open(snippet, 'r', encoding=self.encoding) as f:
-                            new_lines.extend(
-                                [space + l2 for l2 in self.parse_snippets([l.rstrip('\r\n') for l in f], snippet)]
-                            )
-                    except Exception:  # pragma: no cover
-                        pass
-                    if file_name:
-                        self.seen.remove(file_name)
+                if snippet:
+                    if os.path.exists(snippet):
+                        if snippet in self.seen:
+                            # This is in the stack and we don't want an infinite loop!
+                            continue
+                        if file_name:
+                            # Track this file.
+                            self.seen.add(file_name)
+                        try:
+                            with codecs.open(snippet, 'r', encoding=self.encoding) as f:
+                                new_lines.extend(
+                                    [space + l2 for l2 in self.parse_snippets([l.rstrip('\r\n') for l in f], snippet)]
+                                )
+                        except Exception:  # pragma: no cover
+                            pass
+                        if file_name:
+                            self.seen.remove(file_name)
+                    elif self.check_paths:
+                        raise IOError("Snippet at path %s could not be found" % path)
 
         return new_lines
 
@@ -141,19 +146,20 @@ class SnippetExtension(Extension):
 
         self.config = {
             'base_path': [".", "Base path for snippet paths - Default: \"\""],
-            'encoding': ["utf-8", "Encoding of snippets - Default: \"utf-8\""]
+            'encoding': ["utf-8", "Encoding of snippets - Default: \"utf-8\""],
+            'check_paths': [False, "Make the build fail if a snippet can't be found - Default: \"false\""]
         }
 
         super(SnippetExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Register the extension."""
 
         self.md = md
         md.registerExtension(self)
         config = self.getConfigs()
         snippet = SnippetPreprocessor(config, md)
-        md.preprocessors.add('snippet', snippet, ">normalize_whitespace")
+        md.preprocessors.register(snippet, "snippet", 32)
 
 
 def makeExtension(*args, **kwargs):

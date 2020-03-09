@@ -50,15 +50,19 @@ def get_checkbox(state, custom_checkbox=False, clickable_checkbox=False):
 class TasklistTreeprocessor(Treeprocessor):
     """Tasklist tree processor that finds lists with checkboxes."""
 
+    def __init__(self, md):
+        """Initialize."""
+
+        super(TasklistTreeprocessor, self).__init__(md)
+
     def inline(self, li):
         """Search for checkbox directly in `li` tag."""
 
         found = False
         m = RE_CHECKBOX.match(li.text)
         if m is not None:
-            li.text = self.markdown.htmlStash.store(
-                get_checkbox(m.group('state'), self.custom_checkbox, self.clickable_checkbox),
-                safe=True
+            li.text = self.md.htmlStash.store(
+                get_checkbox(m.group('state'), self.custom_checkbox, self.clickable_checkbox)
             ) + m.group('line')
             found = True
         return found
@@ -72,9 +76,8 @@ class TasklistTreeprocessor(Treeprocessor):
             if first.tag == "p" and first.text is not None:
                 m = RE_CHECKBOX.match(first.text)
                 if m is not None:
-                    first.text = self.markdown.htmlStash.store(
-                        get_checkbox(m.group('state'), self.custom_checkbox, self.clickable_checkbox),
-                        safe=True
+                    first.text = self.md.htmlStash.store(
+                        get_checkbox(m.group('state'), self.custom_checkbox, self.clickable_checkbox)
                     ) + m.group('line')
                     found = True
         return found
@@ -132,12 +135,12 @@ class TasklistExtension(Extension):
 
         super(TasklistExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Add checklist tree processor to Markdown instance."""
 
         tasklist = TasklistTreeprocessor(md)
         tasklist.config = self.getConfigs()
-        md.treeprocessors.add("task-list", tasklist, ">inline")
+        md.treeprocessors.register(tasklist, "task-list", 25)
         md.registerExtension(self)
 
 

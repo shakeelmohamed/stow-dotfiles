@@ -28,17 +28,8 @@ from markdown import Extension
 from markdown.treeprocessors import Treeprocessor
 from markdown import util as md_util
 from . import util
-from .util import PymdownxDeprecationWarning
-import warnings
 import re
-import os
-
-try:
-    from markdown.inlinepatterns import LinkPattern, Pattern
-    LEGACY = True
-except ImportError:  # pragma: no cover
-    from markdown.inlinepatterns import LinkInlineProcessor, Pattern
-    LEGACY = False
+from markdown.inlinepatterns import LinkInlineProcessor, InlineProcessor
 
 MAGIC_LINK = 1
 MAGIC_AUTO_LINK = 2
@@ -65,7 +56,7 @@ RE_LINK = r'''(?xi)
 )
 '''
 
-RE_AUTOLINK = r'(?i)<((?:ht|f)tps?://[^>]*)>'
+RE_AUTOLINK = r'(?i)<((?:ht|f)tps?://[^<>]*)>'
 
 # Provider specific user regex rules
 RE_TWITTER_USER = r'\w{1,15}'
@@ -190,7 +181,7 @@ PROVIDER_INFO = {
 }
 
 
-class _MagiclinkShorthandPattern(Pattern):
+class _MagiclinkShorthandPattern(InlineProcessor):
     """Base shorthand link class."""
 
     def __init__(self, pattern, md, user, repo, provider, labels):
@@ -200,7 +191,7 @@ class _MagiclinkShorthandPattern(Pattern):
         self.repo = repo
         self.labels = labels
         self.provider = provider if provider in PROVIDER_INFO else ''
-        Pattern.__init__(self, pattern, md)
+        InlineProcessor.__init__(self, pattern, md)
 
 
 class _MagiclinkReferencePattern(_MagiclinkShorthandPattern):
@@ -463,11 +454,11 @@ class MagicShortenerTreeprocessor(Treeprocessor):
             if is_magic:
                 del link.attrib['magiclink']
 
-            # We want a normal link.  No subelements embedded in it, just a normal string.
+            # We want a normal link.  No sub-elements embedded in it, just a normal string.
             if has_child or not text:  # pragma: no cover
                 continue
 
-            # Make sure the text matches the href.  If needed, add back protocol to be sure.
+            # Make sure the text matches the `href`.  If needed, add back protocol to be sure.
             # Not all links will pass through MagicLink, so we try both with and without protocol.
             if (text == href or (is_magic and self.hide_protocol and ('https://' + text) == href)):
                 m = RE_REPO_LINK.match(href)
@@ -490,74 +481,49 @@ class MagicShortenerTreeprocessor(Treeprocessor):
         return root
 
 
-if LEGACY:
-    class MagiclinkPattern(LinkPattern):
-        """Convert html, ftp links to clickable links."""
+class MagiclinkPattern(LinkInlineProcessor):
+    """Convert html, ftp links to clickable links."""
 
-        ANCESTOR_EXCLUDES = ('a',)
+    ANCESTOR_EXCLUDES = ('a',)
 
-        def handleMatch(self, m):
-            """Handle URL matches."""
+    def handleMatch(self, m, data):
+        """Handle URL matches."""
 
-            el = md_util.etree.Element("a")
-            el.text = md_util.AtomicString(m.group('link'))
-            if m.group("www"):
-                href = "http://%s" % m.group('link')
-            else:
-                href = m.group('link')
-                if self.config['hide_protocol']:
-                    el.text = md_util.AtomicString(el.text[el.text.find("://") + 3:])
-            el.set("href", self.sanitize_url(self.unescape(href.strip())))
+        el = md_util.etree.Element("a")
+        el.text = md_util.AtomicString(m.group('link'))
+        if m.group("www"):
+            href = "http://%s" % m.group('link')
+        else:
+            href = m.group('link')
+            if self.config['hide_protocol']:
+                el.text = md_util.AtomicString(el.text[el.text.find("://") + 3:])
+        el.set("href", self.unescape(href.strip()))
 
-            if self.config.get('repo_url_shortener', False):
-                el.set('magiclink', md_util.text_type(MAGIC_LINK))
+        if self.config.get('repo_url_shortener', False):
+            el.set('magiclink', md_util.text_type(MAGIC_LINK))
 
-            return el
-
-else:  # pragma: no cover
-    class MagiclinkPattern(LinkInlineProcessor):
-        """Convert html, ftp links to clickable links."""
-
-        ANCESTOR_EXCLUDES = ('a',)
-
-        def handleMatch(self, m, data):
-            """Handle URL matches."""
-
-            el = md_util.etree.Element("a")
-            el.text = md_util.AtomicString(m.group('link'))
-            if m.group("www"):
-                href = "http://%s" % m.group('link')
-            else:
-                href = m.group('link')
-                if self.config['hide_protocol']:
-                    el.text = md_util.AtomicString(el.text[el.text.find("://") + 3:])
-            el.set("href", self.sanitize_url(self.unescape(href.strip())))
-
-            if self.config.get('repo_url_shortener', False):
-                el.set('magiclink', md_util.text_type(MAGIC_LINK))
-
-            return el, m.start(0), m.end(0)
+        return el, m.start(0), m.end(0)
 
 
-class MagiclinkAutoPattern(Pattern):
+class MagiclinkAutoPattern(InlineProcessor):
     """Return a link Element given an auto link `<http://example/com>`."""
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Return link optionally without protocol."""
 
         el = md_util.etree.Element("a")
-        el.set('href', self.unescape(m.group(2)))
-        el.text = md_util.AtomicString(m.group(2))
+        el.set('href', self.unescape(m.group(1)))
+        el.text = md_util.AtomicString(m.group(1))
         if self.config['hide_protocol']:
             el.text = md_util.AtomicString(el.text[el.text.find("://") + 3:])
 
         if self.config.get('repo_url_shortener', False):
             el.set('magiclink', md_util.text_type(MAGIC_AUTO_LINK))
 
-        return el
+        return el, m.start(0), m.end(0)
 
 
-class MagiclinkMailPattern(Pattern):
+class MagiclinkMailPattern(InlineProcessor):
     """Convert emails to clickable email links."""
 
     ANCESTOR_EXCLUDES = ('a',)
@@ -566,7 +532,7 @@ class MagiclinkMailPattern(Pattern):
         """Return entity definition by code, or the code if not defined."""
         return "%s#%d;" % (md_util.AMP_SUBSTITUTE, code)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle email link patterns."""
 
         el = md_util.etree.Element("a")
@@ -574,7 +540,7 @@ class MagiclinkMailPattern(Pattern):
         href = "mailto:%s" % email
         el.text = md_util.AtomicString(''.join([self.email_encode(ord(c)) for c in email]))
         el.set("href", ''.join([md_util.AMP_SUBSTITUTE + '#%d;' % ord(c) for c in href]))
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class MagiclinkMentionPattern(_MagiclinkShorthandPattern):
@@ -582,7 +548,7 @@ class MagiclinkMentionPattern(_MagiclinkShorthandPattern):
 
     ANCESTOR_EXCLUDES = ('a',)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle email link patterns."""
 
         text = m.group('mention')[1:]
@@ -602,7 +568,7 @@ class MagiclinkMentionPattern(_MagiclinkShorthandPattern):
         )
         el.set('class', 'magiclink magiclink-%s magiclink-mention' % provider)
         el.text = md_util.AtomicString('@' + mention)
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class MagiclinkRepositoryPattern(_MagiclinkShorthandPattern):
@@ -610,7 +576,7 @@ class MagiclinkRepositoryPattern(_MagiclinkShorthandPattern):
 
     ANCESTOR_EXCLUDES = ('a',)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle email link patterns."""
 
         text = m.group('mention')[1:]
@@ -633,7 +599,7 @@ class MagiclinkRepositoryPattern(_MagiclinkShorthandPattern):
         )
         el.set('class', 'magiclink magiclink-%s magiclink-repository' % provider)
         el.text = md_util.AtomicString('%s/%s' % (user, repo))
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class MagiclinkExternalRefsPattern(_MagiclinkReferencePattern):
@@ -641,7 +607,7 @@ class MagiclinkExternalRefsPattern(_MagiclinkReferencePattern):
 
     ANCESTOR_EXCLUDES = ('a',)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle email link patterns."""
 
         is_commit = m.group('commit')
@@ -661,9 +627,9 @@ class MagiclinkExternalRefsPattern(_MagiclinkReferencePattern):
         else:
             provider = self.provider
 
-        # If there is no valid user or provider, return plain text
+        # If there is no valid user or provider, reject
         if not user:
-            return m.group('all')
+            return None, None, None
 
         self.my_user = user == self.user and provider == self.provider
         self.my_repo = self.my_user and repo == self.repo
@@ -675,7 +641,7 @@ class MagiclinkExternalRefsPattern(_MagiclinkReferencePattern):
             self.process_commit(el, provider, user, repo, value)
         else:
             self.process_issues(el, provider, user, repo, value)
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class MagiclinkInternalRefsPattern(_MagiclinkReferencePattern):
@@ -683,12 +649,12 @@ class MagiclinkInternalRefsPattern(_MagiclinkReferencePattern):
 
     ANCESTOR_EXCLUDES = ('a',)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle email link patterns."""
 
-        # We don't have a valid provider, user, and repo, so just return the text
+        # We don't have a valid provider, user, and repo, reject
         if not self.user or not self.repo:
-            return m.group('all')
+            return None, None, None
 
         is_commit = m.group('commit')
         is_diff = m.group('diff')
@@ -708,7 +674,7 @@ class MagiclinkInternalRefsPattern(_MagiclinkReferencePattern):
             self.process_commit(el, provider, user, repo, value)
         else:
             self.process_issues(el, provider, user, repo, value)
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class MagiclinkExtension(Extension):
@@ -735,10 +701,6 @@ class MagiclinkExtension(Extension):
                 False,
                 "If 'True' social shorthand syntax is converted to links - Default: False"
             ],
-            'base_repo_url': [
-                '',
-                'The base repo url to use - Default: ""'
-            ],
             'provider': [
                 'github',
                 'The base provider to use (github, gitlab, bitbucket, twitter) - Default: "github"'
@@ -764,20 +726,13 @@ class MagiclinkExtension(Extension):
         # Setup general link patterns
         auto_link_pattern = MagiclinkAutoPattern(RE_AUTOLINK, md)
         auto_link_pattern.config = config
-        md.inlinePatterns['autolink'] = auto_link_pattern
+        md.inlinePatterns.register(auto_link_pattern, "autolink", 120)
 
         link_pattern = MagiclinkPattern(RE_LINK, md)
         link_pattern.config = config
-        md.inlinePatterns.add("magic-link", link_pattern, "<entity")
+        md.inlinePatterns.register(link_pattern, "magic-link", 85)
 
-        md.inlinePatterns.add("magic-mail", MagiclinkMailPattern(RE_MAIL, md), "<entity")
-
-    def setup_shortener(self, md, base_url, base_user_url, config):
-        """Setup shortener."""
-
-        shortener = MagicShortenerTreeprocessor(md, base_url, base_user_url, self.labels)
-        shortener.config = config
-        md.treeprocessors.add("magic-repo-shortener", shortener, "<prettify")
+        md.inlinePatterns.register(MagiclinkMailPattern(RE_MAIL, md), "magic-mail", 84.9)
 
     def setup_shorthand(self, md, int_mentions, ext_mentions, config):
         """Setup shorthand."""
@@ -791,62 +746,64 @@ class MagiclinkExtension(Extension):
             git_ext_repo = MagiclinkRepositoryPattern(
                 RE_GIT_EXT_REPO_MENTIONS, md, self.user, self.repo, self.provider, self.labels
             )
-            md.inlinePatterns.add("magic-repo-ext-mention", git_ext_repo, "<entity")
+            md.inlinePatterns.register(git_ext_repo, "magic-repo-ext-mention", 79.9)
             if not self.is_social:
                 git_int_repo = MagiclinkRepositoryPattern(
                     RE_GIT_INT_REPO_MENTIONS % int_mentions, md, self.user, self.repo, self.provider, self.labels
                 )
-                md.inlinePatterns.add("magic-repo-int-mention", git_int_repo, "<entity")
+                md.inlinePatterns.register(git_int_repo, "magic-repo-int-mention", 79.8)
 
         # Mentions
         pattern = RE_ALL_EXT_MENTIONS % '|'.join(ext_mentions)
         git_mention = MagiclinkMentionPattern(
             pattern, md, self.user, self.repo, self.provider, self.labels
         )
-        md.inlinePatterns.add("magic-ext-mention", git_mention, "<entity")
+        md.inlinePatterns.register(git_mention, "magic-ext-mention", 79.7)
 
         git_mention = MagiclinkMentionPattern(
             RE_INT_MENTIONS % int_mentions, md, self.user, self.repo, self.provider, self.labels
         )
-        md.inlinePatterns.add("magic-int-mention", git_mention, "<entity")
+        md.inlinePatterns.register(git_mention, "magic-int-mention", 79.6)
 
         # Other project refs
         if self.git_short:
             git_ext_refs = MagiclinkExternalRefsPattern(
                 RE_GIT_EXT_REFS, md, self.user, self.repo, self.provider, self.labels
             )
-            md.inlinePatterns.add("magic-ext-refs", git_ext_refs, "<entity")
+            md.inlinePatterns.register(git_ext_refs, "magic-ext-refs", 79.5)
             if not self.is_social:
                 git_int_refs = MagiclinkExternalRefsPattern(
                     RE_GIT_INT_EXT_REFS % int_mentions, md, self.user, self.repo, self.provider, self.labels
                 )
-                md.inlinePatterns.add("magic-int-refs", git_int_refs, "<entity")
+                md.inlinePatterns.register(git_int_refs, "magic-int-refs", 79.4)
                 git_int_micro_refs = MagiclinkInternalRefsPattern(
                     RE_GIT_INT_MICRO_REFS, md, self.user, self.repo, self.provider, self.labels
                 )
-                md.inlinePatterns.add("magic-int-micro-refs", git_int_micro_refs, "<entity")
+                md.inlinePatterns.register(git_int_micro_refs, "magic-int-micro-refs", 79.3)
 
-    def get_base_urls(self, base_url, config):
+    def setup_shortener(self, md, base_url, base_user_url, config):
+        """Setup shortener."""
+
+        shortener = MagicShortenerTreeprocessor(md, base_url, base_user_url, self.labels)
+        shortener.config = config
+        md.treeprocessors.register(shortener, "magic-repo-shortener", 9.9)
+
+    def get_base_urls(self, config):
         """Get base URLs."""
 
+        base_url = ''
+        base_user_url = ''
+
         if self.is_social:
-            return '', ''
+            return base_url, base_user_url
 
-        # Setup base URL
-        base_user_url = os.path.dirname(base_url)
-        if base_url:
-            base_url += "/"
-        if base_user_url:
-            base_user_url += "/"
-
-        if config.get('repo_url_shorthand', False) or not base_url:
-            if self.user and self.repo:
-                base_url = '%s/%s/%s/' % (PROVIDER_INFO[self.provider]['url'], self.user, self.repo)
-                base_user_url = '%s/%s/' % (PROVIDER_INFO[self.provider]['url'], self.user)
+        if self.user and self.repo:
+            base_url = '%s/%s/%s/' % (PROVIDER_INFO[self.provider]['url'], self.user, self.repo)
+            base_user_url = '%s/%s/' % (PROVIDER_INFO[self.provider]['url'], self.user)
 
         return base_url, base_user_url
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Add support for turning html links and emails to link tags."""
 
         config = self.getConfigs()
@@ -875,15 +832,6 @@ class MagiclinkExtension(Extension):
         if self.git_short or self.social_short:
             int_mentions = PROVIDER_INFO[self.provider]['user_pattern']
 
-        base_repo_url = config.get('base_repo_url', '').rstrip('/')
-        if base_repo_url:  # pragma: no cover
-            warnings.warn(
-                "'base_repo_url' is deprecated and will be removed in the future.\n"
-                "\nIt is strongly encouraged to migrate to using `provider`, 'user`\n"
-                " and 'repo' moving forward.",
-                PymdownxDeprecationWarning
-            )
-
         self.setup_autolinks(md, config)
 
         if self.git_short or self.social_short:
@@ -891,7 +839,7 @@ class MagiclinkExtension(Extension):
 
         # Setup link post processor for shortening repository links
         if config.get('repo_url_shortener', False):
-            base_url, base_user_url = self.get_base_urls(base_repo_url, config)
+            base_url, base_user_url = self.get_base_urls(config)
             self.setup_shortener(md, base_url, base_user_url, config)
 
 

@@ -4,7 +4,7 @@ Arithmatex.
 pymdownx.arithmatex
 Extension that preserves the following for MathJax use:
 
-~~~.tex
+```
 $Equation$, \(Equation\)
 
 $$
@@ -18,7 +18,7 @@ $$
 \begin{align}
   Display Equations
 \end{align}
-~~~
+```
 
 and `$Inline MathJax Equations$`
 
@@ -44,18 +44,11 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import unicode_literals
 from markdown import Extension
-from markdown.inlinepatterns import Pattern
+from markdown.inlinepatterns import InlineProcessor
 from markdown.blockprocessors import BlockProcessor
 from markdown import util as md_util
 from . import util
 import re
-from .util import PymdownxDeprecationWarning
-import warnings
-
-DEPRECATION_WARN = """'insert_as_script' is deprecated and is now unnecessary if using MathJax
-as it is the default format for MathJax. If you wish to use a generic math output, use 'generic'.
-Please discontinue using this option as it will be removed in the future.
-See documentation to see why this have been deprecated."""
 
 RE_SMART_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)(?!\s)((?:\\.|[^\$])+?)(?<!\s)(?:\$))'
 RE_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)((?:\\.|[^\$])+?)(?:\$))'
@@ -66,7 +59,95 @@ RE_TEX_BLOCK = r'(?P<math2>\\begin\{(?P<env>[a-z]+\*?)\}.+?\\end\{(?P=env)\})'
 RE_BRACKET_BLOCK = r'\\\[(?P<math3>(?:\\[^\]]|[^\\])+?)\\\]'
 
 
-class InlineArithmatexPattern(Pattern):
+def _escape(txt):
+    """Basic html escaping."""
+
+    txt = txt.replace('&', '&amp;')
+    txt = txt.replace('<', '&lt;')
+    txt = txt.replace('>', '&gt;')
+    txt = txt.replace('"', '&quot;')
+    return txt
+
+
+def _inline_mathjax_format(math, preview=False):
+    """Inline math formatter."""
+
+    if preview:
+        el = md_util.etree.Element('span')
+        pre = md_util.etree.SubElement(el, 'span', {'class': 'MathJax_Preview'})
+        pre.text = md_util.AtomicString(math)
+        script = md_util.etree.SubElement(el, 'script', {'type': 'math/tex'})
+        script.text = md_util.AtomicString(math)
+    else:
+        el = md_util.etree.Element('script', {'type': 'math/tex'})
+        el.text = md_util.AtomicString(math)
+    return el
+
+
+def _fence_mathjax_format(math, preview=False):
+    """Block math formatter."""
+
+    text = ''
+    if preview:
+        text += (
+            '<div>\n' +
+            '<div class="MathJax_Preview">\n' +
+            _escape(math) +
+            '\n</div>\n'
+        )
+
+    text += (
+        '<script type="math/tex; mode=display">\n' +
+        math +
+        '\n</script>\n'
+    )
+    if preview:
+        text += '</div>'
+
+    return text
+
+
+# Formatters usable with InlineHilite
+def inline_mathjax_preview_format(math, language='math', class_name='arithmatex', md=None):
+    """Inline math formatter with preview."""
+
+    return _inline_mathjax_format(math, True)
+
+
+def inline_mathjax_format(math, language='math', class_name='arithmatex', md=None):
+    """Inline math formatter."""
+
+    return _inline_mathjax_format(math, False)
+
+
+def inline_generic_format(math, language='math', class_name='arithmatex', md=None, wrap='\\(%s\\)'):
+    """Inline generic formatter."""
+
+    el = md_util.etree.Element('span', {'class': class_name})
+    el.text = md_util.AtomicString(wrap % math)
+    return el
+
+
+# Formatters usable with SuperFences
+def fence_mathjax_preview_format(math, language='math', class_name='arithmatex', options=None, md=None):
+    """Block MathJax formatter with preview."""
+
+    return _fence_mathjax_format(math, True)
+
+
+def fence_mathjax_format(math, language='math', class_name='arithmatex', options=None, md=None):
+    """Block MathJax formatter."""
+
+    return _fence_mathjax_format(math, False)
+
+
+def fence_generic_format(math, language='math', class_name='arithmatex', options=None, md=None, wrap='\\[\n%s\n\\]'):
+    """Generic block formatter."""
+
+    return '<div class="%s">%s</div>' % (class_name, (wrap % math))
+
+
+class InlineArithmatexPattern(InlineProcessor):
     """Arithmatex inline pattern handler."""
 
     ESCAPED_BSLASH = '%s%s%s' % (md_util.STX, ord('\\'), md_util.ETX)
@@ -81,45 +162,27 @@ class InlineArithmatexPattern(Pattern):
 
         # Default setup
         self.preview = config.get('preview', True)
-        Pattern.__init__(self, pattern)
+        InlineProcessor.__init__(self, pattern)
 
-    def mathjax_output(self, math):
-        """Default MathJax output."""
-
-        if self.preview:
-            el = md_util.etree.Element('span')
-            preview = md_util.etree.SubElement(el, 'span', {'class': 'MathJax_Preview'})
-            preview.text = md_util.AtomicString(math)
-            script = md_util.etree.SubElement(el, 'script', {'type': 'math/tex'})
-            script.text = md_util.AtomicString(math)
-        else:
-            el = md_util.etree.Element('script', {'type': 'math/tex'})
-            el.text = md_util.AtomicString(math)
-        return el
-
-    def generic_output(self, math):
-        """Generic output."""
-
-        el = md_util.etree.Element('span', {'class': 'arithmatex'})
-        el.text = md_util.AtomicString(self.wrap % math)
-        return el
-
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle notations and switch them to something that will be more detectable in HTML."""
 
         # Handle escapes
-        escapes = m.group(2)
+        escapes = m.group(1)
         if not escapes:
-            escapes = m.group(5)
+            escapes = m.group(4)
         if escapes:
-            return escapes.replace('\\\\', self.ESCAPED_BSLASH)
+            return escapes.replace('\\\\', self.ESCAPED_BSLASH), m.start(0), m.end(0)
 
         # Handle Tex
-        math = m.group(4)
+        math = m.group(3)
         if not math:
-            math = m.group(7)
+            math = m.group(6)
 
-        return self.generic_output(math) if self.generic else self.mathjax_output(math)
+        if self.generic:
+            return inline_generic_format(math, wrap=self.wrap), m.start(0), m.end(0)
+        else:
+            return _inline_mathjax_format(math, self.preview), m.start(0), m.end(0)
 
 
 class BlockArithmatexProcessor(BlockProcessor):
@@ -210,7 +273,6 @@ class ArithmatexExtension(Extension):
                 ' - Default: ["dollar", "round"]'
             ],
             'generic': [False, "Output in a generic format for non MathJax libraries - Default: False"],
-            'insert_as_script': [False, "Deprecated"],
             'preview': [
                 True,
                 "Insert a preview for scripts. - Default: False"
@@ -219,16 +281,13 @@ class ArithmatexExtension(Extension):
 
         super(ArithmatexExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Extend the inline and block processor objects."""
 
         md.registerExtension(self)
         util.escape_chars(md, ['$'])
 
         config = self.getConfigs()
-
-        if config.get('insert_as_script'):  # pragma: no cover
-            warnings.warn(DEPRECATION_WARN, PymdownxDeprecationWarning)
 
         # Inline patterns
         allowed_inline = set(config.get('inline_syntax', ['dollar', 'round']))
@@ -240,7 +299,7 @@ class ArithmatexExtension(Extension):
             inline_patterns.append(RE_BRACKET_INLINE)
         if inline_patterns:
             inline = InlineArithmatexPattern('(?:%s)' % '|'.join(inline_patterns), config)
-            md.inlinePatterns.add("arithmatex-inline", inline, ">backtick")
+            md.inlinePatterns.register(inline, 'arithmatex-inline', 189.9)
 
         # Block patterns
         allowed_block = set(config.get('block_syntax', ['dollar', 'square', 'begin']))
@@ -253,7 +312,7 @@ class ArithmatexExtension(Extension):
             block_pattern.append(RE_TEX_BLOCK)
         if block_pattern:
             block = BlockArithmatexProcessor(r'(?s)^(?:%s)[ ]*$' % '|'.join(block_pattern), config, md)
-            md.parser.blockprocessors.add('arithmatex-block', block, "<code")
+            md.parser.blockprocessors.register(block, "arithmatex-block", 79.9)
 
 
 def makeExtension(*args, **kwargs):

@@ -37,7 +37,9 @@
 		"https",
 		"shakeelmohamed",
 		"namespace",
-		"dict"
+		"dict",
+		"wildcard",
+		"admin"
 	],
 	"binary_file_patterns":
 	[
@@ -72,7 +74,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 14,
+	"font_size": 15,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":
