@@ -2,7 +2,7 @@
 File Strip.
 
 Licensed under MIT
-Copyright (c) 2012 - 2016 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2012 - 2020 Isaac Muse <isaacmuse@gmail.com>
 """
 import re
 
@@ -23,7 +23,7 @@ CSS_PATTERN = re.compile(
 
 
 def clean_css(text, preserve_lines=False):
-    """Clean css."""
+    """Clean CSS."""
 
     def remove_comments(group, preserve_lines=False):
         """Remove comments."""

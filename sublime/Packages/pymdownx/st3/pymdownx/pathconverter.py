@@ -71,16 +71,19 @@ def repl_relative(m, base_path, relative_path):
         if not is_url:
             # Get the absolute path of the file or return
             # if we can't resolve the path
-            path = util.url2pathname(path)
-            abs_path = None
+            path = util.url2path(path)
             if (not is_absolute):
                 # Convert current relative path to absolute
-                temp = os.path.normpath(os.path.join(base_path, path))
-                abs_path = temp.replace("\\", "/")
-
-                # Convert the path, url encode it, and format it as a link
-                path = util.pathname2url(os.path.relpath(abs_path, relative_path).replace('\\', '/'))
-                link = '%s"%s"' % (m.group('name'), util.urlunparse((scheme, netloc, path, params, query, fragment)))
+                path = os.path.relpath(
+                    os.path.normpath(os.path.join(base_path, path)),
+                    os.path.normpath(relative_path)
+                )
+                # Convert the path, URL encode it, and format it as a link
+                path = util.path2url(path)
+                link = '%s"%s"' % (
+                    m.group('name'),
+                    util.urlunparse((scheme, netloc, path, params, query, fragment))
+                )
     except Exception:  # pragma: no cover
         # Parsing crashed and burned; no need to continue.
         pass
@@ -96,10 +99,15 @@ def repl_absolute(m, base_path):
         scheme, netloc, path, params, query, fragment, is_url, is_absolute = util.parse_url(m.group('path')[1:-1])
 
         if (not is_absolute and not is_url):
-            path = util.url2pathname(path)
-            temp = os.path.normpath(os.path.join(base_path, path))
-            path = util.pathname2url(temp.replace("\\", "/"))
-            link = '%s"%s"' % (m.group('name'), util.urlunparse((scheme, netloc, path, params, query, fragment)))
+            path = util.url2path(path)
+            path = os.path.normpath(os.path.join(base_path, path))
+            path = util.path2url(path)
+            start = '/' if not path.startswith('/') else ''
+            link = '%s"%s%s"' % (
+                m.group('name'),
+                start,
+                util.urlunparse((scheme, netloc, path, params, query, fragment))
+            )
     except Exception:  # pragma: no cover
         # Parsing crashed and burned; no need to continue.
         pass
@@ -154,12 +162,12 @@ class PathConverterExtension(Extension):
 
         super(PathConverterExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Add post processor to Markdown instance."""
 
         rel_path = PathConverterPostprocessor(md)
         rel_path.config = self.getConfigs()
-        md.postprocessors.add("path-converter", rel_path, "_end")
+        md.postprocessors.register(rel_path, "path-converter", 2)
         md.registerExtension(self)
 
 

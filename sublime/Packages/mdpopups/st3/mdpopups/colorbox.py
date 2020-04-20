@@ -2,7 +2,7 @@
 Sublime tooltip color box.
 
 Licensed under MIT
-Copyright (c) 2015 - 2016 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2015 - 2020 Isaac Muse <isaacmuse@gmail.com>
 """
 from .png import Writer
 from .rgba import RGBA
@@ -28,10 +28,10 @@ __all__ = ('color_box',)
 
 def to_list(rgb, alpha=False):
     """
-    Break rgb channel itno a list.
+    Break RGB channel into a list.
 
-    Take a color of the format #RRGGBBAA (alpha optional and will be stripped)
-    and convert to a list with format [r, g, b].
+    Take a color of the format `#RRGGBBAA` (alpha optional and will be stripped)
+    and convert to a list with format `[r, g, b]`.
     """
     if alpha:
         return [
@@ -85,7 +85,7 @@ def color_box_raw(
     Colors is a list of colors, but only up to 5
     Border can be up to 2 colors (double border).
 
-    Hight, width and border thickness can all be defined.
+    Height, width and border thickness can all be defined.
 
     If using a transparent color, you can define the checkerboard pattern size that shows through.
     If using multiple colors, you can control the max colors to display.  Colors currently are done
@@ -230,14 +230,14 @@ def color_box_raw(
             row = list(border * width)
             p.append(row)
 
-    # Create bytes buffer for png
+    # Create bytes buffer for PNG
     with io.BytesIO() as f:
 
-        # Write out png
+        # Write out PNG
         img = Writer(width, height, alpha=alpha)
         img.write(f, p)
 
-        # Read out png bytes and base64 encode
+        # Read out PNG bytes and base64 encode
         f.seek(0)
 
         return f.read()

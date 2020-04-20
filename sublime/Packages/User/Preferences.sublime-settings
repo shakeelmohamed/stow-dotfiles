@@ -39,7 +39,13 @@
 		"namespace",
 		"dict",
 		"wildcard",
-		"admin"
+		"admin",
+		"personas",
+		"Pinterest",
+		"wordsmith",
+		"api",
+		"scp",
+		"testsdks"
 	],
 	"binary_file_patterns":
 	[
@@ -74,7 +80,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 15,
+	"font_size": 16,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":
