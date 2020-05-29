@@ -45,7 +45,8 @@
 		"wordsmith",
 		"api",
 		"scp",
-		"testsdks"
+		"testsdks",
+		"microservices"
 	],
 	"binary_file_patterns":
 	[
