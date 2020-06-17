@@ -24,19 +24,19 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import unicode_literals
 from markdown import Extension
-from markdown.inlinepatterns import Pattern
+from markdown.inlinepatterns import InlineProcessor
 from markdown import util as md_util
 from . import util
 
 RE_EMOJI = r'(:[+\-\w]+:)'
 SUPPORTED_INDEXES = ('emojione', 'gemoji', 'twemoji')
 UNICODE_VARIATION_SELECTOR_16 = 'fe0f'
-EMOJIONE_SVG_CDN = 'https://cdn.jsdelivr.net/emojione/assets/svg/'
-EMOJIONE_PNG_CDN = 'https://cdn.jsdelivr.net/emojione/assets/3.1/png/64/'
-TWEMOJI_SVG_CDN = 'https://twemoji.maxcdn.com/2/svg/'
-TWEMOJI_PNG_CDN = 'https://twemoji.maxcdn.com/2/72x72/'
-GITHUB_UNICODE_CDN = 'https://assets-cdn.github.com/images/icons/emoji/unicode/'
-GITHUB_CDN = 'https://assets-cdn.github.com/images/icons/emoji/'
+EMOJIONE_SVG_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/svg/'
+EMOJIONE_PNG_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/'
+TWEMOJI_SVG_CDN = 'https://twemoji.maxcdn.com/v/latest/svg/'
+TWEMOJI_PNG_CDN = 'https://twemoji.maxcdn.com/v/latest/72x72/'
+GITHUB_UNICODE_CDN = 'https://github.githubassets.com/images/icons/emoji/unicode/'
+GITHUB_CDN = 'https://github.githubassets.com/images/icons/emoji/'
 NO_TITLE = 'none'
 LONG_TITLE = 'long'
 SHORT_TITLE = 'short'
@@ -95,7 +95,7 @@ def to_png(index, shortname, alias, uc, alt, title, category, options, md):
     is_unicode = uc is not None
     classes = options.get('classes', index)
 
-    # In genral we can use the alias, but github specific images don't have one for each alias.
+    # In general we can use the alias, but github specific images don't have one for each alias.
     # We can tell we have a github specific if there is no Unicode value.
     if is_unicode:
         image_path = options.get('image_path', def_image_path)
@@ -173,10 +173,10 @@ def to_svg_sprite(index, shortname, alias, uc, alt, title, category, options, md
     """
     Return SVG sprite element.
 
-    ~~~.html
+    ```
     <svg class="%(classes)s"><description>%(alt)s</description>
     <use xlink:href="%(sprite)s#emoji-%(unicode)s"></use></svg>
-    ~~~
+    ```
     """
 
     xlink_href = '%s#emoji-%s' % (
@@ -190,30 +190,17 @@ def to_svg_sprite(index, shortname, alias, uc, alt, title, category, options, md
     return svg
 
 
-def to_awesome(index, shortname, alias, uc, alt, title, category, options, md):
-    """
-    Return "awesome style element for "font-awesome" format.
-
-    See: https://github.com/Ranks/emojione/tree/master/lib/emojione-awesome.
-    """
-
-    classes = '%s-%s' % (options.get('classes', 'e1a'), shortname[1:-1])
-    attributes = {"class": classes}
-    add_attriubtes(options, attributes)
-    return md_util.etree.Element("i", attributes)
-
-
 def to_alt(index, shortname, alias, uc, alt, title, category, options, md):
     """Return html entities."""
 
-    return md.htmlStash.store(alt, safe=True)
+    return md.htmlStash.store(alt)
 
 
 ###################
 # Classes
 ###################
-class EmojiPattern(Pattern):
-    """Return element of type `tag` with a text attribute of group(3) of a Pattern."""
+class EmojiPattern(InlineProcessor):
+    """Return element of type `tag` with a text attribute of group(2) of an `InlineProcessor`."""
 
     def __init__(self, pattern, config, md):
         """Initialize."""
@@ -222,14 +209,13 @@ class EmojiPattern(Pattern):
         alt = config['alt']
 
         self._set_index(config["emoji_index"])
-        self.markdown = md
         self.unicode_alt = alt in UNICODE_ALT
         self.encoded_alt = alt == UNICODE_ENTITY
         self.remove_var_sel = config['remove_variation_selector']
         self.title = title if title in VALID_TITLE else NO_TITLE
         self.generator = config['emoji_generator']
         self.options = config['options']
-        Pattern.__init__(self, pattern)
+        InlineProcessor.__init__(self, pattern, md)
 
     def _set_index(self, index):
         """Set the index."""
@@ -302,10 +288,10 @@ class EmojiPattern(Pattern):
 
         return emoji.get('category')
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Handle emoji pattern matches."""
 
-        el = m.group(2)
+        el = m.group(1)
 
         shortname = self.emoji_index['aliases'].get(el, el)
         alias = None if shortname == el else el
@@ -324,10 +310,10 @@ class EmojiPattern(Pattern):
                 title,
                 category,
                 self.options,
-                self.markdown
+                self.md
             )
 
-        return el
+        return el, m.start(0), m.end(0)
 
 
 class EmojiExtension(Extension):
@@ -368,15 +354,14 @@ class EmojiExtension(Extension):
         }
         super(EmojiExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Add support for emoji."""
 
         config = self.getConfigs()
 
         util.escape_chars(md, [':'])
 
-        emj = EmojiPattern(RE_EMOJI, config, md)
-        md.inlinePatterns.add("emoji", emj, "<not_strong")
+        md.inlinePatterns.register(EmojiPattern(RE_EMOJI, config, md), "emoji", 75)
 
 
 ###################

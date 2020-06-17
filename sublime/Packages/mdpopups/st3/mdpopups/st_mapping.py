@@ -1,7 +1,7 @@
 """Sublime Text language mapping."""
 
 lang_map = {
-    # 'name': (('mapping_alias',), ('tmLanguage_or_sublime-syntax file',))
+    # `'name': (('mapping_alias',), ('tmLanguage_or_sublime-syntax file',))`
     'actionscript': (('as', 'actionscript',), ('ActionScript/ActionScript',)),
     'applescript': (('applescript',), ('AppleScript/AppleScript',)),
     'asp': (('asp',), ('ASP/ASP',)),
@@ -16,6 +16,7 @@ lang_map = {
     'd': (('d',), ('D/D',)),
     'diff': (('diff',), ('Diff/Diff',)),
     'erlang': (('erlang',), ('Erlang/Erlang',)),
+    'elm': (('elm',), ('Elm Syntax Highlighting/src/elm',)),
     'go': (('go',), ('Go/Go',)),
     'groovy': (('groovy',), ('Groovy/Groovy',)),
     'haskell': (('haskell', 'hs'), ('Haskell/Haskell',)),

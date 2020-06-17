@@ -24,41 +24,41 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import unicode_literals
 from markdown import Extension
-from markdown.inlinepatterns import Pattern, SubstituteTagPattern
+from markdown.inlinepatterns import InlineProcessor, SubstituteTagInlineProcessor
 from markdown.postprocessors import Postprocessor
 from markdown import util as md_util
 import re
 from . import util
 
-# We need to ignore theseas they are used in Markdown processing
+# We need to ignore these as they are used in Markdown processing
 STX = '\u0002'
 ETX = '\u0003'
 ESCAPE_RE = r'\\(.)'
 ESCAPE_NO_NL_RE = r'\\([^\n])'
 HARDBREAK_RE = r'\\\n'
-UNESCAPE_PATTERN = re.compile('%s(\d+)%s' % (md_util.STX, md_util.ETX))
+UNESCAPE_PATTERN = re.compile(r'%s(\d+)%s' % (md_util.STX, md_util.ETX))
 
 
-class EscapeAllPattern(Pattern):
+class EscapeAllPattern(InlineProcessor):
     """Return an escaped character."""
 
     def __init__(self, pattern, nbsp):
         """Initialize."""
 
         self.nbsp = nbsp
-        Pattern.__init__(self, pattern)
+        InlineProcessor.__init__(self, pattern)
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, data):
         """Convert the char to an escaped character."""
 
-        char = m.group(2)
+        char = m.group(1)
         if self.nbsp and char == ' ':
             escape = md_util.AMP_SUBSTITUTE + 'nbsp;'
         elif char in (STX, ETX):
             escape = char
         else:
             escape = '%s%s%s' % (md_util.STX, util.get_ord(char), md_util.ETX)
-        return escape
+        return escape, m.start(0), m.end(0)
 
 
 class EscapeAllPostprocessor(Postprocessor):
@@ -93,21 +93,20 @@ class EscapeAllExtension(Extension):
         }
         super(EscapeAllExtension, self).__init__(*args, **kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """Escape all."""
 
-        self.md = md
         config = self.getConfigs()
         hardbreak = config['hardbreak']
-        md.inlinePatterns['escape'] = EscapeAllPattern(
-            ESCAPE_NO_NL_RE if hardbreak else ESCAPE_RE, config['nbsp']
+        md.inlinePatterns.register(
+            EscapeAllPattern(ESCAPE_NO_NL_RE if hardbreak else ESCAPE_RE, config['nbsp']),
+            "escape",
+            180
         )
-        md.postprocessors['unescape'] = EscapeAllPostprocessor(md)
+
+        md.postprocessors.register(EscapeAllPostprocessor(md), "unescape", 10)
         if config['hardbreak']:
-            try:
-                md.inlinePatterns.add("hardbreak", SubstituteTagPattern(HARDBREAK_RE, 'br'), "<nl")
-            except Exception:
-                md.inlinePatterns.add("hardbreak", SubstituteTagPattern(HARDBREAK_RE, 'br'), "_end")
+            md.inlinePatterns.register(SubstituteTagInlineProcessor(HARDBREAK_RE, 'br'), "hardbreak", 5.1)
 
 
 def makeExtension(*args, **kwargs):
