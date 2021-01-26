@@ -1,10 +1,9 @@
-Sublime SFTP 1.14.0 Changelog:
+SFTP 1.14.0 Changelog:
 
 
 I wanted to acknowledge the extended length of time between this update and the
-last release of Sublime SFTP. During that period, my time has largely been
-focused on a low-level rewrite of the encryption functionality used for FTPS
-connections.
+last release of SFTP. During that period, my time has largely been focused on a
+low-level rewrite of the encryption functionality used for FTPS connections.
 
 This release includes quite a number of bug fixes, all based on reports that
 users have sent in. Please continue to send in debug logs, and look forward to

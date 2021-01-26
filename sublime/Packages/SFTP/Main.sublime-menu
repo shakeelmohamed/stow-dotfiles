@@ -32,58 +32,19 @@
                         "caption": "SFTP",
                         "children":
                         [
-                            { "command": "open_file", "args": {"file": "${packages}/SFTP/SFTP.sublime-settings"}, "caption": "Settings – Default" },
-                            { "command": "open_file", "args": {"file": "${packages}/User/SFTP.sublime-settings"}, "caption": "Settings – User" },
+                            { "command": "sftp_enter_license_key", "caption": "Enter License Key" },
                             { "caption": "-" },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/SFTP/Default (Windows).sublime-keymap",
-                                    "platform": "Windows"
-                                },
-                                "caption": "Key Bindings – Default"
-                            },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/SFTP/Default (OSX).sublime-keymap",
-                                    "platform": "OSX"
-                                },
-                                "caption": "Key Bindings – Default"
-                            },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/SFTP/Default (Linux).sublime-keymap",
-                                    "platform": "Linux"
-                                },
-                                "caption": "Key Bindings – Default"
-                            },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/User/Default (Windows).sublime-keymap",
-                                    "platform": "Windows"
-                                },
-                                "caption": "Key Bindings – User"
-                            },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/User/Default (OSX).sublime-keymap",
-                                    "platform": "OSX"
-                                },
-                                "caption": "Key Bindings – User"
-                            },
-                            {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/User/Default (Linux).sublime-keymap",
-                                    "platform": "Linux"
-                                },
-                                "caption": "Key Bindings – User"
-                            },
-                            { "caption": "-" }
+                            { "command": "sftp_edit_settings", "caption": "Settings" },
+                            { "command": "sftp_open_default_settings", "caption": "Settings – Default" },
+                            { "command": "sftp_open_user_settings", "caption": "Settings – User" },
+                            { "command": "sftp_edit_key_bindings", "caption": "Key Bindings" },
+                            { "command": "sftp_open_default_key_bindings", "caption": "Key Bindings – Default" },
+                            { "command": "sftp_open_user_key_bindings", "caption": "Key Bindings – User" },
+                            { "caption": "-" },
+                            { "command": "sftp_enable_debug_mode", "caption": "Enable Debug Mode" },
+                            { "command": "sftp_disable_debug_mode", "caption": "Disable Debug Mode" },
+                            { "caption": "-" },
+                            { "command": "sftp_remove_license_key", "caption": "Remove License Key" }
                         ]
                     }
                 ]

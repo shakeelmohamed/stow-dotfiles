@@ -1,3 +1,6 @@
+# coding: utf-8
+from __future__ import unicode_literals, division, absolute_import, print_function
+
 import sublime
 import traceback
 import os
@@ -25,7 +28,7 @@ for mod in sys.modules:
 # Prevent popups during reload, saving the callbacks for re-adding later
 if reload_mods:
     old_callbacks = {}
-    hook_match = re.search("<class '(\w+).ExcepthookChain'>", str(sys.excepthook))
+    hook_match = re.search(r"<class '(\w+).ExcepthookChain'>", str(sys.excepthook))
     if hook_match:
         _temp = __import__(hook_match.group(1), globals(), locals(), ['ExcepthookChain'], -1)
         ExcepthookChain = _temp.ExcepthookChain
@@ -34,6 +37,30 @@ if reload_mods:
 
 mods_load_order = [
     'sftp',
+    'sftp.vendor.asn1crypto._errors',
+    'sftp.vendor.asn1crypto._int',
+    'sftp.vendor.asn1crypto._ordereddict',
+    'sftp.vendor.asn1crypto._teletex_codec',
+    'sftp.vendor.asn1crypto._types',
+    'sftp.vendor.asn1crypto._inet',
+    'sftp.vendor.asn1crypto._iri',
+    'sftp.vendor.asn1crypto.version',
+    'sftp.vendor.asn1crypto.pem',
+    'sftp.vendor.asn1crypto.util',
+    'sftp.vendor.asn1crypto.parser',
+    'sftp.vendor.asn1crypto.core',
+    'sftp.vendor.asn1crypto.algos',
+    'sftp.vendor.asn1crypto.keys',
+    'sftp.vendor.asn1crypto.x509',
+    'sftp.vendor.asn1crypto.crl',
+    'sftp.vendor.asn1crypto.csr',
+    'sftp.vendor.asn1crypto.ocsp',
+    'sftp.vendor.asn1crypto.cms',
+    'sftp.vendor.asn1crypto.pdf',
+    'sftp.vendor.asn1crypto.pkcs12',
+    'sftp.vendor.asn1crypto.tsp',
+    'sftp.vendor.asn1crypto',
+    'sftp.ecdsa',
     'sftp.times',
     'sftp.views',
     'sftp.paths',
@@ -51,7 +78,7 @@ mods_load_order = [
     'sftp.ftps_transport',
     'sftp.sftp_transport',
     'sftp.commands',
-    'sftp.listeners'
+    'sftp.listeners',
 ]
 
 mod_load_prefix = ''
@@ -98,6 +125,18 @@ try:
         SftpUploadOpenFilesCommand,
         SftpVcsChangedFilesCommand,
         SftpWritePanelCommand,
+        SftpEnterLicenseKeyCommand,
+        SftpRemoveLicenseKeyCommand,
+        SftpEnableDebugModeCommand,
+        SftpDisableDebugModeCommand,
+        SftpEditSettingsCommand,
+        SftpOpenDefaultSettingsCommand,
+        SftpOpenUserSettingsCommand,
+        SftpEditKeyBindingsCommand,
+        SftpOpenDefaultKeyBindingsCommand,
+        SftpOpenUserKeyBindingsCommand,
+        cmd_init,
+        cmd_cleanup,
     )
     from sftp.listeners import (
         SftpAutoConnectListener,
@@ -143,6 +182,18 @@ except (ImportError):
             SftpUploadOpenFilesCommand,
             SftpVcsChangedFilesCommand,
             SftpWritePanelCommand,
+            SftpEnterLicenseKeyCommand,
+            SftpRemoveLicenseKeyCommand,
+            SftpEnableDebugModeCommand,
+            SftpDisableDebugModeCommand,
+            SftpEditSettingsCommand,
+            SftpOpenDefaultSettingsCommand,
+            SftpOpenUserSettingsCommand,
+            SftpEditKeyBindingsCommand,
+            SftpOpenDefaultKeyBindingsCommand,
+            SftpOpenUserKeyBindingsCommand,
+            cmd_init,
+            cmd_cleanup,
         )
         from .sftp.listeners import (  # noqa
             SftpAutoConnectListener,
@@ -164,13 +215,13 @@ except (ImportError):
 def plugin_loaded():
     if need_package_control_upgrade:
         sublime.error_message(
-            u'SFTP\n\nThe SFTP package seems to have been '
-            u'installed using an older version of Package Control. Please '
-            u'remove the SFTP package, upgrade Package Control to 2.0.0 '
-            u'and then reinstall SFTP.\n\nIt may be necessary to delete '
-            u'the "Packages/Package Control/" folder and then follow the '
-            u'instructions at https://sublime.wbond.net/installation to '
-            u'properly upgrade Package Control.'
+            'SFTP\n\nThe SFTP package seems to have been '
+            'installed using an older version of Package Control. Please '
+            'remove the SFTP package, upgrade Package Control to 2.0.0 '
+            'and then reinstall SFTP.\n\nIt may be necessary to delete '
+            'the "Packages/Package Control/" folder and then follow the '
+            'instructions at https://packagecontrol.io/installation to '
+            'properly upgrade Package Control.'
         )
         return
 
@@ -188,22 +239,24 @@ def plugin_loaded():
     has_psftp = os.path.exists(psftp_exe)
     if os.name == 'nt' and (not has_bin or not has_psftp):
         sublime.error_message(
-            u'SFTP\n\nThe SFTP package seems to have been '
-            u'synced or copied from an OS X or Linux machine. The Windows '
-            u'version of the package is different due to the inclusion of '
-            u'a number of necessary exe files.\n\nTo fix the SFTP package '
-            u'so that it may run properly, please run "Remove Package" and '
-            u'then reinstall it using the "Install Package" command.\n\nTo '
-            u'learn how to properly sync packages across different machines, '
-            u'please visit https://sublime.wbond.net/docs/syncing'
+            'SFTP\n\nThe SFTP package seems to have been '
+            'synced or copied from an OS X or Linux machine. The Windows '
+            'version of the package is different due to the inclusion of '
+            'a number of necessary exe files.\n\nTo fix the SFTP package '
+            'so that it may run properly, please run "Remove Package" and '
+            'then reinstall it using the "Install Package" command.\n\nTo '
+            'learn how to properly sync packages across different machines, '
+            'please visit https://packagecontrol.io/docs/syncing'
         )
+
+    cmd_init()
 
 
 if sys.version_info < (3,):
     plugin_loaded()
 
 
-hook_match = re.search("<class '(\w+).ExcepthookChain'>", str(sys.excepthook))
+hook_match = re.search(r"<class '(\w+).ExcepthookChain'>", str(sys.excepthook))
 
 if not hook_match:
     class ExcepthookChain(object):
@@ -259,8 +312,8 @@ def sftp_uncaught_except(type, value, tb):
                 send_log_path = sftp_debug.get_debug_log_file()
                 sftp_debug.debug_print(message)
             sublime.error_message(
-                'Sublime SFTP\n\nAn unexpected error occurred, please send '
-                'the file %s to support@wbond.net' % send_log_path
+                'SFTP\n\nAn unexpected error occurred, please submit '
+                'the file %s with a Request at https://codexns.io/account' % send_log_path
             )
             sublime.active_window().run_command(
                 'open_file',
@@ -269,12 +322,13 @@ def sftp_uncaught_except(type, value, tb):
         if reloading['happening']:
             if not reloading['shown']:
                 sublime.error_message(
-                    'Sublime SFTP\n\nThe package was just upgraded, please '
+                    'SFTP\n\nThe package was just upgraded, please '
                     'restart Sublime Text to finish the upgrade'
                 )
                 reloading['shown'] = True
         else:
             sublime.set_timeout(append_log, 10)
+
 
 if reload_mods and old_callbacks:
     for name in old_callbacks:
@@ -287,10 +341,16 @@ if sys.excepthook != ExcepthookChain.hook:
     sys.excepthook = ExcepthookChain.hook
 
 
-def unload_handler():
+def plugin_unloaded():
     try:
         SftpThread.cleanup()
     except (NameError):
         pass
 
+    cmd_cleanup()
+
     ExcepthookChain.remove('sftp_uncaught_except')
+
+if st_version == 2:
+    def unload_handler():
+        plugin_unloaded()

@@ -1,4 +1,4 @@
-Sublime SFTP 1.12.0 Changelog:
+SFTP 1.12.0 Changelog:
 
 
 Upcoming Price Increase
@@ -8,7 +8,7 @@ Due to the increased support work and complexity of supporting Sublime Text 2
 and Sublime Text 3, the price of the package will be increasing on Tuesday,
 September 3rd, 2013. The current price of $16 is good until that date.
 
-https://wbond.net/sublime_packages/sftp/buy
+https://codexns.io/products/sftp_for_sublime/buy
 
 As a reminder, licenses purchased now include a year of free major version
 upgrades. The next feature release will likely be 2.0 and include a number of
@@ -22,7 +22,7 @@ New Features
    the same age
 
  - Added verification that the correct version of the package is installed
-   for the current OS. See https://sublime.wbond.net/docs/syncing for more
+   for the current OS. See https://packagecontrol.io/docs/syncing for more
    details.
 
  - Added help for handling SSH keys that have insecure permissions

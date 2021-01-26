@@ -1,4 +1,4 @@
-Sublime SFTP 1.3.0 Changelog:
+SFTP 1.3.0 Changelog:
 
 ** Backwards Compatibility Breaks **
  - Changed OS X key bindings to use Ctrl+Cmd instead of Cmd+Alt

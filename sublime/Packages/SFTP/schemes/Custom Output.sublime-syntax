@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+name: SFTP Output Panel - Custom
+file_extensions:
+  - sftp-out
+scope: output.sftp
+hidden: true
+contexts:
+  main:
+    - match: ( Yes|No)\n
+      scope: support.constant.sftp
+    - match: ' \.+'
+      scope: comment.sftp
+    - match: (?i:\bfailure\b)
+      scope: constant.language.sftp constant.language.failure.sftp
+    - match: (?i:\bsuccess\b)
+      scope: constant.language.sftp constant.language.success.sftp
+    - match: '(")[^"#]*(")'
+      scope: string.sftp
+      captures:
+        1: punctuation.definition.string.begin.sftp
+        2: punctuation.definition.string.end.sftp
+    - match: '(\()(\d+|same age)[^\)]*(\))'
+      scope: constant.numeric.sftp
+      captures:
+        1: datediff.begin.sftp
+        2: datediff.end.sftp
+    - match: '(\[)(\d+|same age)[^\]]*(\])'
+      scope: comment.sftp
+      captures:
+        1: date.begin.sftp
+        2: date.end.sftp

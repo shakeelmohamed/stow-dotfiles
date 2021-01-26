@@ -1,11 +1,11 @@
-Sublime SFTP 1.13.0 Changelog:
+SFTP 1.13.0 Changelog:
 
 
 New Features
 ------------
 
  - Added an explicit setting "allow_config_upload" that must be set to true in
-   order to upload any Sublime SFTP configuration file (primary or alternate).
+   order to upload any SFTP configuration file (primary or alternate).
    Previously this was handled by the default "ignore_regex" and
    "ignore_regexes" settings, however some users were deleting the ignore
    settings and then accidentally uploading their configurations to their web

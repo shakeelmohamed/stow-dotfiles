@@ -1,0 +1,28 @@
+SFTP 1.15.0 Changelog:
+
+====================================
+| CYBER MONDAY                     |
+| 30% off https://codexns.io/sftp  |
+====================================
+
+Changes
+-------
+
+ - Improved handling of file not found errors on some SFTP servers
+
+ - Update bundled version of psftp.exe on Windows to be based on version 0.74,
+   including:
+    - Support for elliptic-curve cryptography (the NIST curves and 25519)
+    - Hardware-accelerated versions of common cryptographic primitives
+    - Various security fixes
+
+ - Quick panels used for Yes/No confirmation will be preserved when Sublime
+   Text is not focused, or loses focus
+
+ - Improved output from SFTP panel to use colors from custom color schemes
+
+ - Settings and Key Bindings now use side-by-side editing mode
+
+ - Added commands to enable/disable debug mode
+
+ - Added commands to add and remove license key

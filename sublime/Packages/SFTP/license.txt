@@ -1,33 +1,60 @@
 Software contained in the "bin" directory is subject to the licenses in the
 "licenses" subdirectory. "sftp/ftplib2.pyc" is subject to the
 "python_license.txt" in this directory. All other files are subject to the
-following copyright.
+following end user license agreement (EULA):
 
 --------
 
-Sublime SFTP
-Copyright (c) 2011-2015 William Bond <will@wbond.net>
+SFTP for Sublime Text End User License Agreement
+Copyright (c) 2011-2020 Codex Non Sufficit LLC <team@codexns.io>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software to use it for an evaluation period for the purpose of
-testing prior to purchase.
+The usage of SFTP for Sublime Text is governed by this end user license
+agreement. By using SFTP for Sublime Text, you accept the terms of this
+license agreement. If you do not accept the terms of this license agreement,
+you must stop using SFTP for Sublime Text and uninstall it.
 
-Extended use of Sublime SFTP requires a license, which can be purchased from
-https://wbond.net/sublime_packages/buy. Any person who has purchased a license
-from William Bond and enters the provided product key is granted use of Sublime
-SFTP on any number of computers, of any supported operating system. Licenses are
-valid for only a single person, and are valid for all upgrades to the
-major version purchased. For example, purchasing a license for version 1.1 will
-allow for free upgrades until version 2.0.
+1. DEFINITIONS: This license agreement is a contract between you (the User)
+   and Codex Non Sufficit LLC (the Company). It applies to the use of SFTP for
+   Sublime Text (the Software), which is comprised of computer code and data
+   files. For certain uses of the Software, a User must purchase a User
+   License from the Company, which will include a License Key.
 
-Redistribution, modification, merging, publication, distribution, sublicensing,
-and/or selling copies of Sublime SFTP is prohibited. Please contact
-support@wbond.net with any questions.
+2. LICENSE GRANT: The Software is licensed, not sold, to the User under the
+   terms of this license agreement. Subject to the terms and conditions of
+   this license agreement, Company hereby grants to User a perpetual,
+   worldwide, revocable, non-exclusive and non-transferable license to
+   install, use and create backup copies of the Software (the License). The
+   Company reserves all rights not expressly granted the User.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    - Without the purchase of a User License from the Company, the User is
+      granted a license solely to install and evaluate the Software to
+      determine its suitability and compatibility with the User's needs.
+
+    - With the purchase of a User License and receipt of a License Key from
+      the Company, the User is granted a License for commercial and
+      non-commercial purposes.
+
+3. RESTRICTIONS: The User may not:
+
+    a. Remove any copyright or legal notices from the Software
+    b. Distribute copies of the Software
+    c. Distribute User Licenses or License Keys for to Software to third
+       parties
+    d. Sell, rent, lease, lend or transfer User Licenses or License Keys for
+       the Software
+
+4. INTELLECTUAL PROPERTY RIGHTS: All title, including but not limited to
+   copyrights, in and to the Software and any copies thereof are owned by the
+   Company.
+
+5. DISCLAIMER OF WARRANTY: The Software is provided "as is" and "with all
+   faults", without warranty of any kind, either express or implied, including
+   without limitation any implied warranties of condition, uninterrupted use,
+   merchantability, fitness for a particular purpose, or non-infringement.
+
+6. LIMITATION OF LIABILITY: In no event shall the Company be liable to the
+   User or any party related to the User for any indirect, incidental,
+   consequential, special, exemplary, or punitive damages or lost profits
+   arising from the installation or use of the Software. The User is solely
+   responsible for ensuring that their use of the software is in accordance
+   with the law of their jurisdiction.

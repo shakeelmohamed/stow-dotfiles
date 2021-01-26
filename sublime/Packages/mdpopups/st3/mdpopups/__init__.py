@@ -16,7 +16,7 @@ import time
 from . import version as ver
 from . import colorbox
 from collections import OrderedDict
-from .st_scheme_template import SchemeTemplate, POPUP, PHANTOM, SHEET, NEW_SCHEMES
+from .st_scheme_template import SchemeTemplate, POPUP, PHANTOM, SHEET
 from .st_clean_css import clean_css
 from .st_pygments_highlight import syntax_hl as pyg_syntax_hl
 from .st_code_highlight import SublimeHighlight
@@ -30,7 +30,7 @@ try:
 except Exception:
     bs4 = None
 
-HTML_SHEET_SUPPORT = int(sublime.version()) >= 4065
+HTML_SHEET_SUPPORT = int(sublime.version()) >= 4074
 
 DEFAULT_CSS = 'Packages/mdpopups/mdpopups_css/default.css'
 OLD_DEFAULT_CSS = 'Packages/mdpopups/css/default.css'
@@ -46,6 +46,7 @@ there are helpful errors.</p></div>
 '''
 HL_SETTING = 'mdpopups.use_sublime_highlighter'
 STYLE_SETTING = 'mdpopups.default_style'
+LEGACY_MATCHER_SETTING = 'mdpopups.legacy_color_matcher'
 RE_BAD_ENTITIES = re.compile(r'(&(?!amp;|lt;|gt;|nbsp;)(?:\w+;|#\d+;))')
 
 NODEBUG = 0
@@ -172,7 +173,8 @@ def _get_scheme(scheme):
             if (
                 _is_cache_expired(t) or
                 obj.use_pygments != (not settings.get(HL_SETTING, True)) or
-                obj.default_style != settings.get(STYLE_SETTING, True)
+                obj.default_style != settings.get(STYLE_SETTING, True) or
+                obj.legacy_color_matcher != settings.get(LEGACY_MATCHER_SETTING, False)
             ):
                 obj = None
                 user_css = ''
@@ -546,7 +548,7 @@ def scope2style(view, scope, selected=False, explicit_background=False):
     }
     obj = _get_scheme(view.settings().get('color_scheme'))[0]
     style_obj = obj.guess_style(view, scope, selected, explicit_background)
-    if NEW_SCHEMES:
+    if not obj.legacy_color_matcher:
         style['color'] = style_obj['foreground']
         style['background'] = style_obj['background']
         font = []
@@ -554,6 +556,10 @@ def scope2style(view, scope, selected=False, explicit_background=False):
             font.append('bold')
         if style_obj['italic']:
             font.append('italic')
+        if style_obj['underline']:
+            font.append('underline')
+        if style_obj['glow']:
+            font.append('glow')
         style['style'] = ' '.join(font)
     else:
         style['color'] = style_obj.fg_simulated
@@ -690,7 +696,7 @@ def query_phantoms(view, pids):
 
 if HTML_SHEET_SUPPORT:
     def new_html_sheet(
-        window, name, contents, md=True, css=None, cmd="", args=None, flags=0, group=-1,
+        window, name, contents, md=True, css=None, flags=0, group=-1,
         wrapper_class=None, template_vars=None, template_env_options=None, nl2br=False,
         allow_code_wrap=False
     ):
@@ -707,7 +713,7 @@ if HTML_SHEET_SUPPORT:
             _log(traceback.format_exc())
             html = IDK
 
-        return window.new_html_sheet(name, html, cmd, args, flags, group)
+        return window.new_html_sheet(name, html, flags, group)
 
     def update_html_sheet(
         sheet, contents, md=True, css=None, wrapper_class=None,

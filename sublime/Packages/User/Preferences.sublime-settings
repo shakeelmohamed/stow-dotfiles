@@ -46,7 +46,17 @@
 		"api",
 		"scp",
 		"testsdks",
-		"microservices"
+		"microservices",
+		"online",
+		"screenshots",
+		"Codelabs",
+		"Codeday",
+		"hackathons",
+		"screenshot",
+		"mentees",
+		"Spotify",
+		"Spotifaves",
+		"Bellevue"
 	],
 	"binary_file_patterns":
 	[
@@ -63,7 +73,8 @@
 		"bower_components/**",
 		"contrib/**",
 		"demo/build/**",
-		"public/bower_components/**"
+		"public/bower_components/**",
+		"release/**"
 	],
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
@@ -81,7 +92,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 16,
+	"font_size": 15,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":

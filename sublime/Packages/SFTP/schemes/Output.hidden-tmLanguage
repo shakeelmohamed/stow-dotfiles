@@ -38,7 +38,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>^UNREGISTERED: Please visit http://sublime.wbond.net/sftp</string>
+			<string>^UNREGISTERED: Please visit https://codexns.io/sftp</string>
 			<key>name</key>
 			<string>failure.sftp</string>
 		</dict>

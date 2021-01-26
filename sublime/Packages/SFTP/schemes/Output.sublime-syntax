@@ -1,0 +1,34 @@
+%YAML 1.2
+---
+name: SFTP Output Panel
+file_extensions:
+  - sftp-out
+scope: output.sftp
+hidden: true
+contexts:
+  main:
+    - match: ( Yes|No)\n
+      scope: response.sftp
+    - match: ' \.+'
+      scope: dots.sftp
+    - match: (?i:\bfailure\b)
+      scope: failure.sftp
+    - match: (?i:\bsuccess\b)
+      scope: success.sftp
+    - match: "^UNREGISTERED: Please visit https://codexns.io/sftp"
+      scope: failure.sftp
+    - match: '(")[^"#]*(")'
+      scope: string.sftp
+      captures:
+        1: punctuation.definition.string.begin.sftp
+        2: punctuation.definition.string.end.sftp
+    - match: '(\()(\d+|same age)[^\)]*(\))'
+      scope: datediff.sftp
+      captures:
+        1: datediff.begin.sftp
+        2: datediff.end.sftp
+    - match: '(\[)(\d+|same age)[^\]]*(\])'
+      scope: date.sftp
+      captures:
+        1: date.begin.sftp
+        2: date.end.sftp

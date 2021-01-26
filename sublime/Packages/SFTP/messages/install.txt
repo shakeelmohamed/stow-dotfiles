@@ -1,6 +1,5 @@
-Thanks for installing Sublime SFTP! Below are some quick notes to get you
-started with the plugin. Please see https://wbond.net/sublime_packages/sftp for
-the full documentation.
+Thanks for installing SFTP! Below are some quick notes to get you started with
+the plugin. Please see https://codexns.io/sftp for the full documentation.
 
 
 There are two major modes of operation:
@@ -40,9 +39,9 @@ Support
 ----
 
 To learn more about the features and settings, please visit
-https://wbond.net/sublime_packages/sftp.
+https://codexns.io/sftp.
 
 If you are having trouble, please visit
-https://wbond.net/sublime_packages/sftp/support. The support page includes
+https://codexns.io/products/sftp_for_sublime/support. The support page includes
 instructions for capturing a debug log that will be useful if you believe
 you are experiencing a bug.

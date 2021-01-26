@@ -1,4 +1,4 @@
-Sublime SFTP 1.6.0 Changelog:
+SFTP 1.6.0 Changelog:
 
 Please be sure to restart Sublime Text 2 to start using this new version.
 

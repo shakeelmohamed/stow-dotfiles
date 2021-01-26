@@ -1,4 +1,4 @@
-Sublime SFTP 1.10.0 Changelog:
+SFTP 1.10.0 Changelog:
 
 New Features
 

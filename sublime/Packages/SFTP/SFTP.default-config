@@ -1,6 +1,6 @@
 {
     // The tab key will cycle through the settings when first created
-    // Visit http://wbond.net/sublime_packages/sftp/settings for help
+    // Visit https://codexns.io/products/sftp_for_subime/settings for help
     
     // sftp, ftp or ftps
     "type": "${1:sftp}",
