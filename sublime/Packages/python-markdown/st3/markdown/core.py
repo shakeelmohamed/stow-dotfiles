@@ -20,13 +20,10 @@ Copyright 2004 Manfred Stienstra (the original version)
 License: BSD (see LICENSE.md for details).
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import codecs
 import sys
 import logging
 import importlib
-# import pkg_resources
 from . import util
 from .preprocessors import build_preprocessors
 from .blockprocessors import build_block_parser
@@ -42,7 +39,7 @@ __all__ = ['Markdown', 'markdown', 'markdownFromFile']
 logger = logging.getLogger('MARKDOWN')
 
 
-class Markdown(object):
+class Markdown:
     """Convert Markdown to HTML."""
 
     doc_tag = "div"     # Element used to wrap document - later removed
@@ -78,7 +75,7 @@ class Markdown(object):
 
         self.block_level_elements = [
             # Elements which are invalid to wrap in a `<p>` tag.
-            # See http://w3c.github.io/html/grouping-content.html#the-p-element
+            # See https://w3c.github.io/html/grouping-content.html#the-p-element
             'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl',
             'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3',
             'h4', 'h5', 'h6', 'header', 'hr', 'main', 'menu', 'nav', 'ol', 'p', 'pre',
@@ -122,7 +119,7 @@ class Markdown(object):
 
         """
         for ext in extensions:
-            if isinstance(ext, util.string_type):
+            if isinstance(ext, str):
                 ext = self.build_extension(ext, configs.get(ext, {}))
             if isinstance(ext, Extension):
                 ext._extendMarkdown(self)
@@ -132,7 +129,7 @@ class Markdown(object):
                 )
             elif ext is not None:
                 raise TypeError(
-                    'Extension "%s.%s" must be of type: "%s.%s"' % (
+                    'Extension "{}.{}" must be of type: "{}.{}"'.format(
                         ext.__class__.__module__, ext.__class__.__name__,
                         Extension.__module__, Extension.__name__
                     )
@@ -144,9 +141,8 @@ class Markdown(object):
         Build extension from a string name, then return an instance.
 
         First attempt to load an entry point. The string name must be registered as an entry point in the
-        `markdown.extensions` group which points to a subclass of the `markdown.extensions.Extension` class. If
-        multiple distributions have registered the same name, the first one found by `pkg_resources.iter_entry_points`
-        is returned.
+        `markdown.extensions` group which points to a subclass of the `markdown.extensions.Extension` class.
+        If multiple distributions have registered the same name, the first one found is returned.
 
         If no entry point is found, assume dot notation (`path.to.module:ClassName`). Load the specified class and
         return an instance. If no class is specified, import the module and call a `makeExtension` function and return
@@ -165,7 +161,7 @@ class Markdown(object):
         try:
             module = importlib.import_module(ext_name)
             logger.debug(
-                'Successfuly imported extension module "%s".' % ext_name
+                'Successfully imported extension module "%s".' % ext_name
             )
         except ImportError as e:
             message = 'Failed loading extension "%s".' % ext_name
@@ -221,7 +217,7 @@ class Markdown(object):
 
     def is_block_level(self, tag):
         """Check if the tag is a block level HTML tag."""
-        if isinstance(tag, util.string_type):
+        if isinstance(tag, str):
             return tag.lower().rstrip('/') in self.block_level_elements
         # Some ElementTree tags are not strings, so return False.
         return False
@@ -253,7 +249,7 @@ class Markdown(object):
             return ''  # a blank unicode string
 
         try:
-            source = util.text_type(source)
+            source = str(source)
         except UnicodeDecodeError as e:  # pragma: no cover
             # Customise error message while maintaining original trackback
             e.reason += '. -- Note: Markdown only accepts unicode input!'
@@ -321,7 +317,7 @@ class Markdown(object):
 
         # Read the source
         if input:
-            if isinstance(input, util.string_type):
+            if isinstance(input, str):
                 input_file = codecs.open(input, mode="r", encoding=encoding)
             else:
                 input_file = codecs.getreader(encoding)(input)
@@ -329,7 +325,7 @@ class Markdown(object):
             input_file.close()
         else:
             text = sys.stdin.read()
-            if not isinstance(text, util.text_type):  # pragma: no cover
+            if not isinstance(text, str):  # pragma: no cover
                 text = text.decode(encoding)
 
         text = text.lstrip('\ufeff')  # remove the byte-order mark
@@ -339,7 +335,7 @@ class Markdown(object):
 
         # Write to file or stdout
         if output:
-            if isinstance(output, util.string_type):
+            if isinstance(output, str):
                 output_file = codecs.open(output, "w",
                                           encoding=encoding,
                                           errors="xmlcharrefreplace")

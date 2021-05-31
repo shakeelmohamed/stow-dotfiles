@@ -23,7 +23,7 @@ lang_map = {
     'html': (('html',), ('HTML/HTML',)),
     'java': (('java',), ('Java/Java',)),
     'javascript': (('javascript', 'js'), ('JavaScript/JavaScript', 'JavaScriptNext - ES6 Syntax/JavaScriptNext')),
-    'json': (('json',), ('JavaScript/JSON', 'JSON/JSON', 'JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext)')),
+    'json': (('json', 'jsonc'), ('JavaScript/JSON', 'JSON/JSON', 'JavaScriptNext - ES6 Syntax/JSON (JavaScriptNext)')),
     'jsp': (('jsp',), ('Java/Java Server Pages (JSP)',)),
     'julia': (('julia',), ('Julia/Julia',)),
     'less': (('less',), ('LESS/LESS', 'LessImproved/LESS')),
@@ -57,5 +57,6 @@ lang_map = {
     'xml': (('xml',), ('XML/XML',)),
     'yaml': (('yaml',), ('YAML/YAML',)),
     'vhdl': (('vhdl',), ('VHDL/Syntaxes/VHDL', 'HDLProject/sublime-vhdl/Syntaxes/VHDL')),
-    'verilog': (('verilog',), ('Verilog/Verilog', 'HDLProject/sublime-verilog/Verilog'))
+    'verilog': (('verilog',), ('Verilog/Verilog', 'HDLProject/sublime-verilog/Verilog')),
+    'zig': (('zig',), ('Zig Language/Syntaxes/Zig',))
 }

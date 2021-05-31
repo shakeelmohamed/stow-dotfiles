@@ -15,13 +15,11 @@ use CodeHilite to source its settings or pymdownx.highlight.
 Copyright 2014 - 2017 Isaac Muse <isaacmuse@gmail.com>
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from markdown import Extension
 from markdown.inlinepatterns import InlineProcessor
 from markdown import util as md_util
+import xml.etree.ElementTree as etree
 import functools
-from . import util
 
 ESCAPED_BSLASH = '%s%s%s' % (md_util.STX, ord('\\'), md_util.ETX)
 DOUBLE_BSLASH = '\\\\'
@@ -48,13 +46,13 @@ def _escape(txt):
 def _test(language, test_language=None):
     """Test language."""
 
-    return test_language is None or language == test_language
+    return test_language is None or test_language == '*' or language == test_language
 
 
-def _formatter(source, language, md, class_name="", fmt=None):
+def _formatter(src="", language="", md=None, class_name="", fmt=None):
     """Formatter wrapper."""
 
-    return fmt(source, language, class_name, md)
+    return fmt(src, language, class_name, md)
 
 
 class InlineHilitePattern(InlineProcessor):
@@ -92,16 +90,19 @@ class InlineHilitePattern(InlineProcessor):
     def extend_custom_inline(self, name, formatter):
         """Extend SuperFences with the given name, language, and formatter."""
 
-        self.formatters.append(
-            {
-                "name": name,
-                "test": functools.partial(_test, test_language=name),
-                "formatter": formatter
-            }
-        )
+        obj = {
+            "name": name,
+            "test": functools.partial(_test, test_language=name),
+            "formatter": formatter
+        }
+
+        if name == '*':
+            self.formatters[0] = obj
+        else:
+            self.formatters.append(obj)
 
     def get_settings(self):
-        """Check for CodeHilite extension and gather its settings."""
+        """Check for Highlight extension settings."""
 
         if not self.get_hl_settings:
             self.get_hl_settings = True
@@ -125,8 +126,9 @@ class InlineHilitePattern(InlineProcessor):
             self.pygments_style = config['pygments_style']
             self.use_pygments = config['use_pygments']
             self.noclasses = config['noclasses']
+            self.language_prefix = config['language_prefix']
 
-    def highlight_code(self, src, language, classname=None, md=None):
+    def highlight_code(self, src='', language='', classname=None, md=None):
         """Syntax highlight the inline code block."""
 
         process_text = self.style_plain_text or language or self.guess_lang
@@ -137,11 +139,12 @@ class InlineHilitePattern(InlineProcessor):
                 pygments_style=self.pygments_style,
                 use_pygments=self.use_pygments,
                 noclasses=self.noclasses,
-                extend_pygments_lang=self.extend_pygments_lang
+                extend_pygments_lang=self.extend_pygments_lang,
+                language_prefix=self.language_prefix
             ).highlight(src, language, self.css_class, inline=True)
             el.text = self.md.htmlStash.store(el.text)
         else:
-            el = md_util.etree.Element('code')
+            el = etree.Element('code')
             el.text = self.md.htmlStash.store(_escape(src))
         return el
 
@@ -150,8 +153,12 @@ class InlineHilitePattern(InlineProcessor):
 
         for entry in reversed(self.formatters):
             if entry["test"](lang):
-                value = entry["formatter"](src, lang, self.md)
-                if isinstance(value, util.ustr):
+                value = entry["formatter"](
+                    src=src,
+                    language=lang,
+                    md=self.md
+                )
+                if isinstance(value, str):
                     value = self.md.htmlStash.store(value)
                 return value
 
@@ -164,7 +171,10 @@ class InlineHilitePattern(InlineProcessor):
             lang = m.group('lang') if m.group('lang') else ''
             src = m.group('code').strip()
             self.get_settings()
-            return self.handle_code(lang, src), m.start(0), m.end(0)
+            try:
+                return self.handle_code(lang, src), m.start(0), m.end(0)
+            except Exception:
+                return m.group(0), None, None
 
 
 class InlineHiliteExtension(Extension):
@@ -185,7 +195,7 @@ class InlineHiliteExtension(Extension):
             ],
             'css_class': [
                 '',
-                "Set class name for wrapper element. The default of CodeHilite or Highlight will be used"
+                "Set class name for wrapper element. The default of Highlight will be used"
                 "if nothing is set. - "
                 "Default: ''"
             ],

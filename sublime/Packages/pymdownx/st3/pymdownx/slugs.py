@@ -21,10 +21,9 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from __future__ import unicode_literals
 import re
 import unicodedata
-from . import util
+from urllib.parse import quote
 
 RE_TAGS = re.compile(r'</?[^>]*>', re.UNICODE)
 RE_INVALID_SLUG_CHAR = re.compile(r'[^\w\- ]', re.UNICODE)
@@ -55,7 +54,7 @@ def uslugify(text, sep, cased=NO_CASED, percent_encode=False):
     # Remove non word characters, non spaces, and non dashes, and convert spaces to dashes.
     slug = RE_SEP.sub(sep, RE_INVALID_SLUG_CHAR.sub('', slug))
 
-    return util.quote(slug.encode('utf-8')) if percent_encode else slug
+    return quote(slug.encode('utf-8')) if percent_encode else slug
 
 
 def uslugify_encoded(text, sep):

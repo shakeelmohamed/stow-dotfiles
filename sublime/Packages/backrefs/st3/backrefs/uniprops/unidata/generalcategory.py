@@ -1,15 +1,16 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 unicode_properties = {
     "c": {
-        "^": "\x20-\x5c\x7e\xa0-\xac\xae-\u05ff\u0605-\u06dc\u06de-\u070e\u0710-\u200a\u2010-\u2029\u202f-\u205f\u2065-\u2069\u2070-\ud7ff\ud801-\udb7e\udb81-\udbfe\udc01-\udffe\ue001-\uf8fe\uf900-\ufefe\uff00-\ufff8\ufffc-\U000110bc\U000110be-\U0001d172\U0001d17b-\U000e0000\U000e0002-\U000e001f\U000e0080-\U000effff\U000f0001-\U000ffffc\U000ffffe-\U000fffff\U00100001-\U0010fffc\U0010fffe-\U0010ffff",
+        "^": "\x20-\x5c\x7e\xa0-\xac\xae-\u0377\u037a-\u037e\u0384-\u038a\u038c\u038e-\u03a1\u03a3-\u0527\u0531-\u0556\u0559-\u055f\u0561-\u0587\u0589-\u058a\u058f\u0591-\u05c7\u05d0-\u05ea\u05f0-\u05f4\u0606-\u061b\u061e-\u06dc\u06de-\u070d\u0710-\u074a\u074d-\u07b1\u07c0-\u07fa\u0800-\u082d\u0830-\u083e\u0840-\u085b\u085e\u08a0\u08a2-\u08ac\u08e4-\u08fe\u0900-\u0977\u0979-\u097f\u0981-\u0983\u0985-\u098c\u098f-\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bc-\u09c4\u09c7-\u09c8\u09cb-\u09ce\u09d7\u09dc-\u09dd\u09df-\u09e3\u09e6-\u09fb\u0a01-\u0a03\u0a05-\u0a0a\u0a0f-\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32-\u0a33\u0a35-\u0a36\u0a38-\u0a39\u0a3c\u0a3e-\u0a42\u0a47-\u0a48\u0a4b-\u0a4d\u0a51\u0a59-\u0a5c\u0a5e\u0a66-\u0a75\u0a81-\u0a83\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2-\u0ab3\u0ab5-\u0ab9\u0abc-\u0ac5\u0ac7-\u0ac9\u0acb-\u0acd\u0ad0\u0ae0-\u0ae3\u0ae6-\u0af1\u0b01-\u0b03\u0b05-\u0b0c\u0b0f-\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32-\u0b33\u0b35-\u0b39\u0b3c-\u0b44\u0b47-\u0b48\u0b4b-\u0b4d\u0b56-\u0b57\u0b5c-\u0b5d\u0b5f-\u0b63\u0b66-\u0b77\u0b82-\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99-\u0b9a\u0b9c\u0b9e-\u0b9f\u0ba3-\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bbe-\u0bc2\u0bc6-\u0bc8\u0bca-\u0bcd\u0bd0\u0bd7\u0be6-\u0bfa\u0c01-\u0c03\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c33\u0c35-\u0c39\u0c3d-\u0c44\u0c46-\u0c48\u0c4a-\u0c4d\u0c55-\u0c56\u0c58-\u0c59\u0c60-\u0c63\u0c66-\u0c6f\u0c78-\u0c7f\u0c82-\u0c83\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbc-\u0cc4\u0cc6-\u0cc8\u0cca-\u0ccd\u0cd5-\u0cd6\u0cde\u0ce0-\u0ce3\u0ce6-\u0cef\u0cf1-\u0cf2\u0d02-\u0d03\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d-\u0d44\u0d46-\u0d48\u0d4a-\u0d4e\u0d57\u0d60-\u0d63\u0d66-\u0d75\u0d79-\u0d7f\u0d82-\u0d83\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0dca\u0dcf-\u0dd4\u0dd6\u0dd8-\u0ddf\u0df2-\u0df4\u0e01-\u0e3a\u0e3f-\u0e5b\u0e81-\u0e82\u0e84\u0e87-\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa-\u0eab\u0ead-\u0eb9\u0ebb-\u0ebd\u0ec0-\u0ec4\u0ec6\u0ec8-\u0ecd\u0ed0-\u0ed9\u0edc-\u0edf\u0f00-\u0f47\u0f49-\u0f6c\u0f71-\u0f97\u0f99-\u0fbc\u0fbe-\u0fcc\u0fce-\u0fda\u1000-\u10c5\u10c7\u10cd\u10d0-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u135d-\u137c\u1380-\u1399\u13a0-\u13f4\u1400-\u169c\u16a0-\u16f0\u1700-\u170c\u170e-\u1714\u1720-\u1736\u1740-\u1753\u1760-\u176c\u176e-\u1770\u1772-\u1773\u1780-\u17dd\u17e0-\u17e9\u17f0-\u17f9\u1800-\u180e\u1810-\u1819\u1820-\u1877\u1880-\u18aa\u18b0-\u18f5\u1900-\u191c\u1920-\u192b\u1930-\u193b\u1940\u1944-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u19d0-\u19da\u19de-\u1a1b\u1a1e-\u1a5e\u1a60-\u1a7c\u1a7f-\u1a89\u1a90-\u1a99\u1aa0-\u1aad\u1b00-\u1b4b\u1b50-\u1b7c\u1b80-\u1bf3\u1bfc-\u1c37\u1c3b-\u1c49\u1c4d-\u1c7f\u1cc0-\u1cc7\u1cd0-\u1cf6\u1d00-\u1de6\u1dfc-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fc4\u1fc6-\u1fd3\u1fd6-\u1fdb\u1fdd-\u1fef\u1ff2-\u1ff4\u1ff6-\u1ffe\u2000-\u200a\u2010-\u2029\u202f-\u205f\u2070-\u2071\u2074-\u208e\u2090-\u209c\u20a0-\u20b9\u20d0-\u20f0\u2100-\u2189\u2190-\u23f3\u2400-\u2426\u2440-\u244a\u2460-\u26ff\u2701-\u2b4c\u2b50-\u2b59\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2cf3\u2cf9-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f-\u2d70\u2d7f-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2de0-\u2e3b\u2e80-\u2e99\u2e9b-\u2ef3\u2f00-\u2fd5\u2ff0-\u2ffb\u3000-\u303f\u3041-\u3096\u3099-\u30ff\u3105-\u312d\u3131-\u318e\u3190-\u31ba\u31c0-\u31e3\u31f0-\u321e\u3220-\u32fe\u3300-\u3400\u4db5\u4dc0-\u4e00\u9fcc\ua000-\ua48c\ua490-\ua4c6\ua4d0-\ua62b\ua640-\ua697\ua69f-\ua6f7\ua700-\ua78e\ua790-\ua793\ua7a0-\ua7aa\ua7f8-\ua82b\ua830-\ua839\ua840-\ua877\ua880-\ua8c4\ua8ce-\ua8d9\ua8e0-\ua8fb\ua900-\ua953\ua95f-\ua97c\ua980-\ua9cd\ua9cf-\ua9d9\ua9de-\ua9df\uaa00-\uaa36\uaa40-\uaa4d\uaa50-\uaa59\uaa5c-\uaa7b\uaa80-\uaac2\uaadb-\uaaf6\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uabc0-\uabed\uabf0-\uabf9\uac00\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d-\ufb36\ufb38-\ufb3c\ufb3e\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufbc1\ufbd3-\ufd3f\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfd\ufe00-\ufe19\ufe20-\ufe26\ufe30-\ufe52\ufe54-\ufe66\ufe68-\ufe6b\ufe70-\ufe74\ufe76-\ufefc\uff01-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc\uffe0-\uffe6\uffe8-\uffee\ufffc-\ufffd\U00010000-\U0001000b\U0001000d-\U00010026\U00010028-\U0001003a\U0001003c-\U0001003d\U0001003f-\U0001004d\U00010050-\U0001005d\U00010080-\U000100fa\U00010100-\U00010102\U00010107-\U00010133\U00010137-\U0001018a\U00010190-\U0001019b\U000101d0-\U000101fd\U00010280-\U0001029c\U000102a0-\U000102d0\U00010300-\U0001031e\U00010320-\U00010323\U00010330-\U0001034a\U00010380-\U0001039d\U0001039f-\U000103c3\U000103c8-\U000103d5\U00010400-\U0001049d\U000104a0-\U000104a9\U00010800-\U00010805\U00010808\U0001080a-\U00010835\U00010837-\U00010838\U0001083c\U0001083f-\U00010855\U00010857-\U0001085f\U00010900-\U0001091b\U0001091f-\U00010939\U0001093f\U00010980-\U000109b7\U000109be-\U000109bf\U00010a00-\U00010a03\U00010a05-\U00010a06\U00010a0c-\U00010a13\U00010a15-\U00010a17\U00010a19-\U00010a33\U00010a38-\U00010a3a\U00010a3f-\U00010a47\U00010a50-\U00010a58\U00010a60-\U00010a7f\U00010b00-\U00010b35\U00010b39-\U00010b55\U00010b58-\U00010b72\U00010b78-\U00010b7f\U00010c00-\U00010c48\U00010e60-\U00010e7e\U00011000-\U0001104d\U00011052-\U0001106f\U00011080-\U000110bc\U000110be-\U000110c1\U000110d0-\U000110e8\U000110f0-\U000110f9\U00011100-\U00011134\U00011136-\U00011143\U00011180-\U000111c8\U000111d0-\U000111d9\U00011680-\U000116b7\U000116c0-\U000116c9\U00012000-\U0001236e\U00012400-\U00012462\U00012470-\U00012473\U00013000-\U0001342e\U00016800-\U00016a38\U00016f00-\U00016f44\U00016f50-\U00016f7e\U00016f8f-\U00016f9f\U0001b000-\U0001b001\U0001d000-\U0001d0f5\U0001d100-\U0001d126\U0001d129-\U0001d172\U0001d17b-\U0001d1dd\U0001d200-\U0001d245\U0001d300-\U0001d356\U0001d360-\U0001d371\U0001d400-\U0001d454\U0001d456-\U0001d49c\U0001d49e-\U0001d49f\U0001d4a2\U0001d4a5-\U0001d4a6\U0001d4a9-\U0001d4ac\U0001d4ae-\U0001d4b9\U0001d4bb\U0001d4bd-\U0001d4c3\U0001d4c5-\U0001d505\U0001d507-\U0001d50a\U0001d50d-\U0001d514\U0001d516-\U0001d51c\U0001d51e-\U0001d539\U0001d53b-\U0001d53e\U0001d540-\U0001d544\U0001d546\U0001d54a-\U0001d550\U0001d552-\U0001d6a5\U0001d6a8-\U0001d7cb\U0001d7ce-\U0001d7ff\U0001ee00-\U0001ee03\U0001ee05-\U0001ee1f\U0001ee21-\U0001ee22\U0001ee24\U0001ee27\U0001ee29-\U0001ee32\U0001ee34-\U0001ee37\U0001ee39\U0001ee3b\U0001ee42\U0001ee47\U0001ee49\U0001ee4b\U0001ee4d-\U0001ee4f\U0001ee51-\U0001ee52\U0001ee54\U0001ee57\U0001ee59\U0001ee5b\U0001ee5d\U0001ee5f\U0001ee61-\U0001ee62\U0001ee64\U0001ee67-\U0001ee6a\U0001ee6c-\U0001ee72\U0001ee74-\U0001ee77\U0001ee79-\U0001ee7c\U0001ee7e\U0001ee80-\U0001ee89\U0001ee8b-\U0001ee9b\U0001eea1-\U0001eea3\U0001eea5-\U0001eea9\U0001eeab-\U0001eebb\U0001eef0-\U0001eef1\U0001f000-\U0001f02b\U0001f030-\U0001f093\U0001f0a0-\U0001f0ae\U0001f0b1-\U0001f0be\U0001f0c1-\U0001f0cf\U0001f0d1-\U0001f0df\U0001f100-\U0001f10a\U0001f110-\U0001f12e\U0001f130-\U0001f16b\U0001f170-\U0001f19a\U0001f1e6-\U0001f202\U0001f210-\U0001f23a\U0001f240-\U0001f248\U0001f250-\U0001f251\U0001f300-\U0001f320\U0001f330-\U0001f335\U0001f337-\U0001f37c\U0001f380-\U0001f393\U0001f3a0-\U0001f3c4\U0001f3c6-\U0001f3ca\U0001f3e0-\U0001f3f0\U0001f400-\U0001f43e\U0001f440\U0001f442-\U0001f4f7\U0001f4f9-\U0001f4fc\U0001f500-\U0001f53d\U0001f540-\U0001f543\U0001f550-\U0001f567\U0001f5fb-\U0001f640\U0001f645-\U0001f64f\U0001f680-\U0001f6c5\U0001f700-\U0001f773\U00020000\U0002a6d6\U0002a700\U0002b734\U0002b740\U0002b81d\U0002f800-\U0002fa1d\U000e0100-\U000e01ef",
         "^c": "\x20-\x5c\x7e\xa0-\U0010ffff",
         "^f": "\x00-\xac\xae-\u05ff\u0605-\u06dc\u06de-\u070e\u0710-\u200a\u2010-\u2029\u202f-\u205f\u2065-\u2069\u2070-\ufefe\uff00-\ufff8\ufffc-\U000110bc\U000110be-\U0001d172\U0001d17b-\U000e0000\U000e0002-\U000e001f\U000e0080-\U0010ffff",
+        "^n": "\x00-\u0377\u037a-\u037e\u0384-\u038a\u038c\u038e-\u03a1\u03a3-\u0527\u0531-\u0556\u0559-\u055f\u0561-\u0587\u0589-\u058a\u058f\u0591-\u05c7\u05d0-\u05ea\u05f0-\u05f4\u0600-\u0604\u0606-\u061b\u061e-\u070d\u070f-\u074a\u074d-\u07b1\u07c0-\u07fa\u0800-\u082d\u0830-\u083e\u0840-\u085b\u085e\u08a0\u08a2-\u08ac\u08e4-\u08fe\u0900-\u0977\u0979-\u097f\u0981-\u0983\u0985-\u098c\u098f-\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bc-\u09c4\u09c7-\u09c8\u09cb-\u09ce\u09d7\u09dc-\u09dd\u09df-\u09e3\u09e6-\u09fb\u0a01-\u0a03\u0a05-\u0a0a\u0a0f-\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32-\u0a33\u0a35-\u0a36\u0a38-\u0a39\u0a3c\u0a3e-\u0a42\u0a47-\u0a48\u0a4b-\u0a4d\u0a51\u0a59-\u0a5c\u0a5e\u0a66-\u0a75\u0a81-\u0a83\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2-\u0ab3\u0ab5-\u0ab9\u0abc-\u0ac5\u0ac7-\u0ac9\u0acb-\u0acd\u0ad0\u0ae0-\u0ae3\u0ae6-\u0af1\u0b01-\u0b03\u0b05-\u0b0c\u0b0f-\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32-\u0b33\u0b35-\u0b39\u0b3c-\u0b44\u0b47-\u0b48\u0b4b-\u0b4d\u0b56-\u0b57\u0b5c-\u0b5d\u0b5f-\u0b63\u0b66-\u0b77\u0b82-\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99-\u0b9a\u0b9c\u0b9e-\u0b9f\u0ba3-\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bbe-\u0bc2\u0bc6-\u0bc8\u0bca-\u0bcd\u0bd0\u0bd7\u0be6-\u0bfa\u0c01-\u0c03\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c33\u0c35-\u0c39\u0c3d-\u0c44\u0c46-\u0c48\u0c4a-\u0c4d\u0c55-\u0c56\u0c58-\u0c59\u0c60-\u0c63\u0c66-\u0c6f\u0c78-\u0c7f\u0c82-\u0c83\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbc-\u0cc4\u0cc6-\u0cc8\u0cca-\u0ccd\u0cd5-\u0cd6\u0cde\u0ce0-\u0ce3\u0ce6-\u0cef\u0cf1-\u0cf2\u0d02-\u0d03\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d-\u0d44\u0d46-\u0d48\u0d4a-\u0d4e\u0d57\u0d60-\u0d63\u0d66-\u0d75\u0d79-\u0d7f\u0d82-\u0d83\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0dca\u0dcf-\u0dd4\u0dd6\u0dd8-\u0ddf\u0df2-\u0df4\u0e01-\u0e3a\u0e3f-\u0e5b\u0e81-\u0e82\u0e84\u0e87-\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa-\u0eab\u0ead-\u0eb9\u0ebb-\u0ebd\u0ec0-\u0ec4\u0ec6\u0ec8-\u0ecd\u0ed0-\u0ed9\u0edc-\u0edf\u0f00-\u0f47\u0f49-\u0f6c\u0f71-\u0f97\u0f99-\u0fbc\u0fbe-\u0fcc\u0fce-\u0fda\u1000-\u10c5\u10c7\u10cd\u10d0-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u135d-\u137c\u1380-\u1399\u13a0-\u13f4\u1400-\u169c\u16a0-\u16f0\u1700-\u170c\u170e-\u1714\u1720-\u1736\u1740-\u1753\u1760-\u176c\u176e-\u1770\u1772-\u1773\u1780-\u17dd\u17e0-\u17e9\u17f0-\u17f9\u1800-\u180e\u1810-\u1819\u1820-\u1877\u1880-\u18aa\u18b0-\u18f5\u1900-\u191c\u1920-\u192b\u1930-\u193b\u1940\u1944-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u19d0-\u19da\u19de-\u1a1b\u1a1e-\u1a5e\u1a60-\u1a7c\u1a7f-\u1a89\u1a90-\u1a99\u1aa0-\u1aad\u1b00-\u1b4b\u1b50-\u1b7c\u1b80-\u1bf3\u1bfc-\u1c37\u1c3b-\u1c49\u1c4d-\u1c7f\u1cc0-\u1cc7\u1cd0-\u1cf6\u1d00-\u1de6\u1dfc-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fc4\u1fc6-\u1fd3\u1fd6-\u1fdb\u1fdd-\u1fef\u1ff2-\u1ff4\u1ff6-\u1ffe\u2000-\u2064\u206a-\u2071\u2074-\u208e\u2090-\u209c\u20a0-\u20b9\u20d0-\u20f0\u2100-\u2189\u2190-\u23f3\u2400-\u2426\u2440-\u244a\u2460-\u26ff\u2701-\u2b4c\u2b50-\u2b59\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2cf3\u2cf9-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f-\u2d70\u2d7f-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2de0-\u2e3b\u2e80-\u2e99\u2e9b-\u2ef3\u2f00-\u2fd5\u2ff0-\u2ffb\u3000-\u303f\u3041-\u3096\u3099-\u30ff\u3105-\u312d\u3131-\u318e\u3190-\u31ba\u31c0-\u31e3\u31f0-\u321e\u3220-\u32fe\u3300-\u3400\u4db5\u4dc0-\u4e00\u9fcc\ua000-\ua48c\ua490-\ua4c6\ua4d0-\ua62b\ua640-\ua697\ua69f-\ua6f7\ua700-\ua78e\ua790-\ua793\ua7a0-\ua7aa\ua7f8-\ua82b\ua830-\ua839\ua840-\ua877\ua880-\ua8c4\ua8ce-\ua8d9\ua8e0-\ua8fb\ua900-\ua953\ua95f-\ua97c\ua980-\ua9cd\ua9cf-\ua9d9\ua9de-\ua9df\uaa00-\uaa36\uaa40-\uaa4d\uaa50-\uaa59\uaa5c-\uaa7b\uaa80-\uaac2\uaadb-\uaaf6\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uabc0-\uabed\uabf0-\uabf9\uac00\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\ud800\udb7f-\udb80\udbff-\udc00\udfff-\ue000\uf8ff-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d-\ufb36\ufb38-\ufb3c\ufb3e\ufb40-\ufb41\ufb43-\ufb44\ufb46-\ufbc1\ufbd3-\ufd3f\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfd\ufe00-\ufe19\ufe20-\ufe26\ufe30-\ufe52\ufe54-\ufe66\ufe68-\ufe6b\ufe70-\ufe74\ufe76-\ufefc\ufeff\uff01-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc\uffe0-\uffe6\uffe8-\uffee\ufff9-\ufffd\U00010000-\U0001000b\U0001000d-\U00010026\U00010028-\U0001003a\U0001003c-\U0001003d\U0001003f-\U0001004d\U00010050-\U0001005d\U00010080-\U000100fa\U00010100-\U00010102\U00010107-\U00010133\U00010137-\U0001018a\U00010190-\U0001019b\U000101d0-\U000101fd\U00010280-\U0001029c\U000102a0-\U000102d0\U00010300-\U0001031e\U00010320-\U00010323\U00010330-\U0001034a\U00010380-\U0001039d\U0001039f-\U000103c3\U000103c8-\U000103d5\U00010400-\U0001049d\U000104a0-\U000104a9\U00010800-\U00010805\U00010808\U0001080a-\U00010835\U00010837-\U00010838\U0001083c\U0001083f-\U00010855\U00010857-\U0001085f\U00010900-\U0001091b\U0001091f-\U00010939\U0001093f\U00010980-\U000109b7\U000109be-\U000109bf\U00010a00-\U00010a03\U00010a05-\U00010a06\U00010a0c-\U00010a13\U00010a15-\U00010a17\U00010a19-\U00010a33\U00010a38-\U00010a3a\U00010a3f-\U00010a47\U00010a50-\U00010a58\U00010a60-\U00010a7f\U00010b00-\U00010b35\U00010b39-\U00010b55\U00010b58-\U00010b72\U00010b78-\U00010b7f\U00010c00-\U00010c48\U00010e60-\U00010e7e\U00011000-\U0001104d\U00011052-\U0001106f\U00011080-\U000110c1\U000110d0-\U000110e8\U000110f0-\U000110f9\U00011100-\U00011134\U00011136-\U00011143\U00011180-\U000111c8\U000111d0-\U000111d9\U00011680-\U000116b7\U000116c0-\U000116c9\U00012000-\U0001236e\U00012400-\U00012462\U00012470-\U00012473\U00013000-\U0001342e\U00016800-\U00016a38\U00016f00-\U00016f44\U00016f50-\U00016f7e\U00016f8f-\U00016f9f\U0001b000-\U0001b001\U0001d000-\U0001d0f5\U0001d100-\U0001d126\U0001d129-\U0001d1dd\U0001d200-\U0001d245\U0001d300-\U0001d356\U0001d360-\U0001d371\U0001d400-\U0001d454\U0001d456-\U0001d49c\U0001d49e-\U0001d49f\U0001d4a2\U0001d4a5-\U0001d4a6\U0001d4a9-\U0001d4ac\U0001d4ae-\U0001d4b9\U0001d4bb\U0001d4bd-\U0001d4c3\U0001d4c5-\U0001d505\U0001d507-\U0001d50a\U0001d50d-\U0001d514\U0001d516-\U0001d51c\U0001d51e-\U0001d539\U0001d53b-\U0001d53e\U0001d540-\U0001d544\U0001d546\U0001d54a-\U0001d550\U0001d552-\U0001d6a5\U0001d6a8-\U0001d7cb\U0001d7ce-\U0001d7ff\U0001ee00-\U0001ee03\U0001ee05-\U0001ee1f\U0001ee21-\U0001ee22\U0001ee24\U0001ee27\U0001ee29-\U0001ee32\U0001ee34-\U0001ee37\U0001ee39\U0001ee3b\U0001ee42\U0001ee47\U0001ee49\U0001ee4b\U0001ee4d-\U0001ee4f\U0001ee51-\U0001ee52\U0001ee54\U0001ee57\U0001ee59\U0001ee5b\U0001ee5d\U0001ee5f\U0001ee61-\U0001ee62\U0001ee64\U0001ee67-\U0001ee6a\U0001ee6c-\U0001ee72\U0001ee74-\U0001ee77\U0001ee79-\U0001ee7c\U0001ee7e\U0001ee80-\U0001ee89\U0001ee8b-\U0001ee9b\U0001eea1-\U0001eea3\U0001eea5-\U0001eea9\U0001eeab-\U0001eebb\U0001eef0-\U0001eef1\U0001f000-\U0001f02b\U0001f030-\U0001f093\U0001f0a0-\U0001f0ae\U0001f0b1-\U0001f0be\U0001f0c1-\U0001f0cf\U0001f0d1-\U0001f0df\U0001f100-\U0001f10a\U0001f110-\U0001f12e\U0001f130-\U0001f16b\U0001f170-\U0001f19a\U0001f1e6-\U0001f202\U0001f210-\U0001f23a\U0001f240-\U0001f248\U0001f250-\U0001f251\U0001f300-\U0001f320\U0001f330-\U0001f335\U0001f337-\U0001f37c\U0001f380-\U0001f393\U0001f3a0-\U0001f3c4\U0001f3c6-\U0001f3ca\U0001f3e0-\U0001f3f0\U0001f400-\U0001f43e\U0001f440\U0001f442-\U0001f4f7\U0001f4f9-\U0001f4fc\U0001f500-\U0001f53d\U0001f540-\U0001f543\U0001f550-\U0001f567\U0001f5fb-\U0001f640\U0001f645-\U0001f64f\U0001f680-\U0001f6c5\U0001f700-\U0001f773\U00020000\U0002a6d6\U0002a700\U0002b734\U0002b740\U0002b81d\U0002f800-\U0002fa1d\U000e0001\U000e0020-\U000e007f\U000e0100-\U000e01ef\U000f0000\U000ffffd\U00100000\U0010fffd",
         "^o": "\x00-\udfff\ue001-\uf8fe\uf900-\U000effff\U000f0001-\U000ffffc\U000ffffe-\U000fffff\U00100001-\U0010fffc\U0010fffe-\U0010ffff",
         "^s": "\x00-\ud7ff\ud801-\udb7e\udb81-\udbfe\udc01-\udffe\ue000-\U0010ffff",
         "c": "\x00-\x1f\x7f-\x9f",
         "f": "\xad\u0600-\u0604\u06dd\u070f\u200b-\u200f\u202a-\u202e\u2060-\u2064\u206a-\u206f\ufeff\ufff9-\ufffb\U000110bd\U0001d173-\U0001d17a\U000e0001\U000e0020-\U000e007f",
+        "n": "\u0378-\u0379\u037f-\u0383\u038b\u038d\u03a2\u0528-\u0530\u0557-\u0558\u0560\u0588\u058b-\u058e\u0590\u05c8-\u05cf\u05eb-\u05ef\u05f5-\u05ff\u0605\u061c-\u061d\u070e\u074b-\u074c\u07b2-\u07bf\u07fb-\u07ff\u082e-\u082f\u083f\u085c-\u085d\u085f-\u089f\u08a1\u08ad-\u08e3\u08ff\u0978\u0980\u0984\u098d-\u098e\u0991-\u0992\u09a9\u09b1\u09b3-\u09b5\u09ba-\u09bb\u09c5-\u09c6\u09c9-\u09ca\u09cf-\u09d6\u09d8-\u09db\u09de\u09e4-\u09e5\u09fc-\u0a00\u0a04\u0a0b-\u0a0e\u0a11-\u0a12\u0a29\u0a31\u0a34\u0a37\u0a3a-\u0a3b\u0a3d\u0a43-\u0a46\u0a49-\u0a4a\u0a4e-\u0a50\u0a52-\u0a58\u0a5d\u0a5f-\u0a65\u0a76-\u0a80\u0a84\u0a8e\u0a92\u0aa9\u0ab1\u0ab4\u0aba-\u0abb\u0ac6\u0aca\u0ace-\u0acf\u0ad1-\u0adf\u0ae4-\u0ae5\u0af2-\u0b00\u0b04\u0b0d-\u0b0e\u0b11-\u0b12\u0b29\u0b31\u0b34\u0b3a-\u0b3b\u0b45-\u0b46\u0b49-\u0b4a\u0b4e-\u0b55\u0b58-\u0b5b\u0b5e\u0b64-\u0b65\u0b78-\u0b81\u0b84\u0b8b-\u0b8d\u0b91\u0b96-\u0b98\u0b9b\u0b9d\u0ba0-\u0ba2\u0ba5-\u0ba7\u0bab-\u0bad\u0bba-\u0bbd\u0bc3-\u0bc5\u0bc9\u0bce-\u0bcf\u0bd1-\u0bd6\u0bd8-\u0be5\u0bfb-\u0c00\u0c04\u0c0d\u0c11\u0c29\u0c34\u0c3a-\u0c3c\u0c45\u0c49\u0c4e-\u0c54\u0c57\u0c5a-\u0c5f\u0c64-\u0c65\u0c70-\u0c77\u0c80-\u0c81\u0c84\u0c8d\u0c91\u0ca9\u0cb4\u0cba-\u0cbb\u0cc5\u0cc9\u0cce-\u0cd4\u0cd7-\u0cdd\u0cdf\u0ce4-\u0ce5\u0cf0\u0cf3-\u0d01\u0d04\u0d0d\u0d11\u0d3b-\u0d3c\u0d45\u0d49\u0d4f-\u0d56\u0d58-\u0d5f\u0d64-\u0d65\u0d76-\u0d78\u0d80-\u0d81\u0d84\u0d97-\u0d99\u0db2\u0dbc\u0dbe-\u0dbf\u0dc7-\u0dc9\u0dcb-\u0dce\u0dd5\u0dd7\u0de0-\u0df1\u0df5-\u0e00\u0e3b-\u0e3e\u0e5c-\u0e80\u0e83\u0e85-\u0e86\u0e89\u0e8b-\u0e8c\u0e8e-\u0e93\u0e98\u0ea0\u0ea4\u0ea6\u0ea8-\u0ea9\u0eac\u0eba\u0ebe-\u0ebf\u0ec5\u0ec7\u0ece-\u0ecf\u0eda-\u0edb\u0ee0-\u0eff\u0f48\u0f6d-\u0f70\u0f98\u0fbd\u0fcd\u0fdb-\u0fff\u10c6\u10c8-\u10cc\u10ce-\u10cf\u1249\u124e-\u124f\u1257\u1259\u125e-\u125f\u1289\u128e-\u128f\u12b1\u12b6-\u12b7\u12bf\u12c1\u12c6-\u12c7\u12d7\u1311\u1316-\u1317\u135b-\u135c\u137d-\u137f\u139a-\u139f\u13f5-\u13ff\u169d-\u169f\u16f1-\u16ff\u170d\u1715-\u171f\u1737-\u173f\u1754-\u175f\u176d\u1771\u1774-\u177f\u17de-\u17df\u17ea-\u17ef\u17fa-\u17ff\u180f\u181a-\u181f\u1878-\u187f\u18ab-\u18af\u18f6-\u18ff\u191d-\u191f\u192c-\u192f\u193c-\u193f\u1941-\u1943\u196e-\u196f\u1975-\u197f\u19ac-\u19af\u19ca-\u19cf\u19db-\u19dd\u1a1c-\u1a1d\u1a5f\u1a7d-\u1a7e\u1a8a-\u1a8f\u1a9a-\u1a9f\u1aae-\u1aff\u1b4c-\u1b4f\u1b7d-\u1b7f\u1bf4-\u1bfb\u1c38-\u1c3a\u1c4a-\u1c4c\u1c80-\u1cbf\u1cc8-\u1ccf\u1cf7-\u1cff\u1de7-\u1dfb\u1f16-\u1f17\u1f1e-\u1f1f\u1f46-\u1f47\u1f4e-\u1f4f\u1f58\u1f5a\u1f5c\u1f5e\u1f7e-\u1f7f\u1fb5\u1fc5\u1fd4-\u1fd5\u1fdc\u1ff0-\u1ff1\u1ff5\u1fff\u2065-\u2069\u2072-\u2073\u208f\u209d-\u209f\u20ba-\u20cf\u20f1-\u20ff\u218a-\u218f\u23f4-\u23ff\u2427-\u243f\u244b-\u245f\u2700\u2b4d-\u2b4f\u2b5a-\u2bff\u2c2f\u2c5f\u2cf4-\u2cf8\u2d26\u2d28-\u2d2c\u2d2e-\u2d2f\u2d68-\u2d6e\u2d71-\u2d7e\u2d97-\u2d9f\u2da7\u2daf\u2db7\u2dbf\u2dc7\u2dcf\u2dd7\u2ddf\u2e3c-\u2e7f\u2e9a\u2ef4-\u2eff\u2fd6-\u2fef\u2ffc-\u2fff\u3040\u3097-\u3098\u3100-\u3104\u312e-\u3130\u318f\u31bb-\u31bf\u31e4-\u31ef\u321f\u32ff\u3401-\u4db4\u4db6-\u4dbf\u4e01-\u9fcb\u9fcd-\u9fff\ua48d-\ua48f\ua4c7-\ua4cf\ua62c-\ua63f\ua698-\ua69e\ua6f8-\ua6ff\ua78f\ua794-\ua79f\ua7ab-\ua7f7\ua82c-\ua82f\ua83a-\ua83f\ua878-\ua87f\ua8c5-\ua8cd\ua8da-\ua8df\ua8fc-\ua8ff\ua954-\ua95e\ua97d-\ua97f\ua9ce\ua9da-\ua9dd\ua9e0-\ua9ff\uaa37-\uaa3f\uaa4e-\uaa4f\uaa5a-\uaa5b\uaa7c-\uaa7f\uaac3-\uaada\uaaf7-\uab00\uab07-\uab08\uab0f-\uab10\uab17-\uab1f\uab27\uab2f-\uabbf\uabee-\uabef\uabfa-\uabff\uac01-\ud7a2\ud7a4-\ud7af\ud7c7-\ud7ca\ud7fc-\ud7ff\ud801-\udb7e\udb81-\udbfe\udc01-\udffe\ue001-\uf8fe\ufa6e-\ufa6f\ufada-\ufaff\ufb07-\ufb12\ufb18-\ufb1c\ufb37\ufb3d\ufb3f\ufb42\ufb45\ufbc2-\ufbd2\ufd40-\ufd4f\ufd90-\ufd91\ufdc8-\ufdef\ufdfe-\ufdff\ufe1a-\ufe1f\ufe27-\ufe2f\ufe53\ufe67\ufe6c-\ufe6f\ufe75\ufefd-\ufefe\uff00\uffbf-\uffc1\uffc8-\uffc9\uffd0-\uffd1\uffd8-\uffd9\uffdd-\uffdf\uffe7\uffef-\ufff8\ufffe-\uffff\U0001000c\U00010027\U0001003b\U0001003e\U0001004e-\U0001004f\U0001005e-\U0001007f\U000100fb-\U000100ff\U00010103-\U00010106\U00010134-\U00010136\U0001018b-\U0001018f\U0001019c-\U000101cf\U000101fe-\U0001027f\U0001029d-\U0001029f\U000102d1-\U000102ff\U0001031f\U00010324-\U0001032f\U0001034b-\U0001037f\U0001039e\U000103c4-\U000103c7\U000103d6-\U000103ff\U0001049e-\U0001049f\U000104aa-\U000107ff\U00010806-\U00010807\U00010809\U00010836\U00010839-\U0001083b\U0001083d-\U0001083e\U00010856\U00010860-\U000108ff\U0001091c-\U0001091e\U0001093a-\U0001093e\U00010940-\U0001097f\U000109b8-\U000109bd\U000109c0-\U000109ff\U00010a04\U00010a07-\U00010a0b\U00010a14\U00010a18\U00010a34-\U00010a37\U00010a3b-\U00010a3e\U00010a48-\U00010a4f\U00010a59-\U00010a5f\U00010a80-\U00010aff\U00010b36-\U00010b38\U00010b56-\U00010b57\U00010b73-\U00010b77\U00010b80-\U00010bff\U00010c49-\U00010e5f\U00010e7f-\U00010fff\U0001104e-\U00011051\U00011070-\U0001107f\U000110c2-\U000110cf\U000110e9-\U000110ef\U000110fa-\U000110ff\U00011135\U00011144-\U0001117f\U000111c9-\U000111cf\U000111da-\U0001167f\U000116b8-\U000116bf\U000116ca-\U00011fff\U0001236f-\U000123ff\U00012463-\U0001246f\U00012474-\U00012fff\U0001342f-\U000167ff\U00016a39-\U00016eff\U00016f45-\U00016f4f\U00016f7f-\U00016f8e\U00016fa0-\U0001afff\U0001b002-\U0001cfff\U0001d0f6-\U0001d0ff\U0001d127-\U0001d128\U0001d1de-\U0001d1ff\U0001d246-\U0001d2ff\U0001d357-\U0001d35f\U0001d372-\U0001d3ff\U0001d455\U0001d49d\U0001d4a0-\U0001d4a1\U0001d4a3-\U0001d4a4\U0001d4a7-\U0001d4a8\U0001d4ad\U0001d4ba\U0001d4bc\U0001d4c4\U0001d506\U0001d50b-\U0001d50c\U0001d515\U0001d51d\U0001d53a\U0001d53f\U0001d545\U0001d547-\U0001d549\U0001d551\U0001d6a6-\U0001d6a7\U0001d7cc-\U0001d7cd\U0001d800-\U0001edff\U0001ee04\U0001ee20\U0001ee23\U0001ee25-\U0001ee26\U0001ee28\U0001ee33\U0001ee38\U0001ee3a\U0001ee3c-\U0001ee41\U0001ee43-\U0001ee46\U0001ee48\U0001ee4a\U0001ee4c\U0001ee50\U0001ee53\U0001ee55-\U0001ee56\U0001ee58\U0001ee5a\U0001ee5c\U0001ee5e\U0001ee60\U0001ee63\U0001ee65-\U0001ee66\U0001ee6b\U0001ee73\U0001ee78\U0001ee7d\U0001ee7f\U0001ee8a\U0001ee9c-\U0001eea0\U0001eea4\U0001eeaa\U0001eebc-\U0001eeef\U0001eef2-\U0001efff\U0001f02c-\U0001f02f\U0001f094-\U0001f09f\U0001f0af-\U0001f0b0\U0001f0bf-\U0001f0c0\U0001f0d0\U0001f0e0-\U0001f0ff\U0001f10b-\U0001f10f\U0001f12f\U0001f16c-\U0001f16f\U0001f19b-\U0001f1e5\U0001f203-\U0001f20f\U0001f23b-\U0001f23f\U0001f249-\U0001f24f\U0001f252-\U0001f2ff\U0001f321-\U0001f32f\U0001f336\U0001f37d-\U0001f37f\U0001f394-\U0001f39f\U0001f3c5\U0001f3cb-\U0001f3df\U0001f3f1-\U0001f3ff\U0001f43f\U0001f441\U0001f4f8\U0001f4fd-\U0001f4ff\U0001f53e-\U0001f53f\U0001f544-\U0001f54f\U0001f568-\U0001f5fa\U0001f641-\U0001f644\U0001f650-\U0001f67f\U0001f6c6-\U0001f6ff\U0001f774-\U0001ffff\U00020001-\U0002a6d5\U0002a6d7-\U0002a6ff\U0002a701-\U0002b733\U0002b735-\U0002b73f\U0002b741-\U0002b81c\U0002b81e-\U0002f7ff\U0002fa1e-\U000e0000\U000e0002-\U000e001f\U000e0080-\U000e00ff\U000e01f0-\U000effff\U000f0001-\U000ffffc\U000ffffe-\U000fffff\U00100001-\U0010fffc\U0010fffe-\U0010ffff",
         "o": "\ue000\uf8ff\U000f0000\U000ffffd\U00100000\U0010fffd",
         "s": "\ud800\udb7f-\udb80\udbff-\udc00\udfff"
     },
@@ -86,61 +87,86 @@ unicode_properties = {
 }
 ascii_properties = {
     "c": {
-        "^": "\x20-\x5c\x7e\xa0-\xac\xae-\xff",
-        "^c": "\x20-\x5c\x7e\xa0-\xff",
-        "^f": "\x00-\xac\xae-\xff",
-        "c": "\x00-\x1f\x7f-\x9f",
-        "f": "\xad"
+        "^": "\x20-\x5c\x7e",
+        "^c": "\x20-\x5c\x7e\x80-\U0010ffff",
+        "^f": "\x00-\U0010ffff",
+        "^n": "\x00-\x7f",
+        "^o": "\x00-\U0010ffff",
+        "^s": "\x00-\U0010ffff",
+        "c": "\x00-\x1f\x7f",
+        "f": "",
+        "n": "\x80-\U0010ffff",
+        "o": "",
+        "s": ""
     },
     "l": {
-        "^": "\x00-\x40\x5c\x5b-\x60\x7b-\xa9\xab-\xb4\xb6-\xb9\xbb-\xbf\xd7\xf7",
-        "^c": "\x00-\x40\x5c\x5b-\x60\x7b-\xb4\xb6-\xbf\xd7\xf7",
-        "^l": "\x00-\x60\x7b-\xb4\xb6-\xde\xf7",
-        "^o": "\x00-\xa9\xab-\xb9\xbb-\xff",
-        "^u": "\x00-\x40\x5c\x5b-\xbf\xd7\xdf-\xff",
-        "c": "\x41-\x5a\x61-\x7a\xb5\xc0-\xd6\xd8-\xf6\xf8-\xff",
-        "l": "\x61-\x7a\xb5\xdf-\xf6\xf8-\xff",
-        "o": "\xaa\xba",
-        "u": "\x41-\x5a\xc0-\xd6\xd8-\xde"
+        "^": "\x00-\x40\x5c\x5b-\x60\x7b-\U0010ffff",
+        "^c": "\x00-\x40\x5c\x5b-\x60\x7b-\U0010ffff",
+        "^l": "\x00-\x60\x7b-\U0010ffff",
+        "^m": "\x00-\U0010ffff",
+        "^o": "\x00-\U0010ffff",
+        "^t": "\x00-\U0010ffff",
+        "^u": "\x00-\x40\x5c\x5b-\U0010ffff",
+        "c": "\x41-\x5a\x61-\x7a",
+        "l": "\x61-\x7a",
+        "m": "",
+        "o": "",
+        "t": "",
+        "u": "\x41-\x5a"
+    },
+    "m": {
+        "^": "\x00-\U0010ffff",
+        "^c": "\x00-\U0010ffff",
+        "^e": "\x00-\U0010ffff",
+        "^n": "\x00-\U0010ffff",
+        "c": "",
+        "e": "",
+        "n": ""
     },
     "n": {
-        "^": "\x00-\x2f\x3a-\xb1\xb4-\xb8\xba-\xbb\xbf-\xff",
-        "^d": "\x00-\x2f\x3a-\xff",
-        "^o": "\x00-\xb1\xb4-\xb8\xba-\xbb\xbf-\xff",
+        "^": "\x00-\x2f\x3a-\U0010ffff",
+        "^d": "\x00-\x2f\x3a-\U0010ffff",
+        "^l": "\x00-\U0010ffff",
+        "^o": "\x00-\U0010ffff",
         "d": "\x30-\x39",
-        "o": "\xb2-\xb3\xb9\xbc-\xbe"
+        "l": "",
+        "o": ""
     },
     "p": {
-        "^": "\x00-\x20\x24\x2b\x30-\x39\x3c-\x3e\x41-\x5a\x5c\x5e\x60-\x7a\x5c\x7c\x5c\x7e-\xa0\xa2-\xa6\xa8-\xaa\xac-\xb5\xb8-\xba\xbc-\xbe\xc0-\xff",
-        "^c": "\x00-\x5c\x5e\x60-\xff",
-        "^d": "\x00-\x2c\x2e-\xff",
-        "^e": "\x00-\x28\x2a-\x5c\x5c\x5c\x5e-\x5c\x7c\x5c\x7e-\xff",
-        "^f": "\x00-\xba\xbc-\xff",
-        "^i": "\x00-\xaa\xac-\xff",
-        "^o": "\x00-\x20\x24\x28-\x29\x2b\x5c\x2d\x30-\x39\x3c-\x3e\x41-\x5c\x5b\x5c\x5d-\xa0\xa2-\xa6\xa8-\xb5\xb8-\xbe\xc0-\xff",
-        "^s": "\x00-\x27\x29-\x5a\x5c\x5c-\x7a\x5c\x7c-\xff",
+        "^": "\x00-\x20\x24\x2b\x30-\x39\x3c-\x3e\x41-\x5a\x5c\x5e\x60-\x7a\x5c\x7c\x5c\x7e-\U0010ffff",
+        "^c": "\x00-\x5c\x5e\x60-\U0010ffff",
+        "^d": "\x00-\x2c\x2e-\U0010ffff",
+        "^e": "\x00-\x28\x2a-\x5c\x5c\x5c\x5e-\x5c\x7c\x5c\x7e-\U0010ffff",
+        "^f": "\x00-\U0010ffff",
+        "^i": "\x00-\U0010ffff",
+        "^o": "\x00-\x20\x24\x28-\x29\x2b\x5c\x2d\x30-\x39\x3c-\x3e\x41-\x5c\x5b\x5c\x5d-\U0010ffff",
+        "^s": "\x00-\x27\x29-\x5a\x5c\x5c-\x7a\x5c\x7c-\U0010ffff",
         "c": "\x5f",
         "d": "\x5c\x2d",
         "e": "\x29\x5c\x5d\x7d",
-        "f": "\xbb",
-        "i": "\xab",
-        "o": "\x21-\x23\x25-\x27\x2a\x2c\x2e-\x2f\x3a-\x3b\x3f-\x40\x5c\x5c\xa1\xa7\xb6-\xb7\xbf",
+        "f": "",
+        "i": "",
+        "o": "\x21-\x23\x25-\x27\x2a\x2c\x2e-\x2f\x3a-\x3b\x3f-\x40\x5c\x5c",
         "s": "\x28\x5c\x5b\x7b"
     },
     "s": {
-        "^": "\x00-\x23\x25-\x2a\x2c-\x3b\x3f-\x5c\x5d\x5f\x61-\x7b\x7d\x7f-\xa1\xa7\xaa-\xab\xad\xb2-\xb3\xb5-\xb7\xb9-\xd6\xd8-\xf6\xf8-\xff",
-        "^c": "\x00-\x23\x25-\xa1\xa6-\xff",
-        "^k": "\x00-\x5c\x5d\x5f\x61-\xa7\xa9-\xae\xb0-\xb3\xb5-\xb7\xb9-\xff",
-        "^m": "\x00-\x2a\x2c-\x3b\x3f-\x7b\x7d\x7f-\xab\xad-\xb0\xb2-\xd6\xd8-\xf6\xf8-\xff",
-        "^o": "\x00-\xa5\xa7-\xa8\xaa-\xad\xaf\xb1-\xff",
-        "c": "\x24\xa2-\xa5",
-        "k": "\x5c\x5e\x60\xa8\xaf\xb4\xb8",
-        "m": "\x2b\x3c-\x3e\x5c\x7c\x5c\x7e\xac\xb1\xd7\xf7",
-        "o": "\xa6\xa9\xae\xb0"
+        "^": "\x00-\x23\x25-\x2a\x2c-\x3b\x3f-\x5c\x5d\x5f\x61-\x7b\x7d\x7f-\U0010ffff",
+        "^c": "\x00-\x23\x25-\U0010ffff",
+        "^k": "\x00-\x5c\x5d\x5f\x61-\U0010ffff",
+        "^m": "\x00-\x2a\x2c-\x3b\x3f-\x7b\x7d\x7f-\U0010ffff",
+        "^o": "\x00-\U0010ffff",
+        "c": "\x24",
+        "k": "\x5c\x5e\x60",
+        "m": "\x2b\x3c-\x3e\x5c\x7c\x5c\x7e",
+        "o": ""
     },
     "z": {
-        "^": "\x00-\x1f\x21-\x9f\xa1-\xff",
-        "^s": "\x00-\x1f\x21-\x9f\xa1-\xff",
-        "s": "\x20\xa0"
+        "^": "\x00-\x1f\x21-\U0010ffff",
+        "^l": "\x00-\U0010ffff",
+        "^p": "\x00-\U0010ffff",
+        "^s": "\x00-\x1f\x21-\U0010ffff",
+        "l": "",
+        "p": "",
+        "s": "\x20"
     }
 }

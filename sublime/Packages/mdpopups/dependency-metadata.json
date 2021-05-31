@@ -1,1 +1,1 @@
-{"version": "3.7.4", "platforms": ["*"], "description": "Markdown Popups for Sublime", "url": "https://github.com/facelessuser/sublime-markdown-popups/issues", "sublime_text": ">=3124"}
+{"platforms": ["*"], "url": "https://github.com/facelessuser/sublime-markdown-popups/issues", "version": "4.1.1", "description": "Markdown Popups for Sublime", "sublime_text": ">=3124"}

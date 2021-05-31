@@ -1,3 +1,3 @@
 PyMdown Extensions for Sublime Text
 
-Current version: 6.2.1
+Current version: 8.1.1

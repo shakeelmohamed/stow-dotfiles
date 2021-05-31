@@ -1,5 +1,4 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 unicode_hangul_syllable_type = {
     "^l": "\x00-\u10ff\u1160-\ua95f\ua97d-\U0010ffff",
@@ -16,16 +15,16 @@ unicode_hangul_syllable_type = {
     "v": "\u1160-\u11a7\ud7b0-\ud7c6"
 }
 ascii_hangul_syllable_type = {
-    "^l": "\x00-\xff",
-    "^lv": "\x00-\xff",
-    "^lvt": "\x00-\xff",
+    "^l": "\x00-\U0010ffff",
+    "^lv": "\x00-\U0010ffff",
+    "^lvt": "\x00-\U0010ffff",
     "^na": "",
-    "^t": "\x00-\xff",
-    "^v": "\x00-\xff",
+    "^t": "\x00-\U0010ffff",
+    "^v": "\x00-\U0010ffff",
     "l": "",
     "lv": "",
     "lvt": "",
-    "na": "\x00-\xff",
+    "na": "\x00-\U0010ffff",
     "t": "",
     "v": ""
 }

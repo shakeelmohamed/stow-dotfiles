@@ -33,17 +33,20 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from __future__ import unicode_literals
 from markdown import Extension
 from markdown.postprocessors import Postprocessor
 from . import util
 import os
 import re
+from urllib.parse import urlunparse
 
 RE_TAG_HTML = r'''(?xus)
     (?:
-        (?P<comments>(\r?\n?\s*)<!--[\s\S]*?-->(\s*)(?=\r?\n)|<!--[\s\S]*?-->)|
-        (?P<open><(?P<tag>(?:%s)))
+        (?P<avoid>
+            <\s*(?P<script_name>script|style)[^>]*>.*?</\s*(?P=script_name)\s*> |
+            (?:(\r?\n?\s*)<!--[\s\S]*?-->(\s*)(?=\r?\n)|<!--[\s\S]*?-->)
+        )|
+        (?P<open><\s*(?P<tag>(?:%s)))
         (?P<attr>(?:\s+[\w\-:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)
         (?P<close>\s*(?:\/?)>)
     )
@@ -82,7 +85,7 @@ def repl_relative(m, base_path, relative_path):
                 path = util.path2url(path)
                 link = '%s"%s"' % (
                     m.group('name'),
-                    util.urlunparse((scheme, netloc, path, params, query, fragment))
+                    urlunparse((scheme, netloc, path, params, query, fragment))
                 )
     except Exception:  # pragma: no cover
         # Parsing crashed and burned; no need to continue.
@@ -106,7 +109,7 @@ def repl_absolute(m, base_path):
             link = '%s"%s%s"' % (
                 m.group('name'),
                 start,
-                util.urlunparse((scheme, netloc, path, params, query, fragment))
+                urlunparse((scheme, netloc, path, params, query, fragment))
             )
     except Exception:  # pragma: no cover
         # Parsing crashed and burned; no need to continue.
@@ -118,8 +121,8 @@ def repl_absolute(m, base_path):
 def repl(m, base_path, rel_path=None):
     """Replace."""
 
-    if m.group('comments'):
-        tag = m.group('comments')
+    if m.group('avoid'):
+        tag = m.group('avoid')
     else:
         tag = m.group('open')
         if rel_path is None:

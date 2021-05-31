@@ -1,13 +1,14 @@
 import sublime
 
-from threading import Thread
 from uuid import uuid4
 
-from ._compat.typing import Optional, Union
-from types import TracebackType
+from ._compat.typing import Optional, Union, Callable, Any
+from types import TracebackType, MethodType
 from abc import ABCMeta, abstractmethod
+from functools import partial
+import weakref
 
-from ._util.locked_state import LockedState
+from threading import Lock
 
 
 __all__ = ['ActivityIndicator']
@@ -49,6 +50,20 @@ class ViewTarget(StatusTarget):
         self.view.erase_status(self.key)
 
 
+def _weak_method(method: Callable) -> Callable:
+    assert isinstance(method, MethodType)
+    self_ref = weakref.ref(method.__self__)
+    function_ref = weakref.ref(method.__func__)
+
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        self = self_ref()
+        function = function_ref()
+        if self is not None and function is not None:
+            return function(self, *args, **kwargs)
+
+    return wrapped
+
+
 class ActivityIndicator:
     """
     An animated text-based indicator to show that some activity is in progress.
@@ -62,10 +77,13 @@ class ActivityIndicator:
     .. versionadded:: 1.4
     """
     width = 10  # type: int
-    interval = 100  # type: float
+    interval = 100  # type: int
 
     _target = None  # type: StatusTarget
-    _running = None  # type: LockedState[bool]
+    _ticks = 0  # type: int
+    _lock = None  # type: Lock
+    _running = False  # type: bool
+    _invocation_id = 0  # type: int
 
     def __init__(
         self,
@@ -81,9 +99,10 @@ class ActivityIndicator:
         else:
             self._target = target
 
-        self._ticks = 0
+        self._lock = Lock()
 
-        self._running = LockedState(False)
+    def __del__(self) -> None:
+        self._target.clear()
 
     def __enter__(self) -> None:
         self.start()
@@ -102,16 +121,16 @@ class ActivityIndicator:
 
         :raise ValueError: if the indicator is already running.
         """
-        with self._running:
-            if self._running.state:
+        with self._lock:
+            if self._running:
                 raise ValueError('Timer is already running')
             else:
-                self._running.state = True
+                self._running = True
                 self.update()
-                Thread(
-                    name=self.label,
-                    target=self._run,
-                ).start()
+                sublime.set_timeout(
+                    partial(self._run, self._invocation_id),
+                    self.interval
+                )
 
     def stop(self) -> None:
         """
@@ -119,13 +138,20 @@ class ActivityIndicator:
 
         If the indicator is not running, do nothing.
         """
-        with self._running:
-            self._running.state = False
+        with self._lock:
+            if self._running:
+                self._running = False
+                self._invocation_id += 1
         self._target.clear()
 
-    def _run(self) -> None:
-        while not self._running.wait_for(lambda state: not state, self.interval / 1000):
-            self.tick()
+    def _run(self, invocation_id: int) -> None:
+        with self._lock:
+            if invocation_id == self._invocation_id:
+                self.tick()
+                sublime.set_timeout(
+                    partial(_weak_method(self._run), invocation_id),
+                    self.interval
+                )
 
     def tick(self) -> None:
         self._ticks += 1

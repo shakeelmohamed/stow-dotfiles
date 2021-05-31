@@ -1,8 +1,12 @@
-"""
-X11 colors.
+"""Custom color that looks for colors of format `#RRGGBBAA` as `#AARRGGBB`."""
+from coloraide.css.colors import Color, SRGB
+from coloraide.colors import _parse as parse
+from coloraide import util
+import copy
+import re
 
-A simple name to hex and hex to name map of X11 colors.
-"""
+RE_COMPRESS = re.compile(r'(?i)^#({hex})\1({hex})\2({hex})\3(?:({hex})\4)?$'.format(**parse.COLOR_PARTS))
+
 name2hex_map = {
     "black": "#000000",
     "aliceblue": "#f0f8ff",
@@ -674,3 +678,122 @@ def name2hex(name):
     """Convert X11 webcolor name to hex."""
 
     return name2hex_map.get(name.lower(), None)
+
+
+class SRGBX11(SRGB):
+    """sRGB class."""
+
+    MATCH = re.compile(
+        r"""(?xi)
+        (?:
+            # Hex syntax
+            \#(?:{hex}{{6}}(?:{hex}{{2}})?|{hex}{{3}}(?:{hex})?)\b |
+            # Names
+            \b(?<!\#)[a-z]{{3,}}(?!\()\b
+        )
+        """.format(**parse.COLOR_PARTS)
+    )
+
+    def to_string(
+        self, *, alpha=None, precision=None, fit=True, **kwargs
+    ):
+        """Convert to CSS."""
+
+        options = kwargs
+
+        value = ''
+        a = util.no_nan(self.alpha)
+        alpha = alpha is not False and (alpha is True or a < 1.0)
+        hex_upper = options.get("hex_upper", False)
+        compress = options.get("compress", False)
+        coords = util.no_nan(self.fit_coords())
+
+        template = "#{:02x}{:02x}{:02x}{:02x}" if alpha else "#{:02x}{:02x}{:02x}"
+        if hex_upper:
+            template = template.upper()
+
+        if alpha:
+            h = template.format(
+                int(util.round_half_up(coords[0] * 255.0)),
+                int(util.round_half_up(coords[1] * 255.0)),
+                int(util.round_half_up(coords[2] * 255.0)),
+                int(util.round_half_up(util.no_nan(self.alpha) * 255.0))
+            )
+        else:
+            h = template.format(
+                int(util.round_half_up(coords[0] * 255.0)),
+                int(util.round_half_up(coords[1] * 255.0)),
+                int(util.round_half_up(coords[2] * 255.0))
+            )
+
+        value = h
+        if compress:
+            m = RE_COMPRESS.match(value)
+            if m:
+                value = m.expand(r"#\1\2\3\4") if alpha else m.expand(r"#\1\2\3")
+
+        if options.get("names"):
+            length = len(h) - 1
+            index = int(length / 4)
+            if length in (8, 4) and h[-index:].lower() == ("f" * index):
+                h = h[:-index]
+            n = hex2name(h)
+            if n is not None:
+                value = n
+
+        return value
+
+    @classmethod
+    def translate_channel(cls, channel, value):
+        """Translate channel string."""
+
+        if channel in (-1, 0, 1, 2):
+            return parse.norm_hex_channel(value)
+        else:
+            raise ValueError("Unexpected channel index of '{}'".format(channel))
+
+    @classmethod
+    def split_channels(cls, color):
+        """Split channels."""
+
+        m = cls.HEX_MATCH.match(color)
+        assert(m is not None)
+        if m.group(1):
+            return cls.null_adjust(
+                (
+                    cls.translate_channel(0, "#" + color[1:3]),
+                    cls.translate_channel(1, "#" + color[3:5]),
+                    cls.translate_channel(2, "#" + color[5:7]),
+                    cls.translate_channel(-1, "#" + m.group(2)) if m.group(2) else 1.0
+                )
+            )
+        else:
+            return cls.null_adjust(
+                (
+                    cls.translate_channel(0, "#" + color[1] * 2),
+                    cls.translate_channel(1, "#" + color[2] * 2),
+                    cls.translate_channel(2, "#" + color[3] * 2),
+                    cls.translate_channel(-1, "#" + m.group(4) * 2) if m.group(4) else 1.0
+                )
+            )
+
+    @classmethod
+    def match(cls, string, start=0, fullmatch=True):
+        """Match a CSS color string."""
+
+        m = cls.MATCH.match(string, start)
+        if m is not None and (not fullmatch or m.end(0) == len(string)):
+            if string[start:start + 1] != "#":
+                string = name2hex(string[m.start(0):m.end(0)])
+                if string is not None:
+                    return cls.split_channels(string), m.end(0)
+            else:
+                return cls.split_channels(string[m.start(0):m.end(0)]), m.end(0)
+        return None, None
+
+
+class ColorSRGBX11(Color):
+    """Hex SRGB with X11 color names."""
+
+    CS_MAP = copy.copy(Color.CS_MAP)
+    CS_MAP["srgb"] = SRGBX11

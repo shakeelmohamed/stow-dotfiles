@@ -28,15 +28,16 @@ All changes Copyright 2008-2014 The Python Markdown Project
 License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
-from markdown.postprocessors import Postprocessor
 from markdown.blockprocessors import CodeBlockProcessor
+from markdown.extensions.attr_list import get_attrs
 from markdown import util as md_util
+from .util import PymdownxDeprecationWarning
+import warnings
 import functools
 import re
+from inspect import signature
 
 SOH = '\u0001'  # start
 EOT = '\u0004'  # end
@@ -45,23 +46,27 @@ PREFIX_CHARS = ('>', ' ', '\t')
 
 RE_NESTED_FENCE_START = re.compile(
     r'''(?x)
-    (?P<fence>~{3,}|`{3,})[ \t]*                                                   # Fence opening
-    (\{?                                                                           # Language opening
-    \.?(?P<lang>[\w#.+-]*))?[ \t]*                                                 # Language
-    (?P<options>(?:\b[a-zA-Z][a-zA-Z0-9_]*=(?:(?P<quot>"|').*?(?P=quot))?[ \t]*)*) # Options
-    }?[ \t]*$                                                                      # Language closing
+    (?P<fence>~{3,}|`{3,})[ \t]*                                                    # Fence opening
+    (?:(\{(?P<attrs>[^\}\n]*)\})?|                                                # Optional attributes or
+        (?:\.?(?P<lang>[\w#.+-]*))?[ \t]*                                           # Language
+        (?P<options>
+            (?:
+                (?:\b[a-zA-Z][a-zA-Z0-9_]*(?:=(?P<quot>"|').*?(?P=quot))?[ \t]*) |  # Options
+            )*
+        )
+    )[ \t]*$
     '''
 )
 
-RE_HL_LINES = re.compile(r'(?P<hl_lines>\d+(?:[ \t]+\d+)*)')
+RE_HL_LINES = re.compile(r'^(?P<hl_lines>\d+(?:-\d+)?(?:[ \t]+\d+(?:-\d+)?)*)$')
 RE_LINENUMS = re.compile(r'(?P<linestart>[\d]+)(?:[ \t]+(?P<linestep>[\d]+))?(?:[ \t]+(?P<linespecial>[\d]+))?')
-RE_OPTIONS = re.compile(r'''(?P<key>[a-zA-Z][a-zA-Z0-9_]*)=(?:(?P<quot>"|')(?P<value>.*?)(?P=quot))?''')
-
-RE_TABS = re.compile(r'((?:<p><superfences>.*?</superfences></p>\s*)+)', re.DOTALL)
-
-TAB = r'''<superfences><input name="__tabs_%%(index)s" type="radio" id="__tab_%%(index)s_%%(tab_index)s" %%(state)s/>
-<label for="__tab_%%(index)s_%%(tab_index)s">%(title)s</label>
-<div class="superfences-content">%(code)s</div></superfences>'''
+RE_OPTIONS = re.compile(
+    r'''(?x)
+    (?:
+        (?P<key>[a-zA-Z][a-zA-Z0-9_]*)(?:=(?P<quot>"|')(?P<value>.*?)(?P=quot))?
+    )
+    '''
+)
 
 NESTED_FENCE_END = r'%s[ \t]*$'
 
@@ -124,62 +129,93 @@ class CodeStash(object):
         self.stash = {}
 
 
-def fence_code_format(source, language, css_class, options, md):
+def fence_code_format(source, language, class_name, options, md, **kwargs):
     """Format source as code blocks."""
 
-    return '<pre class="%s"><code>%s</code></pre>' % (css_class, _escape(source))
+    classes = kwargs['classes']
+    id_value = kwargs['id_value']
+    attrs = kwargs['attrs']
+
+    if class_name:
+        classes.insert(0, class_name)
+
+    id_value = ' id="{}"'.format(id_value) if id_value else ''
+    classes = ' class="{}"'.format(' '.join(classes)) if classes else ''
+    attrs = ' ' + ' '.join('{k}="{v}"'.format(k=k, v=v) for k, v in attrs.items()) if attrs else ''
+
+    return '<pre%s%s%s><code>%s</code></pre>' % (id_value, classes, attrs, _escape(source))
 
 
-def fence_div_format(source, language, css_class, options, md):
+def fence_div_format(source, language, class_name, options, md, **kwargs):
     """Format source as div."""
 
-    return '<div class="%s">%s</div>' % (css_class, _escape(source))
+    classes = kwargs['classes']
+    id_value = kwargs['id_value']
+    attrs = kwargs['attrs']
+
+    if class_name:
+        classes.insert(0, class_name)
+
+    id_value = ' id="{}"'.format(id_value) if id_value else ''
+    classes = ' class="{}"'.format(' '.join(classes)) if classes else ''
+    attrs = ' ' + ' '.join('{k}="{v}"'.format(k=k, v=v) for k, v in attrs.items()) if attrs else ''
+
+    return '<div%s%s%s>%s</div>' % (id_value, classes, attrs, _escape(source))
 
 
-def highlight_validator(language, options):
+def highlight_validator(language, inputs, options, attrs, md):
     """Highlight validator."""
 
-    okay = True
-    # Check for invalid keys
-    for k in options.keys():
-        if k not in ('hl_lines', 'linenums'):
-            okay = False
-            break
+    use_pygments = md.preprocessors['fenced_code_block'].use_pygments
 
-    # Check format of valid keys
-    if okay:
+    for k, v in inputs.items():
+        matched = False
         for opt, validator in (('hl_lines', RE_HL_LINES), ('linenums', RE_LINENUMS)):
-            if opt in options:
-                value = options[opt]
-                if value is True or validator.match(options[opt]) is None:
-                    okay = False
-                    break
+            if k == opt and use_pygments:
+                matched = True
+                if v is True or validator.match(v) is None:
+                    attrs[k] = v
+                elif use_pygments:
+                    options[k] = v
+                break
 
-    return okay
+        if not matched:
+            attrs[k] = v
+
+    return True
 
 
-def default_validator(language, options):
+def default_validator(language, inputs, options, attrs, md):
     """Default validator."""
 
-    return len(options) == 0
+    for k, v in inputs.items():
+        attrs[k] = v
+    return True
 
 
-def _validator(language, options, validator=None):
+def _validator(language, inputs, options, attrs, md, validator=None, _legacy=False):
     """Validator wrapper."""
 
-    return validator(language, options)
+    md.preprocessors['fenced_code_block'].get_hl_settings()
+    if _legacy:
+        value = validator(language, inputs)
+        for k, v in inputs.items():
+            options[k] = v
+        return value
+    else:
+        return validator(language, inputs, options, attrs, md)
 
 
-def _formatter(source, language, options, md, class_name="", fmt=None):
+def _formatter(src='', language='', options=None, md=None, class_name="", _fmt=None, **kwargs):
     """Formatter wrapper."""
 
-    return fmt(source, language, class_name, options, md)
+    return _fmt(src, language, class_name, options, md, **kwargs)
 
 
 def _test(language, test_language=None):
     """Test language."""
 
-    return test_language is None or language == test_language
+    return test_language is None or test_language == "*" or language == test_language
 
 
 class SuperFencesCodeExtension(Extension):
@@ -192,7 +228,7 @@ class SuperFencesCodeExtension(Extension):
         self.config = {
             'disable_indented_code_blocks': [False, "Disable indented code blocks - Default: False"],
             'custom_fences': [[], 'Specify custom fences. Default: See documentation.'],
-            'highlight_code': [True, "Highlight code - Default: True"],
+            'highlight_code': [True, "Deprecated and does nothing"],
             'css_class': [
                 '',
                 "Set class name for wrapper element. The default of CodeHilite or Highlight will be used"
@@ -201,19 +237,22 @@ class SuperFencesCodeExtension(Extension):
             ],
             'preserve_tabs': [False, "Preserve tabs in fences - Default: False"]
         }
-        super(SuperFencesCodeExtension, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def extend_super_fences(self, name, formatter, validator):
         """Extend SuperFences with the given name, language, and formatter."""
 
-        self.superfences.append(
-            {
-                "name": name,
-                "test": functools.partial(_test, test_language=name),
-                "formatter": formatter,
-                "validator": validator
-            }
-        )
+        obj = {
+            "name": name,
+            "test": functools.partial(_test, test_language=name),
+            "formatter": formatter,
+            "validator": validator
+        }
+
+        if name == '*':
+            self.superfences[0] = obj
+        else:
+            self.superfences.append(obj)
 
     def extendMarkdown(self, md):
         """Add fenced block preprocessor to the Markdown instance."""
@@ -240,11 +279,20 @@ class SuperFencesCodeExtension(Extension):
             class_name = custom.get('class')
             fence_format = custom.get('format', fence_code_format)
             validator = custom.get('validator', default_validator)
+            legacy = False
             if name is not None and class_name is not None:
+                sig = signature(validator)
+                if len(sig.parameters) == 2:
+                    legacy = True
+                    warnings.warn(
+                        "Old format of custom validators is deprectated, please migrate to the new format"
+                        ": validator(language, inputs, options, attrs, md)",
+                        PymdownxDeprecationWarning
+                    )
                 self.extend_super_fences(
                     name,
-                    functools.partial(_formatter, class_name=class_name, fmt=fence_format),
-                    functools.partial(_validator, validator=validator)
+                    functools.partial(_formatter, class_name=class_name, _fmt=fence_format),
+                    functools.partial(_validator, validator=validator, _legacy=legacy)
                 )
 
         self.md = md
@@ -264,7 +312,8 @@ class SuperFencesCodeExtension(Extension):
         fenced = SuperFencesBlockPreprocessor(self.md)
         fenced.config = config
         fenced.extension = self
-        self.superfences[0]["formatter"] = fenced.highlight
+        if self.superfences[0]['name'] == "superfences":
+            self.superfences[0]["formatter"] = fenced.highlight
         self.md.preprocessors.register(fenced, "fenced_code_block", 25)
 
         indented_code = SuperFencesCodeBlockProcessor(self.md.parser)
@@ -280,8 +329,6 @@ class SuperFencesCodeExtension(Extension):
             self.md.preprocessors.register(raw_fenced, "fenced_raw_block", 31.05)
             self.md.registerExtensions(["pymdownx._bypassnorm"], {})
 
-        self.md.postprocessors.register(SuperFencesTabPostProcessor(self.md), "fenced_tabs", 25)
-
         # Add the highlight extension, but do so in a disabled state so we can just retrieve default configurations
         self.md.registerExtensions(["pymdownx.highlight"], {"pymdownx.highlight": {"_enabled": False}})
 
@@ -289,34 +336,6 @@ class SuperFencesCodeExtension(Extension):
         """Clear the stash."""
 
         self.stash.clear_stash()
-
-
-class SuperFencesTabPostProcessor(Postprocessor):
-    """Post processor for grouping tabs."""
-
-    def repl(self, m):
-        """Replace grouped superfences tabs with a tab group."""
-
-        self.count += 1
-        tab_count = 0
-        tabs = []
-        for entry in [x.strip() for x in m.group(1).split('</superfences></p>')]:
-            tabs.append(
-                entry.replace('<p><superfences>', '') % {
-                    'index': self.count,
-                    'tab_index': tab_count,
-                    'state': ('checked="checked" ' if tab_count == 0 else ''),
-                    'tab_title': 'Tab %d' % (tab_count + 1)
-                }
-            )
-            tab_count += 1
-        return '<div class="superfences-tabs">\n' + '\n'.join(tabs) + '</div>\n'
-
-    def run(self, text):
-        """Search for superfences tab and group consecutive tabs together."""
-
-        self.count = 0
-        return RE_TABS.sub(self.repl, text)
 
 
 class SuperFencesBlockPreprocessor(Preprocessor):
@@ -333,7 +352,7 @@ class SuperFencesBlockPreprocessor(Preprocessor):
     def __init__(self, md):
         """Initialize."""
 
-        super(SuperFencesBlockPreprocessor, self).__init__(md)
+        super().__init__(md)
         self.tab_len = self.md.tab_length
         self.checked_hl_settings = False
         self.codehilite_conf = {}
@@ -349,11 +368,15 @@ class SuperFencesBlockPreprocessor(Preprocessor):
         return '\n'.join([line[self.ws_virtual_len:] for line in lines])
 
     def get_hl_settings(self):
-        """Check for CodeHilite extension to get its configurations."""
+        """Check for Highlight extension to get its configurations."""
 
         if not self.checked_hl_settings:
             self.checked_hl_settings = True
-            self.highlight_code = self.config['highlight_code']
+            if not self.config['highlight_code']:
+                warnings.warn(
+                    "Disabling of 'highlight_code' is deprecated and no longer does anything.",
+                    PymdownxDeprecationWarning
+                )
 
             config = None
             self.highlighter = None
@@ -365,6 +388,8 @@ class SuperFencesBlockPreprocessor(Preprocessor):
                 except AttributeError:
                     pass
 
+            self.attr_list = 'attr_list' in self.md.treeprocessors
+
             css_class = self.config['css_class']
             self.css_class = css_class if css_class else config['css_class']
 
@@ -375,7 +400,11 @@ class SuperFencesBlockPreprocessor(Preprocessor):
             self.noclasses = config['noclasses']
             self.linenums = config['linenums']
             self.linenums_style = config.get('linenums_style', 'table')
+            self.linenums_class = config.get('linenums_class', 'linenums')
             self.linenums_special = config.get('linenums_special', -1)
+            self.wrapcode = not config.get('legacy_no_wrap_code', False)
+            self.language_prefix = config.get('language_prefix', 'language-')
+            self.code_attr_on_pre = config.get('code_attr_on_pre', False)
 
     def clear(self):
         """Reset the class variables."""
@@ -389,8 +418,11 @@ class SuperFencesBlockPreprocessor(Preprocessor):
         self.code = []
         self.empty_lines = 0
         self.fence_end = None
-        self.tab = None
         self.options = {}
+        self.classes = []
+        self.id = ''
+        self.attrs = {}
+        self.formatter = None
 
     def eval_fence(self, ws, content, start, end):
         """Evaluate a normal fence."""
@@ -404,7 +436,10 @@ class SuperFencesBlockPreprocessor(Preprocessor):
             self.clear()
         elif self.fence_end.match(content) is not None and not content.startswith((' ', '\t')):
             # End of fence
-            self.process_nested_block(ws, content, start, end)
+            try:
+                self.process_nested_block(ws, content, start, end)
+            except Exception:
+                self.clear()
         else:
             # Content line
             self.empty_lines = 0
@@ -436,31 +471,57 @@ class SuperFencesBlockPreprocessor(Preprocessor):
                 self.empty_lines = 0
                 self.code.append(ws + content)
 
-    def get_tab(self, code, title):
-        """Wrap code in tab div."""
-
-        return TAB % {'code': code.replace('%', '%%'), 'title': title}
-
     def process_nested_block(self, ws, content, start, end):
         """Process the contents of the nested block."""
 
         self.last = ws + self.normalize_ws(content)
         code = None
-        for entry in reversed(self.extension.superfences):
-            if entry["test"](self.lang):
-                code = entry["formatter"](self.rebuild_block(self.code), self.lang, self.options, self.md)
-                if self.tab is not None:
-                    code = self.get_tab(code, self.tab)
-                break
+        if self.formatter is not None:
+            self.line_count = end - start - 2
+
+            code = self.formatter(
+                src=self.rebuild_block(self.code),
+                language=self.lang,
+                md=self.md,
+                options=self.options,
+                classes=self.classes,
+                id_value=self.id,
+                attrs=self.attrs if self.attr_list else {}
+            )
 
         if code is not None:
             self._store(self.normalize_ws('\n'.join(self.code)) + '\n', code, start, end)
         self.clear()
 
+    def normalize_hl_line(self, number):
+        """
+        Normalize highlight line number.
+
+        Clamp outrages numbers. Numbers out of range will be only one increment out range.
+        This prevents people from create massive buffers of line numbers that exceed real
+        number of code lines.
+        """
+
+        number = int(number)
+        if number < 1:
+            number = 0
+        elif number > self.line_count:
+            number = self.line_count + 1
+        return number
+
     def parse_hl_lines(self, hl_lines):
         """Parse the lines to highlight."""
 
-        return list(map(int, hl_lines.strip().split())) if hl_lines else []
+        lines = []
+        if hl_lines:
+            for entry in hl_lines.split():
+                line_range = [self.normalize_hl_line(e) for e in entry.split('-')]
+                if len(line_range) > 1:
+                    if line_range[0] <= line_range[1]:
+                        lines.extend(list(range(line_range[0], line_range[1] + 1)))
+                elif 1 <= line_range[0] <= self.line_count:
+                    lines.extend(line_range)
+        return lines
 
     def parse_line_start(self, linestart):
         """Parse line start."""
@@ -521,34 +582,83 @@ class SuperFencesBlockPreprocessor(Preprocessor):
 
         return ws
 
-    def parse_options(self, string):
+    def parse_options(self, m):
         """Get options."""
 
-        okay = True
+        okay = False
+
+        if m.group('lang'):
+            self.lang = m.group('lang')
+
+        string = m.group('options')
 
         self.options = {}
-        for m in RE_OPTIONS.finditer(string):
-            key = m.group('key')
-            value = m.group('value')
-            if value is None:
-                value = True
-            self.options[key] = value
-
-        # Global options (remove as we handle them)
-        if 'tab' in self.options:
-            self.tab = self.options['tab']
-            if not self.tab or self.tab is True:
-                self.tab = self.lang
-            if not self.tab:
-                self.tab = '%(tab_title)s'
-            del self.options['tab']
+        self.attrs = {}
+        self.formatter = None
+        values = {}
+        if string:
+            for m in RE_OPTIONS.finditer(string):
+                key = m.group('key')
+                value = m.group('value')
+                if value is None:
+                    value = key
+                values[key] = value
 
         # Run per language validator
         for entry in reversed(self.extension.superfences):
             if entry["test"](self.lang):
+                options = {}
+                attrs = {}
                 validator = entry.get("validator", functools.partial(_validator, validator=default_validator))
-                okay = validator(self.lang, self.options)
-                break
+                try:
+                    okay = validator(self.lang, values, options, attrs, self.md)
+                except Exception:
+                    pass
+                if attrs:
+                    okay = False
+                if okay:
+                    self.formatter = entry.get("formatter")
+                    self.options = options
+                    break
+
+        return okay
+
+    def handle_attrs(self, m):
+        """Handle attribute list."""
+
+        okay = False
+        attributes = get_attrs(m.group('attrs').replace('\t', ' ' * self.tab_len))
+
+        self.options = {}
+        self.attrs = {}
+        self.formatter = None
+        values = {}
+        for k, v in attributes:
+            if k == 'id':
+                self.id = v
+            elif k == '.':
+                self.classes.append(v)
+            else:
+                values[k] = v
+
+        self.lang = self.classes.pop(0) if self.classes else ''
+
+        # Run per language validator
+        for entry in reversed(self.extension.superfences):
+            if entry["test"](self.lang):
+                options = {}
+                attrs = {}
+                validator = entry.get("validator", functools.partial(_validator, validator=default_validator))
+                try:
+                    okay = validator(self.lang, values, options, attrs, self.md)
+                except Exception:
+                    pass
+                if okay:
+                    self.formatter = entry.get("formatter")
+                    self.options = options
+                    if self.attr_list:
+                        self.attrs = attrs
+                    break
 
         return okay
 
@@ -567,14 +677,21 @@ class SuperFencesBlockPreprocessor(Preprocessor):
                 # Found the start of a fenced block.
                 m = RE_NESTED_FENCE_START.match(line, self.ws_len)
                 if m is not None:
-                    start = count
-                    self.first = ws + self.normalize_ws(m.group(0))
-                    self.ws = ws
-                    self.quote_level = self.ws.count(">")
-                    self.empty_lines = 0
-                    self.fence = m.group('fence')
-                    self.lang = m.group('lang')
-                    if self.parse_options(m.group('options')):
+
+                    # Parse options
+                    if m.group('attrs'):
+                        okay = self.handle_attrs(m)
+                    else:
+                        okay = self.parse_options(m)
+
+                    if okay:
+                        # Valid fence options, handle fence
+                        start = count
+                        self.first = ws + self.normalize_ws(m.group(0))
+                        self.ws = ws
+                        self.quote_level = self.ws.count(">")
+                        self.empty_lines = 0
+                        self.fence = m.group('fence')
                         self.fence_end = re.compile(NESTED_FENCE_END % self.fence)
                     else:
                         # Option parsing failed, abandon fence
@@ -619,7 +736,7 @@ class SuperFencesBlockPreprocessor(Preprocessor):
             lines = lines[:start] + [fenced] + lines[end:]
         return lines
 
-    def highlight(self, src, language, options, md):
+    def highlight(self, src="", language="", options=None, md=None, **kwargs):
         """
         Syntax highlight the code block.
 
@@ -627,47 +744,62 @@ class SuperFencesBlockPreprocessor(Preprocessor):
         is enabled, so we call into it to highlight the code.
         """
 
+        classes = kwargs['classes']
+        id_value = kwargs['id_value']
+        attrs = kwargs['attrs']
+
+        if classes is None:  # pragma: no cover
+            classes = []
+
         # Default format options
         linestep = None
         linestart = None
         linespecial = None
         hl_lines = None
-        if 'hl_lines' in options:
-            m = RE_HL_LINES.match(options['hl_lines'])
-            hl_lines = m.group('hl_lines')
-        if 'linenums' in options:
-            m = RE_LINENUMS.match(options['linenums'])
-            linestart = m.group('linestart')
-            linestep = m.group('linestep')
-            linespecial = m.group('linespecial')
 
-        if self.highlight_code:
-            linestep = self.parse_line_step(linestep)
-            linestart = self.parse_line_start(linestart)
-            linespecial = self.parse_line_special(linespecial)
-            hl_lines = self.parse_hl_lines(hl_lines)
+        if self.use_pygments:
+            if 'hl_lines' in options:
+                m = RE_HL_LINES.match(options['hl_lines'])
+                hl_lines = m.group('hl_lines')
+                del options['hl_lines']
+            if 'linenums' in options:
+                m = RE_LINENUMS.match(options['linenums'])
+                linestart = m.group('linestart')
+                linestep = m.group('linestep')
+                linespecial = m.group('linespecial')
+                del options['linenums']
 
-            el = self.highlighter(
-                guess_lang=self.guess_lang,
-                pygments_style=self.pygments_style,
-                use_pygments=self.use_pygments,
-                noclasses=self.noclasses,
-                linenums=self.linenums,
-                linenums_style=self.linenums_style,
-                linenums_special=self.linenums_special,
-                extend_pygments_lang=self.extend_pygments_lang
-            ).highlight(
-                src,
-                language,
-                self.css_class,
-                hl_lines=hl_lines,
-                linestart=linestart,
-                linestep=linestep,
-                linespecial=linespecial
-            )
-        else:
-            # Format as a code block.
-            el = self.CODE_WRAP % ('', '', _escape(src))
+        linestep = self.parse_line_step(linestep)
+        linestart = self.parse_line_start(linestart)
+        linespecial = self.parse_line_special(linespecial)
+        hl_lines = self.parse_hl_lines(hl_lines)
+
+        el = self.highlighter(
+            guess_lang=self.guess_lang,
+            pygments_style=self.pygments_style,
+            use_pygments=self.use_pygments,
+            noclasses=self.noclasses,
+            linenums=self.linenums,
+            linenums_style=self.linenums_style,
+            linenums_special=self.linenums_special,
+            linenums_class=self.linenums_class,
+            extend_pygments_lang=self.extend_pygments_lang,
+            wrapcode=self.wrapcode,
+            language_prefix=self.language_prefix,
+            code_attr_on_pre=self.code_attr_on_pre
+        ).highlight(
+            src,
+            language,
+            self.css_class,
+            hl_lines=hl_lines,
+            linestart=linestart,
+            linestep=linestep,
+            linespecial=linespecial,
+            classes=classes,
+            id_value=id_value,
+            attrs=attrs
+        )
+
         return el
 
     def _store(self, source, code, start, end):
@@ -707,7 +839,7 @@ class SuperFencesBlockPreprocessor(Preprocessor):
                 key = m.group(2)
                 indent_level = len(m.group(1))
                 original = None
-                original, pos = self.extension.stash.get(key)
+                original, pos = self.extension.stash.get(key, (None, None))
                 if original is not None:
                     code = self.reindent(original, pos, indent_level)
                     new_lines.extend(code)
@@ -778,6 +910,7 @@ class SuperFencesRawBlockPreprocessor(SuperFencesBlockPreprocessor):
     def run(self, lines):
         """Search for fenced blocks."""
 
+        self.get_hl_settings()
         self.clear()
         self.stack = []
         self.disabled_indented = self.config.get("disable_indented_code_blocks", False)

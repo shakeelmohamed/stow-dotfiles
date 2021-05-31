@@ -1,8 +1,8 @@
 """PyMdown extra extensions."""
 from .pep562 import Pep562
-from .__meta__ import __version__, __version_info__
 import sys
 import warnings
+from .__meta__ import __version__, __version_info__  # noqa: F401
 
 # Nothing to import with all
 __all__ = tuple()

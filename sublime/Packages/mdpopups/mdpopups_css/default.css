@@ -1,18 +1,8 @@
 {%- if var.default_style %}
 html {
+  --mdpopups-fg: var(--foreground);
+  --mdpopups-link: var(--bluish);
   --mdpopups-font-mono: "sf mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  {%- if var.sublime_version < 3127 %}
-  --mdpopups-admon-fg: var(--background);
-  --mdpopups-admon-info-fg: var(--background);
-  --mdpopups-admon-error-fg: var(--background);
-  --mdpopups-admon-warning-fg: var(--background);
-  --mdpopups-admon-success-fg: var(--background);
-  --mdpopups-admon-bg: color(var(--background) blend(var(--foreground) 30%));
-  --mdpopups-admon-info-bg: color(var(--background) blend(var(--bluish) 30%));
-  --mdpopups-admon-error-bg: color(var(--background) blend(var(--redish) 30%));
-  --mdpopups-admon-warning-bg: color(var(--background) blend(var(--orangish) 30%));
-  --mdpopups-admon-success-bg: color(var(--background) blend(var(--greenish) 30%));
-  {%- else %}
   --mdpopups-admon-fg: var(--foreground);
   --mdpopups-admon-info-fg: var(--foreground);
   --mdpopups-admon-error-fg: var(--foreground);
@@ -23,7 +13,6 @@ html {
   --mdpopups-admon-error-bg: var(--background);
   --mdpopups-admon-warning-bg: var(--background);
   --mdpopups-admon-success-bg: var(--background);
-  {%- endif %}
   --mdpopups-admon-accent: color(var(--background) blend(var(--foreground) 50%));
   --mdpopups-admon-title-fg:  var(--foreground);
   --mdpopups-admon-info-title-fg:  var(--foreground);
@@ -38,22 +27,30 @@ html {
   --mdpopups-kbd-bg: var(--foreground);
 }
 html.light {
-  --mdpopups-hr: color(var(--foreground) blend(white 80%));
+{%- if var.is_phantom or var.is_sheet %}
+  --mdpopups-bg:  var(--background);
+{%- else %}
+  --mdpopups-bg: color(var(--background) blend(black 95%));
+{%- endif %}
+  --mdpopups-hr: color(var(--background) blend(black 85%));
   --mdpopups-kbd-border: color(var(--foreground) blend(white 80%));
   --mdpopups-hl-border: color(var(--background) blend(black 90%));
   --mdpopups-hl-bg: color(var(--background) blend(black 98%));
+  background-color: var(--mdpopups-bg);
 }
 html.dark {
-  --mdpopups-hr: color(var(--foreground) blend(black 80%));
+{%- if var.is_phantom or var.is_sheet %}
+  --mdpopups-bg:  var(--background);
+{%- else %}
+  --mdpopups-bg: color(var(--background) blend(white 95%));
+{%- endif %}
+  --mdpopups-hr: color(var(--background) blend(white 85%));
   --mdpopups-kbd-border: color(var(--foreground) blend(black 80%));
   --mdpopups-hl-border: color(var(--background) blend(white 90%));
-{%- if var.sublime_version < 3127 %}
-  /* 3127 borders allow us more flexibility with code backgrounds. Older versions are going to stick to darkening. */
-  --mdpopups-hl-bg: color(var(--background) blend(black 98%));
-{%- else %}
   --mdpopups-hl-bg: color(var(--background) blend(white 98%));
-{%- endif %}
+  background-color: var(--mdpopups-bg);
 }
+
 html, body { padding: 0; margin: 0; }
 div.mdpopups {
   display: block;
@@ -61,6 +58,11 @@ div.mdpopups {
   padding: 0;
   font-size: 1rem;
   line-height: 1.1rem;
+  color: var(--mdpopups-fg);
+  background-color: var(--mdpopups-bg);
+}
+.mdpopups a {
+  color: var(--mdpopups-link);
 }
 .mdpopups .highlight,
 .mdpopups code,
@@ -85,14 +87,9 @@ div.mdpopups {
 /* Horizontal rule support. */
 .mdpopups hr {
   display: block;
-  {%- if var.sublime_version < 3127 %}
-  padding: 1px;
-  background-color: var(--mdpopups-hr);
-  {%- else %}
   border-color: var(--mdpopups-hr);
   border-style: solid;
   border-width: 0 0 1px 0;
-  {%- endif %}
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
@@ -201,7 +198,7 @@ div.mdpopups {
   margin-bottom: 0.5rem;
   font-size: 1rem;
 }
-.mdpopups code.highlight{
+.mdpopups code.highlight {
   padding: 0.05rem 0.25rem;
 }
 {%- endif %}

@@ -1,20 +1,10 @@
 """Download `Unicodedata` files."""
-from __future__ import unicode_literals
-import sys
 import os
 import zipfile
+import codecs
+from urllib.request import urlopen
 
 __version__ = '2.2.0'
-
-PY3 = sys.version_info >= (3, 0) and sys.version_info[0:2] < (4, 0)
-PY34 = sys.version_info >= (3, 4)
-PY35 = sys.version_info >= (3, 5)
-PY37 = sys.version_info >= (3, 7)
-
-if PY3:
-    from urllib.request import urlopen
-else:
-    from urllib2 import urlopen
 
 HOME = os.path.dirname(os.path.abspath(__file__))
 
@@ -50,6 +40,9 @@ def unzip_unicode(output, version):
 
 def download_unicodedata(version, output=HOME, no_zip=False):
     """Download Unicode data scripts and blocks."""
+
+    ver = tuple([int(x) for x in version.split('.')])
+
     files = [
         'UnicodeData.txt',
         'Scripts.txt',
@@ -75,19 +68,21 @@ def download_unicodedata(version, output=HOME, no_zip=False):
         'extracted/DerivedCombiningClass.txt'
     ]
 
-    if PY3:
-        files.append('ScriptExtensions.txt')
-        if PY35:
-            files.append('IndicPositionalCategory.txt')
-        else:
-            files.append('IndicMatraCategory.txt')
-        files.append('IndicSyllabicCategory.txt')
+    files.append('ScriptExtensions.txt')
+    if ver >= (8, 0, 0):
+        files.append('IndicPositionalCategory.txt')
+    else:
+        files.append('IndicMatraCategory.txt')
+    files.append('IndicSyllabicCategory.txt')
 
-    if PY34:
+    if ver >= (6, 3, 0):
         files.append('BidiBrackets.txt')
 
-    if PY37:
+    if ver >= (11, 0, 0):
         files.append('VerticalOrientation.txt')
+
+    if ver >= (13, 0, 0):
+        files.append('emoji/emoji-data.txt')
 
     http_url = 'http://www.unicode.org/Public/%s/ucd/' % version
     ftp_url = 'ftp://ftp.unicode.org/Public/%s/ucd/' % version
@@ -111,7 +106,7 @@ def download_unicodedata(version, output=HOME, no_zip=False):
                 except Exception:
                     print('Failed: %s' % url)
                     continue
-                with open(file_location, 'w') as uf:
+                with codecs.open(file_location, 'w', encoding='utf-8') as uf:
                     uf.write(data.decode('utf-8'))
                 retrieved = True
                 break
@@ -158,4 +153,4 @@ if __name__ == '__main__':
     else:
         version = args.unicode_version
 
-    get_unicodedata(version, args.output)
+    get_unicodedata(version, output=args.output)

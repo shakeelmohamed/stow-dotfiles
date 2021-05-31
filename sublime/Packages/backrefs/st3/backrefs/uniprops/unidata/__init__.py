@@ -1,5 +1,4 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 from .age import *  # noqa
 from .alias import *  # noqa
@@ -19,7 +18,6 @@ from .joiningtype import *  # noqa
 from .linebreak import *  # noqa
 from .numerictype import *  # noqa
 from .numericvalue import *  # noqa
-from .posix import *  # noqa
 from .quickcheck import *  # noqa
 from .sentencebreak import *  # noqa
 from .script import *  # noqa

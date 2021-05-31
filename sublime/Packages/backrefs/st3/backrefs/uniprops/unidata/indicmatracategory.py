@@ -1,5 +1,4 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 unicode_indic_matra_category = {
     "^bottom": "\x00-\u0940\u0945-\u094c\u094e-\u0955\u0958-\u0961\u0964-\u09c0\u09c5-\u09cc\u09ce-\u09e1\u09e4-\u0a40\u0a43-\u0a4c\u0a4e-\u0ac0\u0ac5-\u0acc\u0ace-\u0ae1\u0ae4-\u0b40\u0b45-\u0b4c\u0b4e-\u0b61\u0b64-\u0bc0\u0bc3-\u0c55\u0c57-\u0c61\u0c64-\u0ce1\u0ce4-\u0d42\u0d45-\u0d61\u0d64-\u0dd3\u0dd5\u0dd7-\u0e37\u0e3b-\u0eb7\u0eba-\u0f70\u0f72-\u0f73\u0f76-\u0f83\u0f85-\u102e\u1031-\u1057\u105a-\u1712\u1715-\u1732\u1735-\u1752\u1754-\u1772\u1774-\u17ba\u17be-\u1921\u1923-\u1a17\u1a19-\u1a68\u1a6b\u1a6d-\u1b37\u1b3b-\u1ba4\u1ba6-\u1c2b\u1c2d-\ua824\ua826-\ua8c3\ua8c5-\ua946\ua94a\ua94f-\ua9b7\ua9ba-\uaa2c\uaa2e-\uaa31\uaa33-\uaab3\uaab5-\uaaeb\uaaed-\uabe7\uabe9-\uabec\uabee-\U00010a01\U00010a04-\U00010a0b\U00010a0d-\U0001103b\U00011042-\U000110b2\U000110b5-\U000110b8\U000110ba-\U00011129\U0001112c-\U00011130\U00011133-\U000111b5\U000111bc-\U000116af\U000116b2-\U0010ffff",
@@ -34,27 +33,27 @@ unicode_indic_matra_category = {
     "visualorderleft": "\u0e40-\u0e44\u0ec0-\u0ec4\uaab5-\uaab6\uaab9\uaabb-\uaabc"
 }
 ascii_indic_matra_category = {
-    "^bottom": "\x00-\xff",
-    "^bottomandright": "\x00-\xff",
-    "^invisible": "\x00-\xff",
-    "^left": "\x00-\xff",
-    "^leftandright": "\x00-\xff",
+    "^bottom": "\x00-\U0010ffff",
+    "^bottomandright": "\x00-\U0010ffff",
+    "^invisible": "\x00-\U0010ffff",
+    "^left": "\x00-\U0010ffff",
+    "^leftandright": "\x00-\U0010ffff",
     "^na": "",
-    "^overstruck": "\x00-\xff",
-    "^right": "\x00-\xff",
-    "^top": "\x00-\xff",
-    "^topandbottom": "\x00-\xff",
-    "^topandbottomandright": "\x00-\xff",
-    "^topandleft": "\x00-\xff",
-    "^topandleftandright": "\x00-\xff",
-    "^topandright": "\x00-\xff",
-    "^visualorderleft": "\x00-\xff",
+    "^overstruck": "\x00-\U0010ffff",
+    "^right": "\x00-\U0010ffff",
+    "^top": "\x00-\U0010ffff",
+    "^topandbottom": "\x00-\U0010ffff",
+    "^topandbottomandright": "\x00-\U0010ffff",
+    "^topandleft": "\x00-\U0010ffff",
+    "^topandleftandright": "\x00-\U0010ffff",
+    "^topandright": "\x00-\U0010ffff",
+    "^visualorderleft": "\x00-\U0010ffff",
     "bottom": "",
     "bottomandright": "",
     "invisible": "",
     "left": "",
     "leftandright": "",
-    "na": "\x00-\xff",
+    "na": "\x00-\U0010ffff",
     "overstruck": "",
     "right": "",
     "top": "",

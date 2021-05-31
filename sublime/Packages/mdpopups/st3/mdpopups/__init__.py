@@ -13,6 +13,11 @@ import markdown
 import jinja2
 import traceback
 import time
+import html
+import html.parser
+import urllib
+import functools
+import base64
 from . import version as ver
 from . import colorbox
 from collections import OrderedDict
@@ -46,7 +51,6 @@ there are helpful errors.</p></div>
 '''
 HL_SETTING = 'mdpopups.use_sublime_highlighter'
 STYLE_SETTING = 'mdpopups.default_style'
-LEGACY_MATCHER_SETTING = 'mdpopups.legacy_color_matcher'
 RE_BAD_ENTITIES = re.compile(r'(&(?!amp;|lt;|gt;|nbsp;)(?:\w+;|#\d+;))')
 
 NODEBUG = 0
@@ -58,7 +62,7 @@ INFO = 3
 def _log(msg):
     """Log."""
 
-    print('mdpopups: %s' % str(msg))
+    print('mdpopups: {}'.format(str(msg)))
 
 
 def _debug(msg, level):
@@ -173,8 +177,7 @@ def _get_scheme(scheme):
             if (
                 _is_cache_expired(t) or
                 obj.use_pygments != (not settings.get(HL_SETTING, True)) or
-                obj.default_style != settings.get(STYLE_SETTING, True) or
-                obj.legacy_color_matcher != settings.get(LEGACY_MATCHER_SETTING, False)
+                obj.default_style != settings.get(STYLE_SETTING, True)
             ):
                 obj = None
                 user_css = ''
@@ -231,6 +234,9 @@ class _MdWrapper(markdown.Markdown):
         if 'allow_code_wrap' in kwargs:
             self.sublime_wrap = kwargs['allow_code_wrap']
             del kwargs['allow_code_wrap']
+        if 'language_map' in kwargs:
+            self.plugin_map = kwargs['language_map']
+            del kwargs['language_map']
         if 'sublime_hl' in kwargs:
             self.sublime_hl = kwargs['sublime_hl']
             del kwargs['sublime_hl']
@@ -260,8 +266,9 @@ class _MdWrapper(markdown.Markdown):
                     ext._extendMarkdown(self)
                 elif ext is not None:
                     raise TypeError(
-                        'Extension "%s.%s" must be of type: "markdown.Extension"'
-                        % (ext.__class__.__module__, ext.__class__.__name__)
+                        'Extension "{}.{}" must be of type: "markdown.Extension"'.format(
+                            ext.__class__.__module__, ext.__class__.__name__
+                        )
                     )
             except Exception:
                 # We want to gracefully continue even if an extension fails.
@@ -293,20 +300,18 @@ def _get_theme(view, css=None, css_type=POPUP, template_vars=None):
 def _remove_entities(text):
     """Remove unsupported HTML entities."""
 
-    import html.parser
-    html = html.parser.HTMLParser()
+    p = html.parser.HTMLParser()
 
     def repl(m):
         """Replace entities except &, <, >, and `nbsp`."""
-        return html.unescape(m.group(1))
+        return p.unescape(m.group(1))
 
     return RE_BAD_ENTITIES.sub(repl, text)
 
 
 def _create_html(
     view, content, md=True, css=None, debug=False, css_type=POPUP,
-    wrapper_class=None, template_vars=None, template_env_options=None, nl2br=True,
-    allow_code_wrap=False
+    wrapper_class=None, template_vars=None, template_env_options=None
 ):
     """Create HTML from content."""
 
@@ -324,8 +329,7 @@ def _create_html(
     if md:
         content = md2html(
             view, content, template_vars=template_vars,
-            template_env_options=template_env_options, nl2br=nl2br,
-            allow_code_wrap=allow_code_wrap
+            template_env_options=template_env_options
         )
     else:
         # Strip out frontmatter if found as we don't currently
@@ -341,12 +345,12 @@ def _create_html(
             _debug('\n' + content, INFO)
 
     if wrapper_class:
-        wrapper = ('<div class="mdpopups"><div class="%s">' % wrapper_class) + '%s</div></div>'
+        wrapper = ('<div class="mdpopups"><div class="{}">'.format(wrapper_class)) + '{}</div></div>'
     else:
-        wrapper = '<div class="mdpopups">%s</div>'
+        wrapper = '<div class="mdpopups">{}</div>'
 
-    html = "<style>%s</style>" % (style)
-    html += _remove_entities(wrapper % content)
+    html = "<style>{}</style>".format(style)
+    html += _remove_entities(wrapper.format(content))
     return html
 
 
@@ -371,8 +375,7 @@ def version():
 
 
 def md2html(
-    view, markup, template_vars=None, template_env_options=None,
-    nl2br=True, allow_code_wrap=False
+    view, markup, template_vars=None, template_env_options=None, **kwargs
 ):
     """Convert Markdown to HTML."""
 
@@ -413,32 +416,46 @@ def md2html(
                 "markdown.extensions.def_list",
                 "pymdownx.betterem",
                 "pymdownx.magiclink",
-                "pymdownx.extrarawhtml"
+                "markdown.extensions.md_in_html",
+                "markdown.extensions.nl2br"
             ]
         )
-
-        # Use legacy method to determine if `nl2b` should be used
-        if nl2br:
-            extensions.append('markdown.extensions.nl2br')
     else:
         for ext in md_exts:
             if isinstance(ext, (dict, OrderedDict)):
                 k, v = next(iter(ext.items()))
                 # We don't allow plugins to overrides the internal color
                 if not k.startswith('mdpopups.'):
+                    if k == "pymdownx.extrarawhtml":
+                        k = 'markdown.extensions.md_in_html'
+                        _debug(
+                            "Warning: 'pymdownx.extrarawhtml' no longer exists. 'markdown.extensions.md_in_html'"
+                            " will be used instead. Plugins should migrate as mdpopups will not redirect in the "
+                            "future.",
+                            WARNING
+                        )
                     extensions.append(k)
                     if v is not None:
                         configs[k] = v
             elif isinstance(ext, str):
                 if not ext.startswith('mdpopups.'):
+                    if ext == "pymdownx.extrarawhtml":
+                        ext = 'markdown.extensions.md_in_html'
+                        _debug(
+                            "Warning: 'pymdownx.extrarawhtml' no longer exists. 'markdown.extensions.md_in_html'"
+                            " will be used instead. Plugins should migrate as mdpopups will not redirect in the"
+                            " future.",
+                            WARNING
+                        )
                     extensions.append(ext)
 
     return _MdWrapper(
         extensions=extensions,
         extension_configs=configs,
         sublime_hl=sublime_hl,
-        allow_code_wrap=fm.get('allow_code_wrap', allow_code_wrap)
-    ).convert(_markup_template(markup, template_vars, template_env_options)).replace('&quot;', '"').replace('\n', '')
+        allow_code_wrap=fm.get('allow_code_wrap', False),
+        language_map=fm.get('language_map', {})
+    ).convert(_markup_template(markup, template_vars, template_env_options)).replace('&quot;', '"')
 
 
 def color_box(
@@ -507,14 +524,14 @@ def get_language_from_view(view):
     return lang
 
 
-def syntax_highlight(view, src, language=None, inline=False, allow_code_wrap=False):
+def syntax_highlight(view, src, language=None, inline=False, allow_code_wrap=False, language_map=None):
     """Syntax highlighting for code."""
 
     try:
         if _get_setting('mdpopups.use_sublime_highlighter'):
             highlighter = _get_sublime_highlighter(view)
             code = highlighter.syntax_highlight(
-                src, language, inline=inline, code_wrap=(not inline and allow_code_wrap)
+                src, language, inline=inline, code_wrap=(not inline and allow_code_wrap), plugin_map=language_map
             )
         else:
             code = pyg_syntax_hl(
@@ -548,23 +565,19 @@ def scope2style(view, scope, selected=False, explicit_background=False):
     }
     obj = _get_scheme(view.settings().get('color_scheme'))[0]
     style_obj = obj.guess_style(view, scope, selected, explicit_background)
-    if not obj.legacy_color_matcher:
-        style['color'] = style_obj['foreground']
-        style['background'] = style_obj['background']
-        font = []
-        if style_obj['bold']:
-            font.append('bold')
-        if style_obj['italic']:
-            font.append('italic')
-        if style_obj['underline']:
-            font.append('underline')
-        if style_obj['glow']:
-            font.append('glow')
-        style['style'] = ' '.join(font)
-    else:
-        style['color'] = style_obj.fg_simulated
-        style['background'] = style_obj.bg_simulated
-        style['style'] = style_obj.style
+    style['color'] = style_obj['foreground']
+    style['background'] = style_obj['background']
+    font = []
+    if style_obj['bold']:
+        font.append('bold')
+    if style_obj['italic']:
+        font.append('italic')
+    if style_obj['underline']:
+        font.append('underline')
+    if style_obj['glow']:
+        font.append('glow')
+    style['style'] = ' '.join(font)
+
     return style
 
 
@@ -582,8 +595,7 @@ def hide_popup(view):
 
 def update_popup(
     view, content, md=True, css=None, wrapper_class=None,
-    template_vars=None, template_env_options=None, nl2br=True,
-    allow_code_wrap=False
+    template_vars=None, template_env_options=None, **kwargs
 ):
     """Update the popup."""
 
@@ -595,8 +607,7 @@ def update_popup(
     try:
         html = _create_html(
             view, content, md, css, css_type=POPUP, wrapper_class=wrapper_class,
-            template_vars=template_vars, template_env_options=template_env_options, nl2br=nl2br,
-            allow_code_wrap=allow_code_wrap
+            template_vars=template_vars, template_env_options=template_env_options
         )
     except Exception:
         _log(traceback.format_exc())
@@ -609,8 +620,7 @@ def show_popup(
     view, content, md=True, css=None,
     flags=0, location=-1, max_width=320, max_height=240,
     on_navigate=None, on_hide=None, wrapper_class=None,
-    template_vars=None, template_env_options=None, nl2br=True,
-    allow_code_wrap=False
+    template_vars=None, template_env_options=None, **kwargs
 ):
     """Parse the color scheme if needed and show the styled pop-up."""
 
@@ -625,8 +635,7 @@ def show_popup(
     try:
         html = _create_html(
             view, content, md, css, css_type=POPUP, wrapper_class=wrapper_class,
-            template_vars=template_vars, template_env_options=template_env_options,
-            nl2br=nl2br, allow_code_wrap=allow_code_wrap
+            template_vars=template_vars, template_env_options=template_env_options
         )
     except Exception:
         _log(traceback.format_exc())
@@ -647,8 +656,7 @@ def is_popup_visible(view):
 def add_phantom(
     view, key, region, content, layout, md=True,
     css=None, on_navigate=None, wrapper_class=None,
-    template_vars=None, template_env_options=None, nl2br=True,
-    allow_code_wrap=False
+    template_vars=None, template_env_options=None, **kwargs
 ):
     """Add a phantom and return phantom id."""
 
@@ -660,8 +668,7 @@ def add_phantom(
     try:
         html = _create_html(
             view, content, md, css, css_type=PHANTOM, wrapper_class=wrapper_class,
-            template_vars=template_vars, template_env_options=template_env_options,
-            nl2br=nl2br, allow_code_wrap=allow_code_wrap
+            template_vars=template_vars, template_env_options=template_env_options
         )
     except Exception:
         _log(traceback.format_exc())
@@ -697,8 +704,7 @@ def query_phantoms(view, pids):
 if HTML_SHEET_SUPPORT:
     def new_html_sheet(
         window, name, contents, md=True, css=None, flags=0, group=-1,
-        wrapper_class=None, template_vars=None, template_env_options=None, nl2br=False,
-        allow_code_wrap=False
+        wrapper_class=None, template_vars=None, template_env_options=None, **kwargs
     ):
         """Create new HTML sheet."""
 
@@ -706,8 +712,7 @@ if HTML_SHEET_SUPPORT:
         try:
             html = _create_html(
                 view, contents, md, css, css_type=SHEET, wrapper_class=wrapper_class,
-                template_vars=template_vars, template_env_options=template_env_options, nl2br=nl2br,
-                allow_code_wrap=allow_code_wrap
+                template_vars=template_vars, template_env_options=template_env_options
             )
         except Exception:
             _log(traceback.format_exc())
@@ -717,7 +722,7 @@ if HTML_SHEET_SUPPORT:
 
     def update_html_sheet(
         sheet, contents, md=True, css=None, wrapper_class=None,
-        template_vars=None, template_env_options=None, nl2br=False, allow_code_wrap=False
+        template_vars=None, template_env_options=None, **kwargs
     ):
         """Update an HTML sheet."""
 
@@ -727,8 +732,7 @@ if HTML_SHEET_SUPPORT:
         try:
             html = _create_html(
                 view, contents, md, css, css_type=SHEET, wrapper_class=wrapper_class,
-                template_vars=template_vars, template_env_options=template_env_options, nl2br=nl2br,
-                allow_code_wrap=allow_code_wrap
+                template_vars=template_vars, template_env_options=template_env_options
             )
         except Exception:
             _log(traceback.format_exc())
@@ -743,8 +747,7 @@ class Phantom(sublime.Phantom):
     def __init__(
         self, region, content, layout, md=True,
         css=None, on_navigate=None, wrapper_class=None,
-        template_vars=None, template_env_options=None, nl2br=True,
-        allow_code_wrap=False
+        template_vars=None, template_env_options=None, **kwargs
     ):
         """Initialize."""
 
@@ -754,8 +757,6 @@ class Phantom(sublime.Phantom):
         self.wrapper_class = wrapper_class
         self.template_vars = template_vars
         self.template_env_options = template_env_options
-        self.nl2br = nl2br
-        self.allow_code_wrap = allow_code_wrap
 
     def __eq__(self, rhs):
         """Check if phantoms are equal."""
@@ -764,10 +765,9 @@ class Phantom(sublime.Phantom):
         return (
             self.region == rhs.region and self.content == rhs.content and
             self.layout == rhs.layout and self.on_navigate == rhs.on_navigate and
-            self.md == rhs.md and self.css == rhs.css and self.nl2br == rhs.nl2br and
+            self.md == rhs.md and self.css == rhs.css and
             self.wrapper_class == rhs.wrapper_class and self.template_vars == rhs.template_vars and
-            self.template_env_options == rhs.template_env_options and
-            self.allow_code_wrap == rhs.allow_code_wrap
+            self.template_env_options == rhs.template_env_options
         )
 
 
@@ -799,8 +799,7 @@ class PhantomSet(sublime.PhantomSet):
                 p = Phantom(
                     p.region, p.content, p.layout,
                     md=False, css=None, on_navigate=p.on_navigate, wrapper_class=None,
-                    template_vars=None, template_env_options=None, nl2br=False,
-                    allow_code_wrap=False
+                    template_vars=None, template_env_options=None
                 )
                 new_phantoms[count] = p
             try:
@@ -819,9 +818,7 @@ class PhantomSet(sublime.PhantomSet):
                     p.on_navigate,
                     p.wrapper_class,
                     p.template_vars,
-                    p.template_env_options,
-                    p.nl2br,
-                    p.allow_code_wrap
+                    p.template_env_options
                 )
             count += 1
 
@@ -837,3 +834,203 @@ def format_frontmatter(values):
     """Format values as frontmatter."""
 
     return frontmatter.dump_frontmatter(values)
+
+
+RE_TAG_HTML = re.compile(
+    r'''(?xus)
+    (?:
+        (?P<avoid>
+            <\s*(?P<script_name>script|style)[^>]*>.*?</\s*(?P=script_name)\s*> |
+            (?:(\r?\n?\s*)<!--[\s\S]*?-->(\s*)(?=\r?\n)|<!--[\s\S]*?-->)
+        )|
+        (?P<open><\s*(?P<tag>img))
+        (?P<attr>(?:\s+[\w\-:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)
+        (?P<close>\s*(?:\/?)>)
+    )
+    '''
+)
+
+RE_TAG_LINK_ATTR = re.compile(
+    r'''(?xus)
+    (?P<attr>
+        (?:
+            (?P<name>\s+src\s*=\s*)
+            (?P<path>"[^"]*"|'[^']*')
+        )
+    )
+    '''
+)
+
+
+def _image_parser(text):
+    """Retrieve image source whose attribute `src` URL has scheme 'http' or 'https'."""
+
+    images = {}
+    for m in RE_TAG_HTML.finditer(text):
+        if m.group('avoid'):
+            continue
+        start = m.start('attr')
+        m2 = RE_TAG_LINK_ATTR.search(m.group('attr'))
+        if m2:
+            src = m2.group('path')[1:-1]
+            src = html.parser.HTMLParser().unescape(src)
+            if urllib.parse.urlparse(src).scheme in ("http", "https"):
+                s = start + m2.start('path') + 1
+                e = start + m2.end('path') - 1
+                images.setdefault(src, []).append((s, e))
+    return images
+
+
+class _ImageResolver:
+    """
+    Keeps track of which images are downloaded, and builds the final html after all of them have been downloaded.
+
+    Note that this entire class is a workaround for not having a scatter-gather function and not having a promise type.
+    In an asynchronous world, we would of course use `asyncio.gather`.
+    """
+
+    def __init__(self, minihtml, resolver, done_callback, images_to_resolve):
+        """The constructor."""
+        self.minihtml = minihtml
+        self.done_callback = done_callback
+        self.images_to_resolve = images_to_resolve
+        self.resolved = {}
+        for url in self.images_to_resolve.keys():
+            resolver(url, functools.partial(self.on_image_resolved, url))
+
+    def on_image_resolved(self, url, data, mime, exception):
+        """
+        Called by a resolver when an image has been downloaded.
+
+        The `data` is a bytes object.
+        The `mime` is the mime-type, e.g. image/png.
+        When the resolver function encountered an exception, the exception is passed in via the last
+        argument. So its type is Optional[Exception].
+        """
+        if exception:
+            value = (exception, None)
+        else:
+            value = (base64.b64encode(data).decode("ascii"), mime)
+        self.resolved[url] = value
+        if len(self.resolved) == len(self.images_to_resolve):
+            self.finalize()
+
+    def finalize(self):
+        """
+        Called when all necessary images have been downloaded.
+
+        This method reconstructs the final html to be presented.
+
+        It invokes the `done_callback` from the `resolve_urls` function in the main thread of Sublime Text.
+        """
+
+        def flattened():
+            for url, positions in self.images_to_resolve.items():
+                for position in positions:
+                    yield url, position[0], position[1]
+
+        todo = sorted(flattened(), key=lambda t: (t[1], t[2]))
+        chunks = [self.minihtml[:todo[0][1]]]
+        for index in range(0, len(todo)):
+            next_index = index + 1
+            if next_index >= len(todo):
+                next_start = len(self.minihtml)
+            else:
+                next_start = todo[next_index][1]
+            data, mime = self.resolved[todo[index][0]]
+            current_end = todo[index][2]
+            if isinstance(data, Exception):
+                # keep the minihtml unchanged
+                current_start = todo[index][1]
+                chunks.append(self.minihtml[current_start:current_end])
+            else:
+                # replace the URL with the base64 data
+                chunks.append("data:")
+                chunks.append(mime)
+                chunks.append(";base64,")
+                chunks.append(data)
+            chunks.append(self.minihtml[current_end:next_start])
+        finalhtml = "".join(chunks)
+        sublime.set_timeout(lambda: self.done_callback(finalhtml))
+
+
+@functools.lru_cache(maxsize=8)
+def _retrieve(url):
+    """
+    Actually download the image pointed to by the passed URL.
+
+    The most recently used images (8 at most) are kept in a cache.
+    """
+    import urllib.request
+    with urllib.request.urlopen(url) as response:
+        # We provide some basic protection against absurdly large images.
+        # 32MB is chosen as an arbitrary upper limit. This can be raised if desired.
+        length = response.headers.get("content-length")
+        if length is None:
+            raise ValueError("missing content-length header")
+        length = int(length)
+        if length == 0:
+            raise ValueError("empty payload")
+        elif length >= 32 * 1024 * 1024:
+            raise ValueError("refusing to read payloads larger than or equal to 32MB")
+        mime = response.headers.get("content-type", "image/png").lower()
+        return response.readall(), mime
+
+
+def blocking_resolver(url, done):
+    """A simple URL resolver that will block the caller."""
+    exception = None
+    payload = None
+    mime = None
+    try:
+        payload, mime = _retrieve(url)
+    except Exception as ex:
+        exception = ex
+    if exception:
+        done(None, None, exception)
+    elif payload and mime:
+        done(payload, mime, None)
+    else:
+        done(None, None, RuntimeError("failed to retrieve image"))
+
+
+def ui_thread_resolver(url, done):
+    """A URL resolver that runs on the main thread."""
+    sublime.set_timeout(lambda: blocking_resolver(url, done))
+
+
+def worker_thread_resolver(url, done):
+    """A URL resolver that runs on the worker ("async") thread of Sublime Text."""
+    sublime.set_timeout_async(lambda: blocking_resolver(url, done))
+
+
+def resolve_images(minihtml, resolver, on_done):
+    """
+    Download images from the internet.
+
+    Given minihtml containing `<img>` tags with a `src` attribute that points to an image located on the internet,
+    download those images and replace the `src` attribute with embedded base64-encoded image data.
+
+    The first argument is minihtml as returned by the `md2html` function.
+
+    The second argument is a callable that shall take two arguments.
+
+    - The first argument is a URL to be downloaded.
+    - The second argument is a callable that shall take one argument: An object of type `bytes`: the raw image data.
+      The result of downloading the image.
+
+    The third argument is a callable that shall take one argument:
+
+    - A string that is the final minihtml containing embedded base64 encoded images, ready to be presented to a view.
+
+    This function is non-blocking.
+    It will invoke the passed-in `done_callback` on the UI thread.
+    It returns an opaque object that should be kept alive for as long as the passed-in `done_callback` is not yet
+    invoked.
+    """
+    images = _image_parser(minihtml)
+    if images:
+        return _ImageResolver(minihtml, resolver, on_done, images)
+    else:
+        sublime.set_timeout(lambda: on_done(minihtml))
+        return None

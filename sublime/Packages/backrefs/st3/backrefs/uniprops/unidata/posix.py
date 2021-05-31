@@ -1,5 +1,4 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 unicode_posix_properties = {
     "^alnum": "\x00-\x2f\x3a-\x40\x5c\x5b-\x60\x7b-\U0010ffff",

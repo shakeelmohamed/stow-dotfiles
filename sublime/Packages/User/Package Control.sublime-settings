@@ -19,6 +19,7 @@
 		"CTags",
 		"DocBlockr",
 		"Dockerfile Syntax Highlighting",
+		"Emmet",
 		"Git",
 		"GitGutter",
 		"Gradle_Language",
@@ -53,5 +54,5 @@
 		"TWiki",
 		"TypeScript Syntax",
 		"WordCount"
-	]
+	],
 }

@@ -49,6 +49,16 @@ class SettingsDict():
         """Raise NotImplementedError."""
         raise NotImplementedError()
 
+    def __eq__(self, other: object) -> bool:
+        """Return ``True`` if `self` and `other` are of the same type
+        and refer to the same underlying settings data.
+        """
+        return (
+            type(self) == type(other)
+            and isinstance(other, SettingsDict)
+            and self.settings.settings_id == other.settings.settings_id
+        )
+
     def __getitem__(self, key: str) -> Value:
         """Return the setting named `key`.
 
@@ -163,6 +173,12 @@ class SettingsDict():
         then ``self.get(selector, default_value)`` is passed.
         Otherwise, ``projection(self, selector)`` is passed.
 
+        Changes in the selected value are detected
+        by comparing the last known value to the current value
+        using the equality operator.
+        If you use a selector function,
+        the result must be equatable and should not be mutated.
+
         `callback` should accept two arguments:
         the new derived value and the previous derived value.
 
@@ -171,15 +187,16 @@ class SettingsDict():
         """
         selector_fn = get_selector(selector)
 
-        previous_value = selector_fn(self)
+        saved_value = selector_fn(self)
 
         def onchange() -> None:
-            nonlocal previous_value
+            nonlocal saved_value
             new_value = selector_fn(self)
 
-            if new_value != previous_value:
+            if new_value != saved_value:
+                previous_value = saved_value
+                saved_value = new_value
                 callback(new_value, previous_value)
-                previous_value = new_value
 
         key = str(uuid4())
         self.settings.add_on_change(key, onchange)

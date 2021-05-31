@@ -2,7 +2,7 @@
 
 Sublime dependency for Python Markdown
 
-Current version: 3.1.1
+Current version: 3.2.2
 
 # License
 

@@ -1,5 +1,4 @@
 """Unicode Properties from Unicode version 6.1.0 (autogen)."""
-from __future__ import unicode_literals
 
 unicode_numeric_type = {
     "^decimal": "\x00-\x2f\x3a-\u065f\u066a-\u06ef\u06fa-\u07bf\u07ca-\u0965\u0970-\u09e5\u09f0-\u0a65\u0a70-\u0ae5\u0af0-\u0b65\u0b70-\u0be5\u0bf0-\u0c65\u0c70-\u0ce5\u0cf0-\u0d65\u0d70-\u0e4f\u0e5a-\u0ecf\u0eda-\u0f1f\u0f2a-\u103f\u104a-\u108f\u109a-\u17df\u17ea-\u180f\u181a-\u1945\u1950-\u19cf\u19da-\u1a7f\u1a8a-\u1a8f\u1a9a-\u1b4f\u1b5a-\u1baf\u1bba-\u1c3f\u1c4a-\u1c4f\u1c5a-\ua61f\ua62a-\ua8cf\ua8da-\ua8ff\ua90a-\ua9cf\ua9da-\uaa4f\uaa5a-\uabef\uabfa-\uff0f\uff1a-\U0001049f\U000104aa-\U00011065\U00011070-\U000110ef\U000110fa-\U00011135\U00011140-\U000111cf\U000111da-\U000116bf\U000116ca-\U0001d7cd\U0001d800-\U0010ffff",
@@ -12,12 +11,12 @@ unicode_numeric_type = {
     "numeric": "\xbc-\xbe\u09f4-\u09f9\u0b72-\u0b77\u0bf0-\u0bf2\u0c78-\u0c7e\u0d70-\u0d75\u0f2a-\u0f33\u1372-\u137c\u16ee-\u16f0\u17f0-\u17f9\u2150-\u2182\u2185-\u2189\u2469-\u2473\u247d-\u2487\u2491-\u249b\u24eb-\u24f4\u24fe\u277f\u2789\u2793\u2cfd\u3007\u3021-\u3029\u3038-\u303a\u3192-\u3195\u3220-\u3229\u3248-\u324f\u3251-\u325f\u3280-\u3289\u32b1-\u32bf\u3405\u3483\u382a\u3b4d\u4e00\u4e03\u4e07\u4e09\u4e5d\u4e8c\u4e94\u4e96\u4ebf-\u4ec0\u4edf\u4ee8\u4f0d\u4f70\u5104\u5146\u5169\u516b\u516d\u5341\u5343-\u5345\u534c\u53c1-\u53c4\u56db\u58f1\u58f9\u5e7a\u5efe-\u5eff\u5f0c-\u5f0e\u5f10\u62fe\u634c\u67d2\u6f06\u7396\u767e\u8086\u842c\u8cae\u8cb3\u8d30\u9621\u9646\u964c\u9678\u96f6\ua6e6-\ua6ef\ua830-\ua835\uf96b\uf973\uf978\uf9b2\uf9d1\uf9d3\uf9fd\U00010107-\U00010133\U00010140-\U00010178\U0001018a\U00010320-\U00010323\U00010341\U0001034a\U000103d1-\U000103d5\U00010858-\U0001085f\U00010916-\U0001091b\U00010a44-\U00010a47\U00010a7d-\U00010a7e\U00010b58-\U00010b5f\U00010b78-\U00010b7f\U00010e69-\U00010e7e\U0001105b-\U00011065\U00012400-\U00012431\U00012434-\U00012455\U00012458-\U00012462\U0001d360-\U0001d371\U00020001\U00020064\U000200e2\U00020121\U0002092a\U00020983\U0002098c\U0002099c\U00020aea\U00020afd\U00020b19\U00022390\U00022998\U00023b1b\U0002626d\U0002f890"
 }
 ascii_numeric_type = {
-    "^decimal": "\x00-\x2f\x3a-\xff",
-    "^digit": "\x00-\xb1\xb4-\xb8\xba-\xff",
-    "^none": "\x30-\x39\xb2-\xb3\xb9\xbc-\xbe",
-    "^numeric": "\x00-\xbb\xbf-\xff",
+    "^decimal": "\x00-\x2f\x3a-\U0010ffff",
+    "^digit": "\x00-\U0010ffff",
+    "^none": "\x30-\x39",
+    "^numeric": "\x00-\U0010ffff",
     "decimal": "\x30-\x39",
-    "digit": "\xb2-\xb3\xb9",
-    "none": "\x00-\x2f\x3a-\xb1\xb4-\xb8\xba-\xbb\xbf-\xff",
-    "numeric": "\xbc-\xbe"
+    "digit": "",
+    "none": "\x00-\x2f\x3a-\U0010ffff",
+    "numeric": ""
 }

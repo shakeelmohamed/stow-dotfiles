@@ -22,7 +22,6 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from __future__ import unicode_literals
 from markdown import Extension
 from markdown.inlinepatterns import InlineProcessor, SubstituteTagInlineProcessor
 from markdown.postprocessors import Postprocessor
@@ -52,7 +51,13 @@ class EscapeAllPattern(InlineProcessor):
         """Convert the char to an escaped character."""
 
         char = m.group(1)
-        if self.nbsp and char == ' ':
+        if char == '<':
+            escape = md_util.AMP_SUBSTITUTE + 'lt;'
+        elif char == '>':
+            escape = md_util.AMP_SUBSTITUTE + 'gt;'
+        elif char == '&':
+            escape = md_util.AMP_SUBSTITUTE + 'amp;'
+        elif self.nbsp and char == ' ':
             escape = md_util.AMP_SUBSTITUTE + 'nbsp;'
         elif char in (STX, ETX):
             escape = char

@@ -42,20 +42,20 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from __future__ import unicode_literals
 from markdown import Extension
 from markdown.inlinepatterns import InlineProcessor
 from markdown.blockprocessors import BlockProcessor
 from markdown import util as md_util
+import xml.etree.ElementTree as etree
 from . import util
 import re
 
-RE_SMART_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)(?!\s)((?:\\.|[^\$])+?)(?<!\s)(?:\$))'
-RE_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)((?:\\.|[^\$])+?)(?:\$))'
+RE_SMART_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)(?!\s)((?:\\.|[^\\$])+?)(?<!\s)(?:\$))'
+RE_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$)|(?<!\\)(\$)((?:\\.|[^\\$])+?)(?:\$))'
 RE_BRACKET_INLINE = r'(?:(?<!\\)((?:\\{2})+?)(?=\\\()|(?<!\\)(\\\()((?:\\[^)]|[^\\])+?)(?:\\\)))'
 
-RE_DOLLAR_BLOCK = r'(?P<dollar>[$]{2})(?P<math>.+?)(?P=dollar)'
-RE_TEX_BLOCK = r'(?P<math2>\\begin\{(?P<env>[a-z]+\*?)\}.+?\\end\{(?P=env)\})'
+RE_DOLLAR_BLOCK = r'(?P<dollar>[$]{2})(?P<math>((?:\\.|[^\\])+?))(?P=dollar)'
+RE_TEX_BLOCK = r'(?P<math2>\\begin\{(?P<env>[a-z]+\*?)\}(?:\\.|[^\\])+?\\end\{(?P=env)\})'
 RE_BRACKET_BLOCK = r'\\\[(?P<math3>(?:\\[^\]]|[^\\])+?)\\\]'
 
 
@@ -73,13 +73,13 @@ def _inline_mathjax_format(math, preview=False):
     """Inline math formatter."""
 
     if preview:
-        el = md_util.etree.Element('span')
-        pre = md_util.etree.SubElement(el, 'span', {'class': 'MathJax_Preview'})
+        el = etree.Element('span')
+        pre = etree.SubElement(el, 'span', {'class': 'MathJax_Preview'})
         pre.text = md_util.AtomicString(math)
-        script = md_util.etree.SubElement(el, 'script', {'type': 'math/tex'})
+        script = etree.SubElement(el, 'script', {'type': 'math/tex'})
         script.text = md_util.AtomicString(math)
     else:
-        el = md_util.etree.Element('script', {'type': 'math/tex'})
+        el = etree.Element('script', {'type': 'math/tex'})
         el.text = md_util.AtomicString(math)
     return el
 
@@ -123,28 +123,40 @@ def inline_mathjax_format(math, language='math', class_name='arithmatex', md=Non
 def inline_generic_format(math, language='math', class_name='arithmatex', md=None, wrap='\\(%s\\)'):
     """Inline generic formatter."""
 
-    el = md_util.etree.Element('span', {'class': class_name})
+    el = etree.Element('span', {'class': class_name})
     el.text = md_util.AtomicString(wrap % math)
     return el
 
 
 # Formatters usable with SuperFences
-def fence_mathjax_preview_format(math, language='math', class_name='arithmatex', options=None, md=None):
+def fence_mathjax_preview_format(math, language='math', class_name='arithmatex', options=None, md=None, **kwargs):
     """Block MathJax formatter with preview."""
 
     return _fence_mathjax_format(math, True)
 
 
-def fence_mathjax_format(math, language='math', class_name='arithmatex', options=None, md=None):
+def fence_mathjax_format(math, language='math', class_name='arithmatex', options=None, md=None, **kwargs):
     """Block MathJax formatter."""
 
     return _fence_mathjax_format(math, False)
 
 
-def fence_generic_format(math, language='math', class_name='arithmatex', options=None, md=None, wrap='\\[\n%s\n\\]'):
+def fence_generic_format(
+    math, language='math', class_name='arithmatex', options=None, md=None, wrap='\\[\n%s\n\\]', **kwargs
+):
     """Generic block formatter."""
 
-    return '<div class="%s">%s</div>' % (class_name, (wrap % math))
+    classes = kwargs['classes']
+    id_value = kwargs['id_value']
+    attrs = kwargs['attrs']
+
+    classes.insert(0, class_name)
+
+    id_value = ' id="{}"'.format(id_value) if id_value else ''
+    classes = ' class="{}"'.format(' '.join(classes))
+    attrs = ' ' + ' '.join('{k}="{v}"'.format(k=k, v=v) for k, v in attrs.items()) if attrs else ''
+
+    return '<div%s%s%s>%s</div>' % (id_value, classes, attrs, (wrap % math))
 
 
 class InlineArithmatexPattern(InlineProcessor):
@@ -215,16 +227,16 @@ class BlockArithmatexProcessor(BlockProcessor):
 
         if self.preview:
             grandparent = parent
-            parent = md_util.etree.SubElement(grandparent, 'div')
-            preview = md_util.etree.SubElement(parent, 'div', {'class': 'MathJax_Preview'})
+            parent = etree.SubElement(grandparent, 'div')
+            preview = etree.SubElement(parent, 'div', {'class': 'MathJax_Preview'})
             preview.text = md_util.AtomicString(math)
-        el = md_util.etree.SubElement(parent, 'script', {'type': 'math/tex; mode=display'})
+        el = etree.SubElement(parent, 'script', {'type': 'math/tex; mode=display'})
         el.text = md_util.AtomicString(math)
 
     def generic_output(self, parent, math):
         """Generic output."""
 
-        el = md_util.etree.SubElement(parent, 'div', {'class': 'arithmatex'})
+        el = etree.SubElement(parent, 'div', {'class': 'arithmatex'})
         el.text = md_util.AtomicString(self.wrap % math)
 
     def run(self, parent, blocks):

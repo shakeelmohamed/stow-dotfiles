@@ -1,44 +1,32 @@
 """Unicode Properties."""
-from __future__ import unicode_literals
 from . import unidata
 import sys
 
-NARROW = sys.maxunicode == 0xFFFF
-if NARROW:
-    UNICODE_RANGE = '\u0000-\uffff'
-else:
-    UNICODE_RANGE = '\u0000-\U0010ffff'
+UNICODE_RANGE = '\u0000-\U0010ffff'
+ASCII_RANGE = '\x00-\xff'
 
-PY3 = sys.version_info >= (3, 0) and sys.version_info[0:2] < (4, 0)
+PY34 = sys.version_info >= (3, 4)
 PY35 = sys.version_info >= (3, 5)
 PY37 = sys.version_info >= (3, 7)
-if PY3:
-    binary_type = bytes  # noqa
-else:
-    binary_type = str  # noqa
 
-POSIX = 0
-POSIX_BINARY = 1
-POSIX_UNICODE = 2
+MODE_NORMAL = 0
+MODE_ASCII = 1
+MODE_UNICODE = 2
 
 
-def get_posix_property(value, mode=POSIX):
-    """Retrieve the posix category."""
+def fmt_string(value, is_bytes):
+    """Format for bytes string."""
 
-    if mode == POSIX_BINARY:
-        return unidata.ascii_posix_properties[value]
-    elif mode == POSIX_UNICODE:
-        return unidata.unicode_binary[
-            ('^posix' + value[1:]) if value.startswith('^') else ('posix' + value)
-        ]
+    if is_bytes:
+        return value[:-1] + '\xff' if value.endswith('\U0010ffff') else value
     else:
-        return unidata.unicode_posix_properties[value]
+        return value
 
 
-def get_gc_property(value, binary=False):
+def get_gc_property(value, mode=MODE_UNICODE):
     """Get `GC` property."""
 
-    obj = unidata.ascii_properties if binary else unidata.unicode_properties
+    obj = unidata.ascii_properties if mode != MODE_UNICODE else unidata.unicode_properties
 
     if value.startswith('^'):
         negate = True
@@ -47,25 +35,31 @@ def get_gc_property(value, binary=False):
         negate = False
 
     value = unidata.unicode_alias['generalcategory'].get(value, value)
+    is_binary = mode == MODE_ASCII
 
-    assert 1 <= len(value) <= 2, 'Invalid property!'
+    length = len(value)
+    if length < 1 or length > 2:
+        raise ValueError('Invalid property')
+    elif length == 1 and value not in obj:
+        raise ValueError('Invalid property')
+    elif length == 2 and (value[0] not in obj or value[1] not in obj[value[0]]):
+        raise ValueError('Invalid property')
 
     if not negate:
         p1, p2 = (value[0], value[1]) if len(value) > 1 else (value[0], None)
         value = ''.join(
-            [v for k, v in obj.get(p1, {}).items() if not k.startswith('^')]
-        ) if p2 is None else obj.get(p1, {}).get(p2, '')
+            [fmt_string(v, is_binary) for k, v in obj.get(p1, {}).items() if not k.startswith('^')]
+        ) if p2 is None else fmt_string(obj.get(p1, {}).get(p2, ''), is_binary)
     else:
         p1, p2 = (value[0], value[1]) if len(value) > 1 else (value[0], '')
-        value = obj.get(p1, {}).get('^' + p2, '')
-    assert value, 'Invalid property!'
+        value = fmt_string(obj.get(p1, {}).get('^' + p2, ''), is_binary)
     return value
 
 
-def get_binary_property(value, binary=False):
+def get_binary_property(value, mode=MODE_UNICODE):
     """Get `BINARY` property."""
 
-    obj = unidata.ascii_binary if binary else unidata.unicode_binary
+    obj = unidata.ascii_binary if mode != MODE_UNICODE else unidata.unicode_binary
 
     if value.startswith('^'):
         negated = value[1:]
@@ -73,13 +67,13 @@ def get_binary_property(value, binary=False):
     else:
         value = unidata.unicode_alias['binary'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_canonical_combining_class_property(value, binary=False):
+def get_canonical_combining_class_property(value, mode=MODE_UNICODE):
     """Get `CANONICAL COMBINING CLASS` property."""
 
-    obj = unidata.ascii_canonical_combining_class if binary else unidata.unicode_canonical_combining_class
+    obj = unidata.ascii_canonical_combining_class if mode != MODE_UNICODE else unidata.unicode_canonical_combining_class
 
     if value.startswith('^'):
         negated = value[1:]
@@ -87,13 +81,13 @@ def get_canonical_combining_class_property(value, binary=False):
     else:
         value = unidata.unicode_alias['canonicalcombiningclass'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_east_asian_width_property(value, binary=False):
+def get_east_asian_width_property(value, mode=MODE_UNICODE):
     """Get `EAST ASIAN WIDTH` property."""
 
-    obj = unidata.ascii_east_asian_width if binary else unidata.unicode_east_asian_width
+    obj = unidata.ascii_east_asian_width if mode != MODE_UNICODE else unidata.unicode_east_asian_width
 
     if value.startswith('^'):
         negated = value[1:]
@@ -101,13 +95,13 @@ def get_east_asian_width_property(value, binary=False):
     else:
         value = unidata.unicode_alias['eastasianwidth'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_grapheme_cluster_break_property(value, binary=False):
+def get_grapheme_cluster_break_property(value, mode=MODE_UNICODE):
     """Get `GRAPHEME CLUSTER BREAK` property."""
 
-    obj = unidata.ascii_grapheme_cluster_break if binary else unidata.unicode_grapheme_cluster_break
+    obj = unidata.ascii_grapheme_cluster_break if mode != MODE_UNICODE else unidata.unicode_grapheme_cluster_break
 
     if value.startswith('^'):
         negated = value[1:]
@@ -115,13 +109,13 @@ def get_grapheme_cluster_break_property(value, binary=False):
     else:
         value = unidata.unicode_alias['graphemeclusterbreak'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_line_break_property(value, binary=False):
+def get_line_break_property(value, mode=MODE_UNICODE):
     """Get `LINE BREAK` property."""
 
-    obj = unidata.ascii_line_break if binary else unidata.unicode_line_break
+    obj = unidata.ascii_line_break if mode != MODE_UNICODE else unidata.unicode_line_break
 
     if value.startswith('^'):
         negated = value[1:]
@@ -129,13 +123,13 @@ def get_line_break_property(value, binary=False):
     else:
         value = unidata.unicode_alias['linebreak'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_sentence_break_property(value, binary=False):
+def get_sentence_break_property(value, mode=MODE_UNICODE):
     """Get `SENTENCE BREAK` property."""
 
-    obj = unidata.ascii_sentence_break if binary else unidata.unicode_sentence_break
+    obj = unidata.ascii_sentence_break if mode != MODE_UNICODE else unidata.unicode_sentence_break
 
     if value.startswith('^'):
         negated = value[1:]
@@ -143,13 +137,13 @@ def get_sentence_break_property(value, binary=False):
     else:
         value = unidata.unicode_alias['sentencebreak'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_word_break_property(value, binary=False):
+def get_word_break_property(value, mode=MODE_UNICODE):
     """Get `WORD BREAK` property."""
 
-    obj = unidata.ascii_word_break if binary else unidata.unicode_word_break
+    obj = unidata.ascii_word_break if mode != MODE_UNICODE else unidata.unicode_word_break
 
     if value.startswith('^'):
         negated = value[1:]
@@ -157,13 +151,13 @@ def get_word_break_property(value, binary=False):
     else:
         value = unidata.unicode_alias['wordbreak'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_hangul_syllable_type_property(value, binary=False):
+def get_hangul_syllable_type_property(value, mode=MODE_UNICODE):
     """Get `HANGUL SYLLABLE TYPE` property."""
 
-    obj = unidata.ascii_hangul_syllable_type if binary else unidata.unicode_hangul_syllable_type
+    obj = unidata.ascii_hangul_syllable_type if mode != MODE_UNICODE else unidata.unicode_hangul_syllable_type
 
     if value.startswith('^'):
         negated = value[1:]
@@ -171,17 +165,17 @@ def get_hangul_syllable_type_property(value, binary=False):
     else:
         value = unidata.unicode_alias['hangulsyllabletype'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_indic_positional_category_property(value, binary=False):
+def get_indic_positional_category_property(value, mode=MODE_UNICODE):
     """Get `INDIC POSITIONAL/MATRA CATEGORY` property."""
 
     if PY35:
-        obj = unidata.ascii_indic_positional_category if binary else unidata.unicode_indic_positional_category
+        obj = unidata.ascii_indic_positional_category if mode != MODE_UNICODE else unidata.unicode_indic_positional_category
         alias_key = 'indicpositionalcategory'
     else:
-        obj = unidata.ascii_indic_matra_category if binary else unidata.unicode_indic_matra_category
+        obj = unidata.ascii_indic_matra_category if mode != MODE_UNICODE else unidata.unicode_indic_matra_category
         alias_key = 'indicmatracategory'
 
     if value.startswith('^'):
@@ -190,13 +184,13 @@ def get_indic_positional_category_property(value, binary=False):
     else:
         value = unidata.unicode_alias[alias_key].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_indic_syllabic_category_property(value, binary=False):
+def get_indic_syllabic_category_property(value, mode=MODE_UNICODE):
     """Get `INDIC SYLLABIC CATEGORY` property."""
 
-    obj = unidata.ascii_indic_syllabic_category if binary else unidata.unicode_indic_syllabic_category
+    obj = unidata.ascii_indic_syllabic_category if mode != MODE_UNICODE else unidata.unicode_indic_syllabic_category
 
     if value.startswith('^'):
         negated = value[1:]
@@ -204,13 +198,13 @@ def get_indic_syllabic_category_property(value, binary=False):
     else:
         value = unidata.unicode_alias['indicsyllabiccategory'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_decomposition_type_property(value, binary=False):
+def get_decomposition_type_property(value, mode=MODE_UNICODE):
     """Get `DECOMPOSITION TYPE` property."""
 
-    obj = unidata.ascii_decomposition_type if binary else unidata.unicode_decomposition_type
+    obj = unidata.ascii_decomposition_type if mode != MODE_UNICODE else unidata.unicode_decomposition_type
 
     if value.startswith('^'):
         negated = value[1:]
@@ -218,13 +212,13 @@ def get_decomposition_type_property(value, binary=False):
     else:
         value = unidata.unicode_alias['decompositiontype'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_nfc_quick_check_property(value, binary=False):
+def get_nfc_quick_check_property(value, mode=MODE_UNICODE):
     """Get `NFC QUICK CHECK` property."""
 
-    obj = unidata.ascii_nfc_quick_check if binary else unidata.unicode_nfc_quick_check
+    obj = unidata.ascii_nfc_quick_check if mode != MODE_UNICODE else unidata.unicode_nfc_quick_check
 
     if value.startswith('^'):
         negated = value[1:]
@@ -232,13 +226,13 @@ def get_nfc_quick_check_property(value, binary=False):
     else:
         value = unidata.unicode_alias['nfcquickcheck'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_nfd_quick_check_property(value, binary=False):
+def get_nfd_quick_check_property(value, mode=MODE_UNICODE):
     """Get `NFD QUICK CHECK` property."""
 
-    obj = unidata.ascii_nfd_quick_check if binary else unidata.unicode_nfd_quick_check
+    obj = unidata.ascii_nfd_quick_check if mode != MODE_UNICODE else unidata.unicode_nfd_quick_check
 
     if value.startswith('^'):
         negated = value[1:]
@@ -246,13 +240,13 @@ def get_nfd_quick_check_property(value, binary=False):
     else:
         value = unidata.unicode_alias['nfdquickcheck'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_nfkc_quick_check_property(value, binary=False):
+def get_nfkc_quick_check_property(value, mode=MODE_UNICODE):
     """Get `NFKC QUICK CHECK` property."""
 
-    obj = unidata.ascii_nfkc_quick_check if binary else unidata.unicode_nfkc_quick_check
+    obj = unidata.ascii_nfkc_quick_check if mode != MODE_UNICODE else unidata.unicode_nfkc_quick_check
 
     if value.startswith('^'):
         negated = value[1:]
@@ -260,13 +254,13 @@ def get_nfkc_quick_check_property(value, binary=False):
     else:
         value = unidata.unicode_alias['nfkcquickcheck'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_nfkd_quick_check_property(value, binary=False):
+def get_nfkd_quick_check_property(value, mode=MODE_UNICODE):
     """Get `NFKD QUICK CHECK` property."""
 
-    obj = unidata.ascii_nfkd_quick_check if binary else unidata.unicode_nfkd_quick_check
+    obj = unidata.ascii_nfkd_quick_check if mode != MODE_UNICODE else unidata.unicode_nfkd_quick_check
 
     if value.startswith('^'):
         negated = value[1:]
@@ -274,13 +268,13 @@ def get_nfkd_quick_check_property(value, binary=False):
     else:
         value = unidata.unicode_alias['nfkdquickcheck'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_numeric_type_property(value, binary=False):
+def get_numeric_type_property(value, mode=MODE_UNICODE):
     """Get `NUMERIC TYPE` property."""
 
-    obj = unidata.ascii_numeric_type if binary else unidata.unicode_numeric_type
+    obj = unidata.ascii_numeric_type if mode != MODE_UNICODE else unidata.unicode_numeric_type
 
     if value.startswith('^'):
         negated = value[1:]
@@ -288,13 +282,13 @@ def get_numeric_type_property(value, binary=False):
     else:
         value = unidata.unicode_alias['numerictype'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_numeric_value_property(value, binary=False):
+def get_numeric_value_property(value, mode=MODE_UNICODE):
     """Get `NUMERIC VALUE` property."""
 
-    obj = unidata.ascii_numeric_values if binary else unidata.unicode_numeric_values
+    obj = unidata.ascii_numeric_values if mode != MODE_UNICODE else unidata.unicode_numeric_values
 
     if value.startswith('^'):
         negated = value[1:]
@@ -302,13 +296,13 @@ def get_numeric_value_property(value, binary=False):
     else:
         value = unidata.unicode_alias['numericvalue'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_age_property(value, binary=False):
+def get_age_property(value, mode=MODE_UNICODE):
     """Get `AGE` property."""
 
-    obj = unidata.ascii_age if binary else unidata.unicode_age
+    obj = unidata.ascii_age if mode != MODE_UNICODE else unidata.unicode_age
 
     if value.startswith('^'):
         negated = value[1:]
@@ -316,13 +310,13 @@ def get_age_property(value, binary=False):
     else:
         value = unidata.unicode_alias['age'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_joining_type_property(value, binary=False):
+def get_joining_type_property(value, mode=MODE_UNICODE):
     """Get `JOINING TYPE` property."""
 
-    obj = unidata.ascii_joining_type if binary else unidata.unicode_joining_type
+    obj = unidata.ascii_joining_type if mode != MODE_UNICODE else unidata.unicode_joining_type
 
     if value.startswith('^'):
         negated = value[1:]
@@ -330,13 +324,13 @@ def get_joining_type_property(value, binary=False):
     else:
         value = unidata.unicode_alias['joiningtype'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_joining_group_property(value, binary=False):
+def get_joining_group_property(value, mode=MODE_UNICODE):
     """Get `JOINING GROUP` property."""
 
-    obj = unidata.ascii_joining_group if binary else unidata.unicode_joining_group
+    obj = unidata.ascii_joining_group if mode != MODE_UNICODE else unidata.unicode_joining_group
 
     if value.startswith('^'):
         negated = value[1:]
@@ -344,13 +338,13 @@ def get_joining_group_property(value, binary=False):
     else:
         value = unidata.unicode_alias['joininggroup'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_script_property(value, binary=False):
+def get_script_property(value, mode=MODE_UNICODE):
     """Get `SC` property."""
 
-    obj = unidata.ascii_scripts if binary else unidata.unicode_scripts
+    obj = unidata.ascii_scripts if mode != MODE_UNICODE else unidata.unicode_scripts
 
     if value.startswith('^'):
         negated = value[1:]
@@ -358,13 +352,13 @@ def get_script_property(value, binary=False):
     else:
         value = unidata.unicode_alias['script'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_script_extension_property(value, binary=False):
+def get_script_extension_property(value, mode=MODE_UNICODE):
     """Get `SCX` property."""
 
-    obj = unidata.ascii_script_extensions if binary else unidata.unicode_script_extensions
+    obj = unidata.ascii_script_extensions if mode != MODE_UNICODE else unidata.unicode_script_extensions
 
     if value.startswith('^'):
         negated = value[1:]
@@ -372,13 +366,13 @@ def get_script_extension_property(value, binary=False):
     else:
         value = unidata.unicode_alias['script'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_block_property(value, binary=False):
+def get_block_property(value, mode=MODE_UNICODE):
     """Get `BLK` property."""
 
-    obj = unidata.ascii_blocks if binary else unidata.unicode_blocks
+    obj = unidata.ascii_blocks if mode != MODE_UNICODE else unidata.unicode_blocks
 
     if value.startswith('^'):
         negated = value[1:]
@@ -386,13 +380,13 @@ def get_block_property(value, binary=False):
     else:
         value = unidata.unicode_alias['block'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_bidi_property(value, binary=False):
+def get_bidi_property(value, mode=MODE_UNICODE):
     """Get `BC` property."""
 
-    obj = unidata.ascii_bidi_classes if binary else unidata.unicode_bidi_classes
+    obj = unidata.ascii_bidi_classes if mode != MODE_UNICODE else unidata.unicode_bidi_classes
 
     if value.startswith('^'):
         negated = value[1:]
@@ -400,13 +394,13 @@ def get_bidi_property(value, binary=False):
     else:
         value = unidata.unicode_alias['bidiclass'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_bidi_paired_bracket_type_property(value, binary=False):
+def get_bidi_paired_bracket_type_property(value, mode=MODE_UNICODE):
     """Get `BPT` property."""
 
-    obj = unidata.ascii_bidi_paired_bracket_type if binary else unidata.unicode_bidi_paired_bracket_type
+    obj = unidata.ascii_bidi_paired_bracket_type if mode != MODE_UNICODE else unidata.unicode_bidi_paired_bracket_type
 
     if value.startswith('^'):
         negated = value[1:]
@@ -414,13 +408,13 @@ def get_bidi_paired_bracket_type_property(value, binary=False):
     else:
         value = unidata.unicode_alias['bidipairedbrackettype'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_vertical_orientation_property(value, binary=False):
+def get_vertical_orientation_property(value, mode=MODE_UNICODE):
     """Get `VO` property."""
 
-    obj = unidata.ascii_vertical_orientation if binary else unidata.unicode_vertical_orientation
+    obj = unidata.ascii_vertical_orientation if mode != MODE_UNICODE else unidata.unicode_vertical_orientation
 
     if value.startswith('^'):
         negated = value[1:]
@@ -428,10 +422,10 @@ def get_vertical_orientation_property(value, binary=False):
     else:
         value = unidata.unicode_alias['verticalorientation'].get(value, value)
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_is_property(value, binary=False):
+def get_is_property(value, mode=MODE_UNICODE):
     """Get shortcut for `SC` or `Binary` property."""
 
     if value.startswith('^'):
@@ -446,11 +440,8 @@ def get_is_property(value, binary=False):
     if prefix != 'is':
         raise ValueError("Does not start with 'is'!")
 
-    if PY3:
-        script_obj = unidata.ascii_script_extensions if binary else unidata.unicode_script_extensions
-    else:
-        script_obj = unidata.ascii_scripts if binary else unidata.unicode_scripts
-    bin_obj = unidata.ascii_binary if binary else unidata.unicode_binary
+    script_obj = unidata.ascii_script_extensions if mode != MODE_UNICODE else unidata.unicode_script_extensions
+    bin_obj = unidata.ascii_binary if mode != MODE_UNICODE else unidata.unicode_binary
 
     value = negate + unidata.unicode_alias['script'].get(temp, temp)
 
@@ -460,10 +451,10 @@ def get_is_property(value, binary=False):
     else:
         obj = script_obj
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def get_in_property(value, binary=False):
+def get_in_property(value, mode=MODE_UNICODE):
     """Get shortcut for `Block` property."""
 
     if value.startswith('^'):
@@ -479,115 +470,130 @@ def get_in_property(value, binary=False):
         raise ValueError("Does not start with 'in'!")
 
     value = negate + unidata.unicode_alias['block'].get(temp, temp)
-    obj = unidata.ascii_blocks if binary else unidata.unicode_blocks
+    obj = unidata.ascii_blocks if mode != MODE_UNICODE else unidata.unicode_blocks
 
-    return obj[value]
+    return fmt_string(obj[value], mode == MODE_ASCII)
 
 
-def is_enum(name):
+def _is_binary(name):
     """Check if name is an enum (not a binary) property."""
 
-    return name in unidata.enum_names
+    return name in unidata.unicode_binary or name in unidata.unicode_alias['binary']
 
 
-def get_unicode_property(value, prop=None, binary=False):
+def get_unicode_property(prop, value=None, mode=MODE_UNICODE):
     """Retrieve the Unicode category from the table."""
 
-    if prop is not None:
-        prop = unidata.unicode_alias['_'].get(prop, prop)
-        try:
-            if prop == 'generalcategory':
-                return get_gc_property(value, binary)
-            elif prop == 'script':
-                return get_script_property(value, binary)
-            elif PY3 and prop == 'scriptextensions':
-                return get_script_extension_property(value, binary)
-            elif prop == 'block':
-                return get_block_property(value, binary)
-            elif prop == 'binary':
-                return get_binary_property(value, binary)
-            elif prop == 'bidiclass':
-                return get_bidi_property(value, binary)
-            elif prop == 'bidipairedbrackettype':
-                return get_bidi_paired_bracket_type_property(value, binary)
-            elif prop == 'age':
-                return get_age_property(value, binary)
-            elif prop == 'eastasianwidth':
-                return get_east_asian_width_property(value, binary)
-            elif PY35 and prop == 'indicpositionalcategory':
-                return get_indic_positional_category_property(value, binary)
-            elif PY3 and not PY35 and prop == 'indicmatracategory':
-                return get_indic_positional_category_property(value, binary)
-            elif PY3 and prop == 'indicsyllabiccategory':
-                return get_indic_syllabic_category_property(value, binary)
-            elif prop == 'hangulsyllabletype':
-                return get_hangul_syllable_type_property(value, binary)
-            elif prop == 'decompositiontype':
-                return get_decomposition_type_property(value, binary)
-            elif prop == 'canonicalcombiningclass':
-                return get_canonical_combining_class_property(value, binary)
-            elif prop == 'numerictype':
-                return get_numeric_type_property(value, binary)
-            elif prop == 'numericvalue':
-                return get_numeric_value_property(value, binary)
-            elif prop == 'joiningtype':
-                return get_joining_type_property(value, binary)
-            elif prop == 'joininggroup':
-                return get_joining_group_property(value, binary)
-            elif prop == 'graphemeclusterbreak':
-                return get_grapheme_cluster_break_property(value, binary)
-            elif prop == 'linebreak':
-                return get_line_break_property(value, binary)
-            elif prop == 'sentencebreak':
-                return get_sentence_break_property(value, binary)
-            elif prop == 'wordbreak':
-                return get_word_break_property(value, binary)
-            elif prop == 'nfcquickcheck':
-                return get_nfc_quick_check_property(value, binary)
-            elif prop == 'nfdquickcheck':
-                return get_nfd_quick_check_property(value, binary)
-            elif prop == 'nfkcquickcheck':
-                return get_nfkc_quick_check_property(value, binary)
-            elif prop == 'nfkdquickcheck':
-                return get_nfkd_quick_check_property(value, binary)
-            elif PY37 and prop == 'verticalorientation':
-                return get_vertical_orientation_property(value, binary)
-            else:
-                raise ValueError('Invalid Unicode property!')
-        except Exception:
-            raise ValueError('Invalid Unicode property!')
+    if value is not None:
 
-    try:
-        return get_gc_property(value, binary)
-    except Exception:
-        pass
+        negate = prop.startswith('^')
 
-    try:
-        if PY3:
-            return get_script_extension_property(value, binary)
+        # Normalize binary true/false input so we can handle it properly
+        if _is_binary(prop):
+            name = prop[1:] if negate else prop
+
+            if value in ('n', 'no', 'f', 'false'):
+                negate = not negate
+            elif value not in ('y', 'yes', 't', 'true'):
+                raise ValueError("'{}' is not a valid value for the binary property '{}'".format(value, prop))
+
+            return get_binary_property('^' + name if negate else name, mode)
         else:
-            return get_script_property(value, binary)
+            if negate:
+                value = '^' + value
+                name = prop[1:]
+            else:
+                name = prop
+
+        name = unidata.unicode_alias['_'].get(name, name)
+        try:
+            if name == 'generalcategory':
+                return get_gc_property(value, mode)
+            elif name == 'script':
+                return get_script_property(value, mode)
+            elif name == 'scriptextensions':
+                return get_script_extension_property(value, mode)
+            elif name == 'block':
+                return get_block_property(value, mode)
+            elif name == 'bidiclass':
+                return get_bidi_property(value, mode)
+            elif PY34 and name == 'bidipairedbrackettype':
+                return get_bidi_paired_bracket_type_property(value, mode)
+            elif name == 'age':
+                return get_age_property(value, mode)
+            elif name == 'eastasianwidth':
+                return get_east_asian_width_property(value, mode)
+            elif PY35 and name == 'indicpositionalcategory':
+                return get_indic_positional_category_property(value, mode)
+            elif not PY35 and name == 'indicmatracategory':
+                return get_indic_positional_category_property(value, mode)
+            elif name == 'indicsyllabiccategory':
+                return get_indic_syllabic_category_property(value, mode)
+            elif name == 'hangulsyllabletype':
+                return get_hangul_syllable_type_property(value, mode)
+            elif name == 'decompositiontype':
+                return get_decomposition_type_property(value, mode)
+            elif name == 'canonicalcombiningclass':
+                return get_canonical_combining_class_property(value, mode)
+            elif name == 'numerictype':
+                return get_numeric_type_property(value, mode)
+            elif name == 'numericvalue':
+                return get_numeric_value_property(value, mode)
+            elif name == 'joiningtype':
+                return get_joining_type_property(value, mode)
+            elif name == 'joininggroup':
+                return get_joining_group_property(value, mode)
+            elif name == 'graphemeclusterbreak':
+                return get_grapheme_cluster_break_property(value, mode)
+            elif name == 'linebreak':
+                return get_line_break_property(value, mode)
+            elif name == 'sentencebreak':
+                return get_sentence_break_property(value, mode)
+            elif name == 'wordbreak':
+                return get_word_break_property(value, mode)
+            elif name == 'nfcquickcheck':
+                return get_nfc_quick_check_property(value, mode)
+            elif name == 'nfdquickcheck':
+                return get_nfd_quick_check_property(value, mode)
+            elif name == 'nfkcquickcheck':
+                return get_nfkc_quick_check_property(value, mode)
+            elif name == 'nfkdquickcheck':
+                return get_nfkd_quick_check_property(value, mode)
+            elif PY37 and name == 'verticalorientation':
+                return get_vertical_orientation_property(value, mode)
+            else:
+                raise ValueError("'{}={}' does not have a valid property name".format(prop, value))
+        except Exception:
+            raise ValueError("'{}={}' does not appear to be a valid property".format(prop, value))
+
+    try:
+        return get_gc_property(prop, mode)
     except Exception:
         pass
 
     try:
-        return get_block_property(value, binary)
+        return get_script_extension_property(prop, mode)
     except Exception:
         pass
 
     try:
-        return get_binary_property(value, binary)
+        return get_binary_property(prop, mode)
     except Exception:
         pass
 
     try:
-        return get_is_property(value, binary)
+        return get_block_property(prop, mode)
     except Exception:
         pass
 
     try:
-        return get_in_property(value, binary)
+        return get_is_property(prop, mode)
     except Exception:
         pass
 
-    raise ValueError('Invalid Unicode property!')
+    try:
+        return get_in_property(prop, mode)
+    except Exception:
+        pass
+
+    raise ValueError("'{}' does not appear to be a valid property".format(prop))

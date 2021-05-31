@@ -126,6 +126,16 @@ class TestSettingsDict(TestCase):
 
         self.assertRaises(NotImplementedError, iter, chained)
 
+    def test_equal(self):
+        other = SettingsDict(self.settings)
+        self.assertEqual(self.fancy, other)
+
+    def test_not_equal(self):
+        other_view = self.view.window().new_file()
+        other_view.set_scratch(True)
+        other = SettingsDict(other_view.settings())
+        self.assertNotEqual(self.fancy, other)
+
 
 class TestSettingsDictSubscription(TestCase):
 
@@ -178,3 +188,18 @@ class TestSettingsDictSubscription(TestCase):
             'example_1': 10,
             'example_2': 2
         })
+
+    def test_settings_change_in_callback(self):
+        calls = []
+
+        def callback(new, old):
+            calls.append((new, old))
+            self.fancy['bar'] = True
+
+        self.fancy.subscribe('foo', callback)
+
+        self.fancy['foo'] = True
+
+        self.assertEqual(calls, [
+            (True, None)
+        ])

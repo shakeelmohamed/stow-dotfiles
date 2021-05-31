@@ -56,7 +56,11 @@
 		"mentees",
 		"Spotify",
 		"Spotifaves",
-		"Bellevue"
+		"Bellevue",
+		"podcast",
+		"Podcasts",
+		"Ismaili",
+		"podcasts"
 	],
 	"binary_file_patterns":
 	[
@@ -110,7 +114,7 @@
 		"Theme - itg.flat",
 		"VBScript",
 		"Vintage",
-		"xmllint"
+		"xmllint",
 	],
 	"ignored_words":
 	[
@@ -123,5 +127,5 @@
 	"tab_size": 4,
 	"theme": "Spacegray Eighties.sublime-theme",
 	"translate_tabs_to_spaces": true,
-	"word_wrap": true
+	"word_wrap": true,
 }
