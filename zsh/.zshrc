@@ -91,3 +91,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/opt/go@1.10/bin:$PATH"
+
+# added by travis gem
+[ ! -s /Users/shakeelmohamed/.travis/travis.sh ] || source /Users/shakeelmohamed/.travis/travis.sh

@@ -18,11 +18,16 @@ import re
 from . import version as ver
 from .coloraide import util
 from .st_colormod import Color
-import jinja2
-from pygments.formatters import HtmlFormatter
+from . import jinja2
+from .pygments.formatters import HtmlFormatter
 from collections import OrderedDict
 from .st_clean_css import clean_css
 import copy
+import codecs
+import os
+
+LOCATION = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_CSS_PATH = os.path.join(LOCATION, 'css', 'default.css')
 
 INVALID = -1
 POPUP = 0
@@ -314,6 +319,16 @@ class SchemeTemplate(object):
             if css == OLD_DEFAULT_CSS:
                 css = DEFAULT_CSS
 
+            if css == DEFAULT_CSS:
+                css = ''
+                try:
+                    with codecs.open(DEFAULT_CSS_PATH, encoding='utf-8') as f:
+                        css = clean_css(f.read())
+                except Exception:
+                    pass
+
+                return self.env.from_string(css).render(var=var, plugin=self.plugin_vars)
+
             return self.env.from_string(
                 clean_css(sublime.load_resource(css))
             ).render(var=var, plugin=self.plugin_vars)
@@ -331,7 +346,7 @@ class SchemeTemplate(object):
             if len(parts) == 2 and parts[0] in ('background-color', 'color'):
                 rgba = Color(parts[1])
                 rgba.alpha = max(min(float(factor), 1.0), 0.0)
-                rgba.overlay(self.get_bg())
+                rgba.compose(self.get_bg())
                 return '{}: {}; '.format(parts[0], rgba.to_string(hex=True))
         except Exception:
             pass
