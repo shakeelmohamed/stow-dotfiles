@@ -365,7 +365,7 @@ tableflip() {
 }
 
 alias copy="pbcopy"
-alias update="upgrade_oh_my_zsh"
+alias update="omz update"
 
 # Who has time to type brew cask every time?
 alias cask="brew cask $@"
