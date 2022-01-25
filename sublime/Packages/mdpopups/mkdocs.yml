@@ -21,6 +21,7 @@ theme:
     code: Roboto Mono
   features:
     - navigation.tabs
+    - navigation.top
 
 nav:
   - Home:
@@ -111,5 +112,5 @@ plugins:
   - search
   - git-revision-date-localized
   - mkdocs_pymdownx_material_extras
-  - minify:
-      minify_html: true
+  # - minify:
+  #     minify_html: true

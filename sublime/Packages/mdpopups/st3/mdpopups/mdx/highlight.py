@@ -22,15 +22,15 @@ All changes Copyright 2008-2014 The Python Markdown Project
 License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 """
 import re
-from markdown import Extension
-from markdown.treeprocessors import Treeprocessor
+from ..markdown import Extension
+from ..markdown.treeprocessors import Treeprocessor
 import xml.etree.ElementTree as etree
 import copy
 from collections import OrderedDict
 try:
-    from pygments import highlight
-    from pygments.lexers import get_lexer_by_name, guess_lexer
-    from pygments.formatters import find_formatter_class
+    from ..pygments import highlight
+    from ..pygments.lexers import get_lexer_by_name, guess_lexer
+    from ..pygments.formatters import find_formatter_class
     HtmlFormatter = find_formatter_class('html')
     pygments = True
 except ImportError:  # pragma: no cover

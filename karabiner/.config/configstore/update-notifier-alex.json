@@ -1,0 +1,10 @@
+{
+	"optOut": false,
+	"lastUpdateCheck": 1635049073381,
+	"update": {
+		"latest": "10.0.0",
+		"current": "9.1.0",
+		"type": "major",
+		"name": "alex"
+	}
+}

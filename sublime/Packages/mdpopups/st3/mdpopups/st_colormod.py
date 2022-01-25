@@ -1,8 +1,8 @@
 """Color-mod."""
 import re
-from .coloraide.css import Color as ColorCSS
-from .coloraide.colors import ColorMatch
-from .coloraide.colors import _parse as parse
+from .coloraide import Color as ColorCSS
+from .coloraide import ColorMatch
+from .coloraide.spaces import _parse
 from .coloraide import util
 import functools
 import math
@@ -21,31 +21,55 @@ TOKENS = {
             \#(?:{hex}{{6}}(?:{hex}{{2}})?|{hex}{{3}}(?:{hex})?) |
             [\w][\w\d]*
         )
-        """.format(**parse.COLOR_PARTS)
+        """.format(**_parse.COLOR_PARTS)
     ),
     "functions": re.compile(r'(?i)[\w][\w\d]*\('),
-    "separators": re.compile(r'(?:{comma}|{space}|{slash})'.format(**parse.COLOR_PARTS))
+    "separators": re.compile(r'(?:{comma}|{space}|{slash})'.format(**_parse.COLOR_PARTS))
 }
 
 RE_ADJUSTERS = {
     "alpha": re.compile(
         r'(?i)\s+a(?:lpha)?\(\s*(?:(\+\s+|\-\s+)?({percent}|{float})|(\*)?\s*({percent}|{float}))\s*\)'.format(
-            **parse.COLOR_PARTS
+            **_parse.COLOR_PARTS
         )
     ),
-    "saturation": re.compile(r'(?i)\s+s(?:aturation)?\((\+\s|\-\s|\*)?\s*({percent})\s*\)'.format(**parse.COLOR_PARTS)),
-    "lightness": re.compile(r'(?i)\s+l(?:ightness)?\((\+\s|\-\s|\*)?\s*({percent})\s*\)'.format(**parse.COLOR_PARTS)),
+    "saturation": re.compile(
+        r'(?i)\s+s(?:aturation)?\((\+\s|\-\s|\*)?\s*({percent})\s*\)'.format(**_parse.COLOR_PARTS)
+    ),
+    "lightness": re.compile(r'(?i)\s+l(?:ightness)?\((\+\s|\-\s|\*)?\s*({percent})\s*\)'.format(**_parse.COLOR_PARTS)),
     "min-contrast_start": re.compile(r'(?i)\s+min-contrast\(\s*'),
     "blend_start": re.compile(r'(?i)\s+blenda?\(\s*'),
     "end": re.compile(r'(?i)\s*\)')
 }
 
-RE_HUE = re.compile(r'(?i){angle}'.format(**parse.COLOR_PARTS))
+RE_HUE = re.compile(r'(?i){angle}'.format(**_parse.COLOR_PARTS))
 RE_COLOR_START = re.compile(r'(?i)color\(\s*')
-RE_BLEND_END = re.compile(r'(?i)\s+({percent})(?:\s+(rgb|hsl|hwb))?\s*\)'.format(**parse.COLOR_PARTS))
+RE_BLEND_END = re.compile(r'(?i)\s+({percent})(?:\s+(rgb|hsl|hwb))?\s*\)'.format(**_parse.COLOR_PARTS))
 RE_BRACKETS = re.compile(r'(?:(\()|(\))|[^()]+)')
-RE_MIN_CONTRAST_END = re.compile(r'(?i)\s+({float})\s*\)'.format(**parse.COLOR_PARTS))
+RE_MIN_CONTRAST_END = re.compile(r'(?i)\s+({float})\s*\)'.format(**_parse.COLOR_PARTS))
 RE_VARS = re.compile(r'(?i)(?:(?<=^)|(?<=[\s\t\(,/]))(var\(\s*([-\w][-\w\d]*)\s*\))(?!\()(?=[\s\t\),/]|$)')
+
+
+def bracket_match(match, string, start, fullmatch):
+    """
+    Make sure we can acquire a complete `func()` before we replace variables.
+
+    We mainly do this so we can judge the real size before we alter the string with variables.
+    """
+
+    end = None
+    if match.match(string, start):
+        brackets = 1
+        for m in RE_BRACKETS.finditer(string, start + 6):
+            if m.group(2):
+                brackets -= 1
+            elif m.group(1):
+                brackets += 1
+
+            if brackets == 0:
+                end = m.end(2)
+                break
+    return end if (not fullmatch or end == len(string)) else None
 
 
 def validate_vars(var, good_vars):
@@ -187,7 +211,7 @@ class ColorMod:
                 start = m.end(0)
                 m = RE_HUE.match(string, start)
                 if m:
-                    hue = parse.norm_hue_channel(m.group(0))
+                    hue = _parse.norm_angle(m.group(0))
                     color = Color("hsl", [hue, 1, 0.5]).convert("srgb")
                     start = m.end(0)
                 if color is None:
@@ -211,12 +235,13 @@ class ColorMod:
 
             if color is not None:
                 self._color = color
-                if not self._color.in_gamut():
-                    self._color.fit(method="clip", in_place=True)
+                self._color.fit(method="clip", in_place=True)
 
                 while not done:
                     m = None
-                    for name, pattern in RE_ADJUSTERS.items():
+                    name = None
+                    for key, pattern in RE_ADJUSTERS.items():
+                        name = key
                         m = pattern.match(string, start)
                         if m:
                             start = m.end(0)
@@ -238,8 +263,7 @@ class ColorMod:
                     else:
                         break
 
-                    if not self._color.in_gamut():
-                        self._color.fit(method="clip", in_place=True)
+                    self._color.fit(method="clip", in_place=True)
             else:
                 raise ValueError('Could not calculate base color')
         except Exception:
@@ -284,7 +308,7 @@ class ColorMod:
         else:
             value = m.group(4)
         if value.endswith('%'):
-            value = float(value.strip('%')) * parse.SCALE_PERCENT
+            value = float(value.strip('%')) * _parse.SCALE_PERCENT
         else:
             value = float(value)
         op = ""
@@ -326,7 +350,7 @@ class ColorMod:
                 raise ValueError("Could not find a valid color for 'blend'")
         m = RE_BLEND_END.match(string, start)
         if m:
-            value = float(m.group(1).strip('%')) * parse.SCALE_PERCENT
+            value = float(m.group(1).strip('%')) * _parse.SCALE_PERCENT
             space = "srgb"
             if m.group(2):
                 space = m.group(2).lower()
@@ -513,11 +537,11 @@ class Color(ColorCSS):
             for space, space_class in self.CS_MAP.items():
                 s = color.lower()
                 if space == s and (not filters or s in filters):
-                    obj = space_class(data[:space_class.NUM_COLOR_CHANNELS] + [alpha])
+                    obj = space_class(data[:space_class.NUM_COLOR_CHANNELS], alpha)
                     return obj
         elif isinstance(color, ColorCSS):
             if not filters or color.space() in filters:
-                obj = self.CS_MAP[color.space()](color._color)
+                obj = self.CS_MAP[color.space()](color._space)
         else:
             m = self._match(color, fullmatch=True, filters=filters, variables=variables)
             if m is None:
@@ -547,7 +571,7 @@ class Color(ColorCSS):
                 string = handle_vars(string, variables)
                 variables = None
 
-        temp = parse.bracket_match(RE_COLOR_START, string, start, fullmatch)
+        temp = bracket_match(RE_COLOR_START, string, start, fullmatch)
         if end is None and temp:
             end = temp
             is_mod = True
@@ -559,7 +583,7 @@ class Color(ColorCSS):
                 string = handle_vars(string, variables)
             obj, match_end = ColorMod(fullmatch).adjust(string, start)
             if obj is not None:
-                return ColorMatch(obj._color, start, end if end is not None else match_end)
+                return ColorMatch(obj._space, start, end if end is not None else match_end)
         else:
             filters = set(filters) if filters is not None else set()
             obj = None
@@ -568,7 +592,7 @@ class Color(ColorCSS):
                     continue
                 value, match_end = space_class.match(string, start, fullmatch)
                 if value is not None:
-                    color = space_class(value)
+                    color = space_class(*value)
                     obj = ColorMatch(color, start, match_end)
             if obj is not None and end:
                 obj.end = end
@@ -583,17 +607,22 @@ class Color(ColorCSS):
             obj.color = cls(obj.color.space(), obj.color.coords(), obj.color.alpha)
         return obj
 
-    @classmethod
-    def new(cls, color, data=None, alpha=util.DEF_ALPHA, *, filters=None, variables=None, **kwargs):
+    def new(self, color, data=None, alpha=util.DEF_ALPHA, *, filters=None, variables=None, **kwargs):
         """Create new color object."""
 
-        return cls(color, data, alpha, filters=filters, variables=variables, **kwargs)
+        return type(self)(color, data, alpha, filters=filters, variables=variables, **kwargs)
 
     def update(self, color, data=None, alpha=util.DEF_ALPHA, *, filters=None, variables=None, **kwargs):
         """Update the existing color space with the provided color."""
 
+        clone = self.clone()
         obj = self._parse(color, data, alpha, filters=filters, variables=variables, **kwargs)
-        self._color.update(obj)
+        clone._attach(obj)
+
+        if clone.space() != self.space():
+            clone.convert(self.space(), in_place=True)
+
+        self._attach(clone._space)
         return self
 
     def mutate(self, color, data=None, alpha=util.DEF_ALPHA, *, filters=None, variables=None, **kwargs):
