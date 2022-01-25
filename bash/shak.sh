@@ -405,9 +405,6 @@ alias ag="echo \"ag is slow, use rg instead... brew install rg if needed\""
 alias duh="du -h"
 
 alias cci="circleci"
-alias k="kubectl"
-
-export SIMDATA_JAR="$HOME/work/git/simdata/build/libs/simdata-1.0.1.jar"
 
 source $HOME/design.sh
 

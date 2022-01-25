@@ -102,6 +102,7 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"GitGutter",
 	],
 	"index_files": false,
 	"scroll_past_end": true,
