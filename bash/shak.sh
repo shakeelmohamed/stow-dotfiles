@@ -368,7 +368,7 @@ alias copy="pbcopy"
 alias update="upgrade_oh_my_zsh"
 
 # Who has time to type brew cask every time?
-alias cask="brew cask $@"
+alias cask="brew install --cask $@"
 
 # golang
 # TODO: add setup for these directories
@@ -397,8 +397,6 @@ dockerkill() {
 
 alias dcu="docker-compose up"
 alias dcub="docker-compose up --build"
-
-alias jb="jirabrancher"
 
 alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
 

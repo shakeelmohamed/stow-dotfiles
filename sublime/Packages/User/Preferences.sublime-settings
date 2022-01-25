@@ -47,9 +47,9 @@
 		"scp",
 		"testsdks",
 		"microservices",
-		"online",
-		"screenshots",
-		"Codelabs",
+		"Wikipedia",
+		"journaling",
+		"webserver",
 		"Codeday",
 		"hackathons",
 		"screenshot",
@@ -96,29 +96,11 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 15,
+	"font_size": 16,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"GitGutter",
-		"HTML-CSS-JS Prettify",
-		"JSHint",
-		"JSONLint",
-		"Markdown",
-		"Markdown Extended",
-		"Markdown Preview",
-		"MarkdownHighlighting",
-		"Pretty JSON",
-		"Splunk Conf File Syntax Highlighting",
-		"Theme - itg.flat",
-		"VBScript",
-		"Vintage",
-		"xmllint",
-	],
-	"ignored_words":
-	[
-		"webserver"
 	],
 	"index_files": false,
 	"scroll_past_end": true,
@@ -128,4 +110,5 @@
 	"theme": "Spacegray Eighties.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"word_wrap": true,
+	"update_check": true,
 }

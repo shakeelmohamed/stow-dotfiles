@@ -52,16 +52,12 @@ git config --global core.excludesfile $HOME/.gitignore
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
 
-# Karabiner https://github.com/tekezo/Karabiner-Elements; cask install karabiner-elements
+# Karabiner https://github.com/tekezo/Karabiner-Elements; brew install --cask karabiner-elements
 stow karabiner -t $HOME/
 
-# Forklift
-stow forklift -t $HOME/Library/Preferences/
-
 # Node.js setup
-nvm install 8
+nvm install 12
 npm install -g trash-cli
-npm install -g jira-brancher
 
 # bro pages, simpler man pages
 sudo gem install bropages
