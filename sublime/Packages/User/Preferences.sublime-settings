@@ -103,6 +103,7 @@
 	"ignored_packages":
 	[
 		"GitGutter",
+		"Vintage",
 	],
 	"index_files": false,
 	"scroll_past_end": true,
