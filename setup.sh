@@ -1,4 +1,3 @@
-
 # MacOS System
 # Remove Message of the day prompt
 touch $HOME/.hushlogin
@@ -50,13 +49,13 @@ stow git -t $HOME/
 git config --global core.excludesfile $HOME/.gitignore
 
 # Sublime text configs
-stow sublime -t "$HOME/Library/Application Support/Sublime Text 3/"
+stow sublime -t "$HOME/Library/Application Support/Sublime Text/"
 
 # Karabiner https://github.com/tekezo/Karabiner-Elements; brew install --cask karabiner-elements
 stow karabiner -t $HOME/
 
 # Node.js setup
-nvm install 12
+nvm install 16
 npm install -g trash-cli
 
 # bro pages, simpler man pages
