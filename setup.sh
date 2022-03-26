@@ -29,11 +29,6 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     brew install "$line"
 done < "./brew.txt"
 
-# Install all cask packages
-while IFS='' read -r line || [[ -n "$line" ]]; do
-    brew cask install "$line"
-done < "./cask.txt"
-
 # SSH config
 stow ssh -t $HOME/
 
