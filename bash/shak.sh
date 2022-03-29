@@ -18,6 +18,8 @@ actuallyrm() {
     /bin/rm "$@"
 }
 
+alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+
 # Moves to trash instead of wiping completely, npm install -g trash-cli
 rm() {
     trash "$@"
