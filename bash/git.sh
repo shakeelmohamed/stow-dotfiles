@@ -86,7 +86,7 @@ ghfork() {
         git remote add "$1" "$remote"
         git fetch "$1"
         if [ "$#" -eq 1 ]; then
-            gco "$1/master"
+            gco "$1/$(gb)"
         else
             gco "$1/$2"
         fi
