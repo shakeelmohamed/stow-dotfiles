@@ -49,7 +49,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin":$PATH
+export PATH=$PATH:"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -84,13 +84,13 @@ source $ZSH/oh-my-zsh.sh
 
 source $HOME/shak.sh
 
-export PATH="$HOME/.yarn/bin:$PATH"
+export PATH="$PATH:$HOME/.yarn/bin"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH="/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/go@1.10/bin:$PATH"
+export PATH="$PATH:/usr/local/sbin"
+export PATH="$PATH:/usr/local/opt/go@1.10/bin"
 
 # added by travis gem
 [ ! -s /Users/shakeelmohamed/.travis/travis.sh ] || source /Users/shakeelmohamed/.travis/travis.sh
