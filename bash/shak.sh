@@ -203,3 +203,5 @@ source $HOME/design.sh
 source $HOME/docker.sh
 source $HOME/git.sh
 # source $HOME/splunk.sh
+
+eval "$(rbenv init - zsh)"
