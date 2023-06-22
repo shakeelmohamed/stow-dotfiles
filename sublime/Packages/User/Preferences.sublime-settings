@@ -62,6 +62,7 @@
 		"Ismaili",
 		"podcasts",
 		"deprioritizing",
+		"letterforms",
 	],
 	"binary_file_patterns":
 	[
@@ -114,4 +115,8 @@
 	"translate_tabs_to_spaces": true,
 	"word_wrap": true,
 	"update_check": true,
+	"ignored_words":
+	[
+		"photobooth"
+	],
 }
