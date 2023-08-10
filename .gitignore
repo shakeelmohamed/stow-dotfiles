@@ -1,17 +1,19 @@
-.DS_Store
 *.py[cd]
-
-sublime/Packages/Colorsublime - Themes/cache
-sublime/Packages/User/Package Control.cache
+.DS_Store
+.idea/
+karabiner/.config/gh/*
+oscrypto-ca-bundle.crt
+Package Control.ca-bundle
+Package Control.ca-certs/
+Package Control.ca-list
+Package Control.cache/
+Package Control.last-run
 Package Control.merged-ca-bundle
 Package Control.system-ca-bundle
 Package Control.user-ca-bundle
-Package Control.last-run
-sublime/Packages/User/sftp_servers
-oscrypto-ca-bundle.crt
-ssh/.ssh/known_hosts
 ssh/.ssh/id_rsa
 ssh/.ssh/id_rsa.pub
-karabiner/.config/gh/*
-
-.idea/
+ssh/.ssh/known_hosts
+sublime/Packages/Colorsublime - Themes/cache
+sublime/Packages/User/Package Control.cache
+sublime/Packages/User/sftp_servers

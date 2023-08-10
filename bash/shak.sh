@@ -27,6 +27,7 @@ rm() {
 trashcli() {
     npm i -g trash-cli
 }
+alias trashy=trashcli
 
 # Remove OS X Terminal logs, see http://osxdaily.com/2010/05/06/speed-up-a-slow-terminal-by-clearing-log-files/
 alias wipelogs="sudo rm -rf /private/var/log/asl/*.asl"
@@ -174,6 +175,7 @@ tableflip() {
 
 alias copy="pbcopy"
 alias update="omz update"
+alias upgrade="brew upgrade"
 
 # Who has time to type brew cask every time?
 alias cask="brew install --cask $@"
