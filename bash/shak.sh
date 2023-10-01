@@ -207,3 +207,6 @@ source $HOME/git.sh
 # source $HOME/splunk.sh
 
 eval "$(rbenv init - zsh)"
+
+alias noshadow="defaults write com.apple.screencapture disable-shadow -bool true ; killall SystemUIServer"
+alias yesshadow="defaults write com.apple.screencapture disable-shadow -bool false ; killall SystemUIServer"
