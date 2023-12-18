@@ -3,6 +3,9 @@
 ###################
 # General utilities
 ###################
+#
+
+alias serveme="python3 -m http.server 9000"
 
 iphonebackups() {
     cd "$HOME/Library/Application Support/MobileSync/Backup"

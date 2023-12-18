@@ -119,4 +119,14 @@
 	[
 		"photobooth"
 	],
+	"open_externally_patterns":
+	[
+		"*.jpg",
+		"*.jpeg",
+		"*.png",
+		"*.gif",
+		"*.zip",
+		"*.pdf"
+	],
+	"prevent_bin_preview": true,
 }
