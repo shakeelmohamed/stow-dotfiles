@@ -49,6 +49,7 @@ alias gfa="git fetch --all"
 alias gfp="git fetch --prune"
 alias gdp="git diff -p"
 alias gpa="git pull --all"
+alias ghr="git remote add $@"
 alias gitpeek="git show HEAD@{1}" # See 1 git commit in the future
 alias gshow="git show $@"
 alias gitgui="git gui $@"

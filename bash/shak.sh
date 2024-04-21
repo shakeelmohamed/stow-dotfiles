@@ -71,6 +71,7 @@ alias restart="exec zsh"
 
 # Edit this file
 alias shakshock="subl $HOME/shak.sh"
+alias gitshock="subl $HOME/git.sh"
 
 # Bicep curls
 alias bicep="curl $@"
@@ -177,7 +178,7 @@ tableflip() {
 }
 
 alias copy="pbcopy"
-alias update="omz update"
+alias update="omz update && brew update"
 alias upgrade="brew upgrade"
 
 # Who has time to type brew cask every time?
