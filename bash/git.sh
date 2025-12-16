@@ -53,6 +53,7 @@ alias ghr="git remote add $@"
 alias gitpeek="git show HEAD@{1}" # See 1 git commit in the future
 alias gshow="git show $@"
 alias gitgui="git gui $@"
+alias gcm="git commit -m $@"
 alias p="git pull $@"
 
 
@@ -79,20 +80,31 @@ gityank() {
 export ghuser="shakeelmohamed"
 
 ghfork() {
-    echo "Trying to checkout a fork for $1"
+    echo "Trying to checkout a fork for $1(:$2)"
 
-    if [ "$#" -eq 1 ]; then
+    # voidCounter:migrate-from-bower
+    #username=$(echo "voidCounter:migrate-from-bower" | sed -r 's/(.+):.+/\1/')
+    #branch=$(echo "voidCounter:migrate-from-bower" | sed -r 's/.+:(.+)/\1/')
+
+    if [ "$#" -eq 2 ]; then
         remote="git@github.com:$1/$(basename $(pwd)).git"
         echo "\tremote: $remote"
         git remote add "$1" "$remote"
         git fetch "$1"
-        if [ "$#" -eq 1 ]; then
-            gco "$1/$(gb)"
-        else
-            gco "$1/$2"
-        fi
+        gco -b "$1__$2" "$1/$2"
     else
-        echo "No GitHub username provided"
+        if [ "$#" -eq 1 ]; then
+            username=$1
+            branch=$(gb)
+            if [[ $1 == *":"* ]] ; then
+                echo "Trying to split username:branch format from $1"
+                username=$(echo $1 | sed -r 's/(.+):.+/\1/')
+                branch=$(echo $1 | sed -r 's/.+:(.+)/\1/')
+            fi
+            ghfork $username $branch
+        else
+            echo "No GitHub username provided"
+        fi
     fi
 }
 
