@@ -63,6 +63,14 @@
 		"podcasts",
 		"deprioritizing",
 		"letterforms",
+		"wordmark",
+		"outro",
+		"engawa",
+		"png",
+		"img",
+		"gif",
+		"Lightsail",
+		"photobooth"
 	],
 	"binary_file_patterns":
 	[
@@ -98,13 +106,16 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 18,
+	"font_size": 17,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"Emmet",
 		"GitGutter",
+		"SublimeLinter-pug-lint",
 		"Vintage",
+		"Vuejs Complete Package",
 	],
 	"index_files": false,
 	"scroll_past_end": true,
@@ -114,11 +125,7 @@
 	"theme": "Spacegray Eighties.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"word_wrap": true,
-	"update_check": true,
-	"ignored_words":
-	[
-		"photobooth"
-	],
+	"update_check": false,
 	"open_externally_patterns":
 	[
 		"*.jpg",

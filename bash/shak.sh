@@ -4,6 +4,16 @@
 # General utilities
 ###################
 #
+#
+#If you need to have ffmpeg@6 first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/ffmpeg@6/bin:$PATH"' >> ~/.zshrc
+
+#For compilers to find ffmpeg@6 you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/ffmpeg@6/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/ffmpeg@6/include"
+
+#For pkg-config to find ffmpeg@6 you may need to set:
+  export PKG_CONFIG_PATH="/opt/homebrew/opt/ffmpeg@6/lib/pkgconfig"
 
 alias serveme="python3 -m http.server 9000"
 
@@ -32,6 +42,13 @@ trashcli() {
 }
 alias trashy=trashcli
 
+rename() {
+    for i in $1*
+    do
+        mv "$i" "${i/$1/$2}"
+    done
+}
+
 # Remove OS X Terminal logs, see http://osxdaily.com/2010/05/06/speed-up-a-slow-terminal-by-clearing-log-files/
 alias wipelogs="sudo rm -rf /private/var/log/asl/*.asl"
 
@@ -45,6 +62,10 @@ untar() {
     for filename in $@; do
         tar xf "$filename"
     done
+}
+
+unzipall() {
+    unzip '*.zip' -d combinedfolder
 }
 
 zipme() {
@@ -63,7 +84,9 @@ shortsha() {
 
 alias fixwifi="sudo route -n flush && sudo networksetup -setv4off Wi-Fi && sudo networksetup -setdhcp Wi-Fi"
 
-# Cross-platform notepad
+alias nproc="sysctl -n hw.logicalcpu"
+
+# Cross-platform ~notepad~
 alias notepad.exe="vim $@"
 
 # Restart zsh
@@ -71,7 +94,9 @@ alias restart="exec zsh"
 
 # Edit this file
 alias shakshock="subl $HOME/shak.sh"
+alias shh=shakshock
 alias gitshock="subl $HOME/git.sh"
+alias gitsh=gitshock
 
 # Bicep curls
 alias bicep="curl $@"
@@ -214,3 +239,10 @@ eval "$(rbenv init - zsh)"
 
 alias noshadow="defaults write com.apple.screencapture disable-shadow -bool true ; killall SystemUIServer"
 alias yesshadow="defaults write com.apple.screencapture disable-shadow -bool false ; killall SystemUIServer"
+
+alias pros=processing-java
+alias prun="pros $1 --run"
+alias pres="pros $1 --present"
+
+alias dropbox="cd $HOME/Dropbox/"
+alias drop=dropbox

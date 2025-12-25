@@ -16,10 +16,13 @@
 		"CTags",
 		"DocBlockr",
 		"Dockerfile Syntax Highlighting",
+		"Emmet",
+		"Ethereum",
 		"Git",
 		"GitGutter",
 		"Handlebars",
 		"Highlight Dodgy Chars",
+		"HTMLBeautify",
 		"iCalendar",
 		"Indent XML",
 		"INI",
@@ -31,13 +34,16 @@
 		"MarkdownEditing",
 		"Missing Palette Commands",
 		"Monokai - Spacegray",
+		"Nunjucks",
 		"Package Control",
 		"PackageDev",
 		"PostgreSQL Syntax Highlighting",
 		"Pretty JSON",
 		"Pug",
 		"Quick File Move",
+		"rainbow_csv",
 		"SFTP",
+		"Shader Syntax (GLSL HLSL Cg)",
 		"SideBarEnhancements",
 		"Splunk Conf File Syntax Highlighting",
 		"Splunk Syntax",
@@ -46,10 +52,19 @@
 		"Tailwind CSS",
 		"Theme - Spacegray",
 		"Themr",
-		"TodoReview",
 		"TOML",
 		"TypeScript Syntax",
 		"Vuejs Complete Package",
 		"WordingStatus",
+	],
+	"channels":
+	[
+		"https://packagecontrol.github.io/channel/channel_v4.json",
+		"https://packagecontrol.io/channel_v3.json",
+		"https://raw.githubusercontent.com/jfcherng-sublime/ST-my-package-control/master/repository.json"
+	],
+	"repositories":
+	[
+		"https://raw.githubusercontent.com/jfcherng-sublime/ST-my-package-control/master/repository.json"
 	],
 }

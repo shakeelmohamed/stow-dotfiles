@@ -91,7 +91,7 @@ ghfork() {
         echo "\tremote: $remote"
         git remote add "$1" "$remote"
         git fetch "$1"
-        gco -b "$1__$2" "$1/$2"
+        gco -b "$1__$2" "$(gb)"
     else
         if [ "$#" -eq 1 ]; then
             username=$1
