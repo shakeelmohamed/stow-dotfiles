@@ -1,2 +1,0 @@
-// this file is required by tests
-console.log('test');
