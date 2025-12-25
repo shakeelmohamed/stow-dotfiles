@@ -6,7 +6,7 @@
 #
 #
 #If you need to have ffmpeg@6 first in your PATH, run:
-  echo 'export PATH="/opt/homebrew/opt/ffmpeg@6/bin:$PATH"' >> ~/.zshrc
+export PATH="/opt/homebrew/opt/ffmpeg@6/bin:$PATH"
 
 #For compilers to find ffmpeg@6 you may need to set:
   export LDFLAGS="-L/opt/homebrew/opt/ffmpeg@6/lib"
@@ -246,3 +246,5 @@ alias pres="pros $1 --present"
 
 alias dropbox="cd $HOME/Dropbox/"
 alias drop=dropbox
+
+alias bro=tldr
