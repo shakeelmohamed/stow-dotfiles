@@ -17,3 +17,4 @@ ssh/.ssh/known_hosts
 sublime/Packages/Colorsublime - Themes/cache
 sublime/Packages/User/Package Control.cache
 sublime/Packages/User/sftp_servers
+vscode/.vscode/extensions
