@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"ANSIescape",
+		"ANTLR syntax highlight",
 		"BracketHighlighter",
 		"ChannelRepositoryTools",
 		"Chmod",
@@ -39,6 +40,7 @@
 		"PackageDev",
 		"PostgreSQL Syntax Highlighting",
 		"Pretty JSON",
+		"Processing",
 		"Pug",
 		"Quick File Move",
 		"rainbow_csv",

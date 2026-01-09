@@ -248,3 +248,7 @@ alias dropbox="cd $HOME/Dropbox/"
 alias drop=dropbox
 
 alias bro=tldr
+
+alias deepclean="mo clean --dry-run && echo 'run mo clean, this was a dry run'"
+
+alias yeskillalladobe="kill $(ps aux | grep -i '.adobe' | grep -v grep | awk '{print $2}')"

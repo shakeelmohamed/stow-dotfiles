@@ -1,8 +1,12 @@
 # MacOS System
 # Remove Message of the day prompt
 touch $HOME/.hushlogin
+
 # Show hidden files in finder
 defaults write com.apple.finder AppleShowAllFiles YES
+
+# Never bounce the dock, it is so irritating
+defaults write com.apple.dock no-bouncing -bool TRUE;
 
 # Basic file system setup
 mkdir -p $HOME/work/git
