@@ -8,6 +8,10 @@ defaults write com.apple.finder AppleShowAllFiles YES
 # Never bounce the dock, it is so irritating
 defaults write com.apple.dock no-bouncing -bool TRUE;
 
+# Hide the stupid language popup
+defaults write /Library/Preferences/FeatureFlags/Domain/UIKit.plist redesigned_text_cursor -dict-add Enabled -bool NO
+
+
 # Basic file system setup
 mkdir -p $HOME/work/git
 
