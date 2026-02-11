@@ -54,6 +54,9 @@ git config --global core.excludesfile $HOME/.gitignore
 # Sublime text configs
 stow sublime -t "$HOME/Library/Application Support/Sublime Text/"
 
+# xcode themes
+stow xcode -t $HOME/Library/Developer/Xcode/UserData/
+
 # Karabiner https://github.com/tekezo/Karabiner-Elements; brew install --cask karabiner-elements
 stow karabiner -t $HOME/
 
