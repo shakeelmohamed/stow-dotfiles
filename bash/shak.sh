@@ -9,11 +9,11 @@
 export PATH="/opt/homebrew/opt/ffmpeg@6/bin:$PATH"
 
 #For compilers to find ffmpeg@6 you may need to set:
-  export LDFLAGS="-L/opt/homebrew/opt/ffmpeg@6/lib"
-  export CPPFLAGS="-I/opt/homebrew/opt/ffmpeg@6/include"
+export LDFLAGS="-L/opt/homebrew/opt/ffmpeg@6/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ffmpeg@6/include"
 
 #For pkg-config to find ffmpeg@6 you may need to set:
-  export PKG_CONFIG_PATH="/opt/homebrew/opt/ffmpeg@6/lib/pkgconfig"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/ffmpeg@6/lib/pkgconfig"
 
 alias serveme="python3 -m http.server 9000"
 
@@ -32,6 +32,8 @@ actuallyrm() {
 }
 
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+export VISUAL="subl -w"
+export EDITOR="subl -w"
 
 alias vscode="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"
 
@@ -230,7 +232,7 @@ goclone() {
 
 alias ag="echo \"ag is slow, use rg instead... brew install rg if needed\""
 
-alias duh="du -h"
+alias duh="du -h $@"
 
 source $HOME/design.sh
 source $HOME/docker.sh
