@@ -55,6 +55,7 @@ alias gshow="git show $@"
 alias gitgui="git gui $@"
 alias gcm="git commit -m $@"
 alias p="git pull $@"
+alias gdw="git diff --color-words $@" # overrides git diff --word-diff
 
 
 # Quickly change git editors. Subl for rebasing, vim for normal stuff

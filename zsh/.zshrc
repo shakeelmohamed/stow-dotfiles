@@ -22,6 +22,10 @@ DISABLE_AUTO_UPDATE="true"
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
 
+#
+# TODO: customize the title https://alvinalexander.com/blog/post/mac-os-x/change-title-bar-of-mac-os-x-terminal-window/
+#
+
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
@@ -155,3 +159,5 @@ ${venv_info}\
  \
 [%*] $exit_code
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
+# Added by Antigravity
+export PATH="/Users/shakeelmohamed/.antigravity/antigravity/bin:$PATH"
