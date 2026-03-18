@@ -5,7 +5,11 @@
       "*": "ask",        // Default: prompt for other bash commands
       "rm *": "deny", 
       "git *": "deny",
-      "gh *": "deny"  
+      "gh *": "deny",
+      "ls": "allow",
+      "grep": "allow",
+      "bun": "allow",
+      "bunx": "allow"
     }
   }
 }
