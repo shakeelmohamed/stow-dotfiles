@@ -93,7 +93,7 @@
 	"bold_folder_labels": true,
 	"color_scheme": "Packages/Colorsublime - Themes/monokai-best.tmTheme",
 	"dictionary": "Packages/Language - English/en_US.dic",
-	"draw_centered": true,
+	"draw_centered": false,
 	"find_selected_text": false,
 	"folder_exclude_patterns":
 	[
@@ -106,7 +106,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 17,
+	"font_size": 15,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":

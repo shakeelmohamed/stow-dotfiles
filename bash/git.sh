@@ -135,3 +135,27 @@ tempclone() {
     clonego $@
 }
 
+ghpr() {
+    # Get the remote URL
+    local remote_url=$(git remote get-url origin 2>/dev/null)
+
+    if [ -z "$remote_url" ]; then
+        echo "Error: Not a git repository or no 'origin' remote found."
+        return 1
+    fi
+
+    # Transform SSH/HTTPS to a clean web URL
+    # 1. Replace 'git@github.com:' with 'https://github.com/'
+    # 2. Remove '.git' from the end
+    local web_url=$(echo "$remote_url" | sed -E 's|git@github.com:|https://github.com/|; s|\.git$||')
+
+    # Detect the current branch to make the "compare" link actually useful
+    local branch=$(git rev-parse --abbrev-ref HEAD)
+
+    # Construct the full PR comparison URL
+    local final_url="${web_url}/compare/${branch}?expand=1"
+
+    echo "Opening: $final_url"
+
+    open "$final_url" 
+}
