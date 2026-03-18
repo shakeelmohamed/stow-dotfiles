@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "bash": {
+      "*": "ask",        // Default: prompt for other bash commands
+      "rm *": "deny", 
+      "git *": "deny",
+      "gh *": "deny"  
+    }
+  }
+}

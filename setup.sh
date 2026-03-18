@@ -57,18 +57,24 @@ stow sublime -t "$HOME/Library/Application Support/Sublime Text/"
 # xcode themes
 stow xcode -t $HOME/Library/Developer/Xcode/UserData/
 
+# TODO: remove, super unused
 # Karabiner https://github.com/tekezo/Karabiner-Elements; brew install --cask karabiner-elements
-stow karabiner -t $HOME/
+# stow karabiner -t $HOME/
+# 
+
+mkdir -p $HOME/.config/opencode/
+stow opencode -t $HOME/.config/opencode/
 
 # Node.js setup
-nvm install 16
-npm install -g trash-cli
+nvm install 22
+npm install -g trash-cli bun
 
-# bro pages, simpler man pages
-sudo gem install bropages
+# RIP: bro pages, simpler man pages
+brew install tldr
 
 # TODO: CLI tool for installing things from app store
 # https://github.com/herrbischoff/awesome-osx-command-line
 
+# TODO: swap for Ghostty
 # Get the Monokai terminal theme - this should be last
 open ./Monokai.terminal
