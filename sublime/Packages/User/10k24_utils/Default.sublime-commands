@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "Add Line Numbers",
+        "command": "number_lines"
+    }
+]

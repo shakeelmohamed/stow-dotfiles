@@ -1,0 +1,10 @@
+{
+    "dependencies": [],
+    "description": "10k24 utils",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "",
+    "version": "0.0.1"
+}
