@@ -1,15 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": ["~/.config/opencode/AGENTS.md"],
   "permission": {
     "bash": {
       "*": "ask",        // Default: prompt for other bash commands
       "rm *": "deny", 
       "git *": "deny",
       "gh *": "deny",
-      "ls": "allow",
+      "ls *": "allow",
       "grep": "allow",
       "bun": "allow",
-      "bunx": "allow"
+      "bunx": "allow",
+      "head": "allow",
+      "tail": "allow",
+      "cd": "allow",
+      "file": "allow",
     }
   }
 }
