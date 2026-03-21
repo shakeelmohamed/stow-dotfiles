@@ -107,6 +107,8 @@
 		".gemtags"
 	],
 	"font_size": 15,
+	"line_padding_top": 1,
+	"line_padding_bottom": 1,
 	"gpu_window_buffer": false,
 	"highlight_line": true,
 	"ignored_packages":

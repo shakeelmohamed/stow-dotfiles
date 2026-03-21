@@ -3,7 +3,9 @@
 ###################
 
 alias dotfiles="cd $HOME/work/git/dotfiles"
-alias stowfiles="cd $HOME/work/git/stow-dotfiles"
+STOWFILES_DIR="$HOME/work/git/stow-dotfiles"
+alias stowfiles="cd $STOWFILES_DIR"
+alias stowstow="subl $STOWFILES_DIR"
 
 alias gitignore="subl $HOME/work/git/stow-dotfiles/git/.gitignore"
 

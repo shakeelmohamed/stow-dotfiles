@@ -5,6 +5,7 @@
 	],
 	"installed_packages":
 	[
+		"10k24_utils",
 		"ANSIescape",
 		"ANTLR syntax highlight",
 		"BracketHighlighter",
