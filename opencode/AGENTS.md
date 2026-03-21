@@ -44,6 +44,10 @@ Ask clarifying questions before significant changes:
 
 Propose a plan for complex features. Flag for human review when uncertain.
 
+**"Update Accordingly"** is a keyword meaning: "Make sure everything that depends on the changed thing is also updated." When invoked, grep for the old value across the codebase (JS, JSX, TS, TSX, JSON, YAML, CSS, MD, MDX, tests, shell scripts, HTML) and update every reference.
+
+Always read the latest source file before prescribing changes or solutions.
+
 ---
 
 ## Code Style
