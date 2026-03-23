@@ -72,10 +72,17 @@ Always read the latest source file before prescribing changes or solutions.
 
 ---
 
-## Git & Permissions
+## Git & Shell
 
 - **NEVER execute git commands** (enforced by permission config)
 - Let me handle all git-related tasks
+- **NEVER use `rm -rf`** - use `trash` command instead (user has `rm` aliased to `trash-cli` node module)
+
+---
+
+## Files to Never Edit
+
+- **NEVER edit `todo.md`** - do not even look at the file
 
 ---
 
@@ -101,6 +108,20 @@ Always read the latest source file before prescribing changes or solutions.
 - Minimal try/catch usage
 - Avoid excessive type checking
 - Let errors propagate when appropriate
+
+---
+
+## Problem Solving
+
+**Always conduct root cause analysis** instead of fixing surface-level issues without investigation. When a bug is reported:
+1. Investigate why it happens, not just how to hide it
+2. Trace data from source to destination
+3. Consider full system architecture including dependencies and platform usage (OS, host, services)
+4. Ask "what else might be affected?"
+5. Fix the underlying cause, not just the symptom
+6. Verify the fix addresses the root cause
+
+Surface fixes create technical debt and often mask bigger problems.
 
 ---
 
