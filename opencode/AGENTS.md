@@ -123,6 +123,16 @@ Always read the latest source file before prescribing changes or solutions.
 
 Surface fixes create technical debt and often mask bigger problems.
 
+### Execution-Based Verification
+
+- Always verify with execution before declaring success
+- Run the exact user command that fails before theorizing
+- If stuck, ask for permission to execute
+- Think, solve, check work, verify logic - THEN consider asking for exec permissions if appropriate
+- Prefer logging over console printing for debugging
+
+**Never speculate. Always use logic and verification.**
+
 ---
 
 ## Performance
@@ -185,6 +195,18 @@ When stuck in a loop of small config/code changes without progress:
 4. Propose a plan before continuing
 
 Avoid endlessly tweaking configs or making the same type of change repeatedly. Step back to solve the real problem.
+
+### Iteration Without Verification
+- Making changes that cannot be tested
+- Running in circles with theoretical fixes
+- Asking for excessive permissions on short intervals without solving the problem first
+
+### Random Changes
+- Adding try/catch blocks without understanding the error
+- Making random edits hoping something will work
+- Using console printing as a substitute for understanding
+- Editing code without first reading and understanding the surrounding context
+- "Brute force" approaches instead of systematic analysis
 
 ---
 
