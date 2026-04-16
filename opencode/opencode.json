@@ -2,6 +2,9 @@
   "$schema": "https://opencode.ai/config.json",
   "instructions": ["~/.config/opencode/AGENTS.md"],
   "permission": {
+    "external_directory": {
+      "~/.ssh": "deny"
+    },
     "bash": {
       "*": "ask",        // Default: prompt for other bash commands
       "rm *": "deny", 
@@ -15,6 +18,7 @@
       "tail": "allow",
       "cd": "allow",
       "file": "allow",
+      "readlink": "allow",
     }
   }
 }

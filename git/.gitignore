@@ -24,3 +24,7 @@ codeship.aes
 
 # secrets
 .env
+
+.idea/
+.vscode/
+.claude/

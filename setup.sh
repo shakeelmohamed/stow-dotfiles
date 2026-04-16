@@ -65,6 +65,8 @@ stow xcode -t $HOME/Library/Developer/Xcode/UserData/
 mkdir -p $HOME/.config/opencode/
 stow opencode -t $HOME/.config/opencode/
 
+ln -s ~/.config/opencode/AGENTS.md ~/.claude/CLAUDE.md
+
 # Node.js setup
 nvm install 22
 npm install -g trash-cli bun
