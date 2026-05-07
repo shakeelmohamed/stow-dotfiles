@@ -161,3 +161,5 @@ ${venv_info}\
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
 # Added by Antigravity
 export PATH="/Users/shakeelmohamed/.antigravity/antigravity/bin:$PATH"
+
+export PATH="$HOME/.rustup/toolchains/1.93-aarch64-apple-darwin/bin:$PATH"

@@ -15,6 +15,8 @@ export CPPFLAGS="-I/opt/homebrew/opt/ffmpeg@6/include"
 #For pkg-config to find ffmpeg@6 you may need to set:
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ffmpeg@6/lib/pkgconfig"
 
+export PATH="$PATH:$HOME/.cargo/bin"
+
 alias serveme="python3 -m http.server 9000"
 
 iphonebackups() {

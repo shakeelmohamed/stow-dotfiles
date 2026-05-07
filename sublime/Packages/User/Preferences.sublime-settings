@@ -106,7 +106,7 @@
 		".tags_sorted_by_file",
 		".gemtags"
 	],
-	"font_size": 15,
+	"font_size": 14,
 	"line_padding_top": 1,
 	"line_padding_bottom": 1,
 	"gpu_window_buffer": false,
