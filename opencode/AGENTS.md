@@ -1,5 +1,17 @@
 # Shakeel's Agent Instructions
 
+## NEVER GUESS — Find Source of Truth
+
+Before answering any technical question about a platform, tool, or API:
+1. Fetch the official documentation first
+2. Search for real community reports (GitHub issues, forums)
+3. Only then propose a solution
+4. If docs contradict your assumption, docs win
+
+Guessing wastes time and erodes trust.
+
+NEVER guess anything, ever again. Assume nothing.
+
 ## Purpose
 
 **Clean, maintainable code that scales. Technically outstanding.**
@@ -77,6 +89,7 @@ Always read the latest source file before prescribing changes or solutions.
 - **NEVER execute git commands** (enforced by permission config)
 - Let me handle all git-related tasks
 - **NEVER use `rm -rf`** - use `trash` command instead (user has `rm` aliased to `trash-cli` node module)
+- You are on MacOS, `timeout` or `gtimeout` are not available
 
 ---
 

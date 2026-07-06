@@ -258,3 +258,15 @@ alias bro=tldr
 alias deepclean="mo clean --dry-run && echo 'run mo clean, this was a dry run'"
 
 alias yeskillalladobe="kill $(ps aux | grep -i '.adobe' | grep -v grep | awk '{print $2}')"
+
+# Crazy wifi flush I need to do sometimes
+superflush() {
+    echo "Setting Wi-Fi to ipv4 only..."
+    sudo networksetup -setv6linklocal Wi-Fi
+    echo "Stopping Wi-Fi hardware (en0)..."
+    networksetup -setairportpower en0 off
+    sleep 2
+    echo "Powering Wi-Fi hardware back up..."
+    networksetup -setairportpower en0 on
+    echo "🔋 Network cycled! You are good to go."
+}
