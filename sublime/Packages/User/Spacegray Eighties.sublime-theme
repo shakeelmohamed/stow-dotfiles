@@ -1,0 +1,20 @@
+// Spacegray Eighties.sublime-theme
+// Custom overrides — merged with the base theme by Sublime Text
+[
+    {
+        "class": "quick_panel_row",
+        "attributes": ["selected"],
+        "layer0.tint": [157, 85, 15]
+    },
+    {
+        "class": "mini_quick_panel_row",
+        "attributes": ["selected"],
+        "layer0.tint": [157, 85, 15]
+    },
+    {
+        "class": "table_row",
+        "attributes": ["selected"],
+        "layer0.tint": [157, 85, 15],
+        "layer0.opacity": 1
+    }
+]

@@ -12,6 +12,7 @@
 		"ChannelRepositoryTools",
 		"Chmod",
 		"CMake",
+		"CodeFormatter",
 		"ColorSchemeSelector",
 		"Colorsublime",
 		"CTags",
